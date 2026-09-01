@@ -1,3 +1,4 @@
+import { sourceMaxAgeDaysFor } from './freshness';
 import { parsePlaybookYaml } from './parse';
 import type { Playbook } from './schema';
 
@@ -50,6 +51,12 @@ export function assertCatalogComplete(): void {
   for (const pb of PLAYBOOKS) {
     if (pb.last_verified !== null) {
       throw new Error(`${pb.id} last_verified must be null in v1 draft SOPs`);
+    }
+    const expectedAge = sourceMaxAgeDaysFor(pb.id);
+    if (pb.source_max_age_days !== expectedAge) {
+      throw new Error(
+        `${pb.id} source_max_age_days must be ${expectedAge} (got ${pb.source_max_age_days})`
+      );
     }
   }
 }
