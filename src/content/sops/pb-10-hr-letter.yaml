@@ -1,0 +1,187 @@
+id: pb-10
+title_en: HR asked for a 6-month lease
+status: draft
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: null
+summary_en: Put the official materials next to the Reddit field report. Write a gentle cover note. Never fake 住宿登记. Preview the one-pager, then attach pb-02 if you still need to register.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: hr_lease_6m
+  - when: flag_is
+    value: hr_lease_6m
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+  - label: Shenzhen government English — living / planning materials
+    url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+    kind: official
+  - label: r/shenzhen 1upmequ (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
+    kind: user_report
+conflicts:
+  - id: official-vs-reddit-lease
+    title_en: Official living materials vs a hiring-practice field report
+    resolution: verify_at_window
+    sources:
+      - label: sz.gov.cn English living / planning page
+        url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+        kind: official
+        claim_en: The city English page is background on living in Shenzhen. It is not an HR policy and it does not require a six-month lease for an employment letter.
+        as_of: "2024-01"
+      - label: r/shenzhen 1upmequ
+        url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
+        kind: user_report
+        claim_en: Users report some employers asking for a six-month lease or 住宿登记 before they will issue HR paperwork. That is a field report — 非法律来源 — not a statute. Verify with HR and, if needed, at the window.
+        as_of: "2025-01"
+failure_tree:
+  id: hr-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: hr-insists-fake
+      question_en: HR wants a 住宿登记 you do not have yet?
+      advice_en: Do not invent a slip. Run pb-02 (24-hour registration) or say you are at a hotel that files automatically. Never fake 住宿登记.
+      never:
+        - fake_registration
+      next: cover-note
+      vpn_off_only: false
+    - id: cover-note
+      question_en: You need something on paper today?
+      advice_en: Use the bilingual one-pager preview. Gentle tone. No accusation. No fake chop. CTA is “I have these.”
+      never:
+        - fake_chop
+      next: null
+      vpn_off_only: false
+attached_playbooks:
+  - pb-02
+steps:
+  - id: sit-sources-side-by-side
+    title_en: Official page beside the Reddit report
+    slot: conflict
+    why: HR hears rumors. You show two sources and do not pick a winner. Reddit stays labeled 非法律来源.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: sz.gov.cn English materials
+        url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+        kind: official
+      - label: r/shenzhen 1upmequ
+        url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
+        kind: user_report
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I read both sides
+    stuck_node: hr-insists-fake
+    timer: null
+  - id: never-fake-registration
+    title_en: Never fake 住宿登记
+    slot: required_check
+    why: A forged slip is worse than a late one. If you still need to register, attach pb-02.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-fake
+        label_en: I will not fake a 住宿登记 slip
+      - id: run-pb02
+        label_en: If I still need to register, I will run the accommodation playbook
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: hr-insists-fake
+    timer: null
+  - id: cover-note
+    title_en: Gentle Chinese cover note — no chop
+    slot: speech
+    why: A short, polite note. No accusation that HR is wrong. No fake company seal.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 您好，我正在按法规办理临时住宿登记。现附上官方说明材料与我目前的住宿情况说明，请查收。如需补充材料，我可以配合。
+      pinyin: Nín hǎo, wǒ zhèngzài àn fǎguī bànlǐ línshí zhùsù dēngjì. Xiàn fù shàng guānfāng shuōmíng cáiliào yǔ wǒ mùqián de zhùsù qíngkuàng shuōmíng, qǐng cháshōu. Rú xū bǔchōng cáiliào, wǒ kěyǐ pèihé.
+      en: Hello. I am completing temporary accommodation registration as required. Please find official background materials and a note on my current stay. I can provide more documents if needed.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: preview_hr_letter
+      label_en: Preview the one-pager
+    stuck_node: cover-note
+    timer: null
+  - id: preview-artifact
+    title_en: Preview the bilingual one-pager
+    slot: click_path
+    why: Print or screenshot. Not a PDF library yet. CTA is “I have these.”
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open /run/pb-10/hr-letter for the bilingual preview.
+          screenshot: null
+        - n: 2
+          text_en: Print or save. No fake chop. Take the official URL and the labeled Reddit note together.
+          screenshot: null
+    official_urls: []
+    prefill:
+      artifact: preview_hr_letter
+      href: /run/pb-10/hr-letter
+    required_checkboxes: []
+    primary_cta:
+      id: preview_hr_letter
+      label_en: Preview the one-pager
+    stuck_node: cover-note
+    timer: null
+  - id: i-have-these
+    title_en: I have these
+    slot: required_check
+    why: The playbook ends when you can hand HR the preview plus whatever stay proof you actually have — hotel folio or a real 住宿登记, never a fake.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport copy
+        required: true
+      - id: stay-proof
+        label_en: Real stay proof (hotel folio or completed 住宿登记)
+        required: false
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: have-preview
+        label_en: I have the bilingual one-pager
+      - id: have-real-proof
+        label_en: Any stay proof I attach is real
+    primary_cta:
+      id: i_have_these
+      label_en: I have these
+    stuck_node: hr-insists-fake
+    timer: null

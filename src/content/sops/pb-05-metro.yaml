@@ -1,0 +1,190 @@
+id: pb-05
+title_en: Ride the metro
+status: draft
+last_verified: null
+source_max_age_days: 30
+lifecycle: 72h
+public_slug: null
+summary_en: Skip the metro mini-program. First hotspot is Alipay → Transport / 出行 → 乘车码. Cash machine is the backup. Short playbook — payments matrix lives in pb-01.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: metro_qr
+primary_cta:
+  id: next_step
+  label_en: Open Alipay Transport
+official_urls:
+  - label: Shenzhen Decoded — getting around
+    url: https://www.shenzhendecoded.com/en/guides/getting-around-shenzhen
+    kind: guide
+  - label: HiShenzhen — Alipay / WeChat Pay setup
+    url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
+    kind: guide
+conflicts:
+  - id: octopus-note
+    title_en: Octopus-since-2023 is a payment-post note, not law
+    resolution: verify_at_window
+    sources:
+      - label: Shenzhen Decoded — metro QR
+        url: https://www.shenzhendecoded.com/en/guides/getting-around-shenzhen
+        kind: guide
+        claim_en: The everyday path described here is Alipay Transport / 乘车码 or a cash token. That is a how-to, not a statute.
+        as_of: "2026-01"
+      - label: HiShenzhen payment guide
+        url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
+        kind: guide
+        claim_en: Some posts mention Hong Kong Octopus acceptance on Shenzhen metro after 2023. Treat that as a payment-post note. Confirm at the gate; it is not written here as law.
+        as_of: "2026-01"
+failure_tree:
+  id: metro-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: miniprogram-fail
+      question_en: The Shenzhen Metro mini-program will not issue a code?
+      advice_en: Leave it. Open the Alipay app itself → Transport / 出行 → 乘车码. The mini-program is not the first hotspot.
+      never: []
+      next: vpn-off
+      vpn_off_only: false
+    - id: vpn-off
+      question_en: Transport tab errors or the QR is grey?
+      advice_en: Turn the VPN off and retry. VPN-off is the only network step. Then use the cash ticket machine.
+      never: []
+      next: cash-machine
+      vpn_off_only: true
+    - id: cash-machine
+      question_en: Still no QR?
+      advice_en: Use the station ticket machine. English button → destination → cash. Token in, token out. Do not friend-bind a ride code.
+      never:
+        - friend_bind
+      next: null
+      vpn_off_only: false
+attached_playbooks:
+  - pb-01
+steps:
+  - id: skip-miniprogram
+    title_en: Skip the metro mini-program
+    slot: click_path
+    why: Mini-programs fail for foreign-number accounts. Do not start there.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Do not open a Shenzhen Metro mini-program first.
+          screenshot: null
+        - n: 2
+          text_en: Open the Alipay app itself. That is the first hotspot.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Open Alipay, not the mini-program
+    stuck_node: miniprogram-fail
+    timer: null
+  - id: alipay-transport
+    title_en: Alipay app → Transport / 出行 → 乘车码
+    slot: click_path
+    why: This is the numbered path. Screenshot art is missing — follow the text.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Wallet KYC before the gate
+      body_en: If Alipay KYC is unfinished, the Transport code may stay grey. Finish pb-01 or use the cash machine. Do not tap a metro mini-program to “fix” KYC.
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the Alipay app itself (home screen of the app, not a mini-program).
+          screenshot: null
+        - n: 2
+          text_en: Tap Transport / 出行.
+          screenshot: null
+        - n: 3
+          text_en: Open 乘车码 and scan the gate.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I opened Transport
+    stuck_node: miniprogram-fail
+    timer: null
+  - id: speech-alipay-code
+    title_en: If a clerk asks how you are riding
+    slot: speech
+    why: One sentence. You are using Alipay's ride code.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 你好，我走支付宝乘车码。
+      pinyin: Nǐ hǎo, wǒ zǒu Zhīfùbǎo chéngchē mǎ.
+      en: Hello, I am using the Alipay transit code.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show clerk
+    stuck_node: miniprogram-fail
+    timer: null
+  - id: cash-token
+    title_en: Cash ticket machine backup
+    slot: click_path
+    why: Every station still sells a single-journey token. English button exists on most machines.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: cash-small
+        label_en: Small RMB notes for a single journey
+        required: false
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: At the machine, tap English → destination on the map → pay with cash (or a working Alipay).
+          screenshot: null
+        - n: 2
+          text_en: Tap the token to enter. Insert the token to exit.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I can use the machine
+    stuck_node: cash-machine
+    timer: null
+  - id: octopus-post
+    title_en: Octopus-since-2023 is a note, not law
+    slot: conflict
+    why: A payment post is not a regulation. Confirm at the gate if you want to try Octopus.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will not treat Octopus as law
+    stuck_node: vpn-off
+    timer: null

@@ -1,0 +1,203 @@
+id: pb-04
+title_en: Get a working SIM or eSIM
+status: draft
+last_verified: null
+source_max_age_days: 30
+lifecycle: 72h
+public_slug: null
+summary_en: Data-only eSIM is not a mainland number. Not every hall serves foreigners. Use official hotlines. Never a yellow-cow stall.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: no_cn_phone
+primary_cta:
+  id: open_official
+  label_en: Open a district hall page
+official_urls:
+  - label: Longhua — service hall / foreigner SIM notes
+    url: https://www.szlhq.gov.cn/english/licc/newsevents/newsevent/content/post_12692962.html
+    kind: official
+  - label: Futian — service center page
+    url: https://www.szft.gov.cn/xxgk/ztbd/yshj/yszx/content/post_10936751.html
+    kind: official
+  - label: SZNews — airport one-stop (SIM help, not a hall SLA)
+    url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+    kind: official
+conflicts:
+  - id: esim-vs-number
+    title_en: Data-only eSIM vs a mainland number
+    resolution: verify_at_window
+    sources:
+      - label: Longhua English hall page
+        url: https://www.szlhq.gov.cn/english/licc/newsevents/newsevent/content/post_12692962.html
+        kind: official
+        claim_en: A mainland number is a real-name counter product. A travel eSIM is data only and will not receive mainland SMS for banks or WeChat.
+        as_of: "2025-01"
+      - label: Airport one-stop opening
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+        claim_en: T3 one-stop can sell a tourist SIM. That is not a promise every city hall window will issue a foreigner number the same day.
+        as_of: "2025-01-25"
+failure_tree:
+  id: sim-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: hall-refuses
+      question_en: The hall says they do not serve foreign passports?
+      advice_en: That happens. Try the other official hall page (Longhua / Futian) or call 10086 / 10000 / 10010 and ask which window takes passports. Do not go to a yellow-cow stall.
+      never:
+        - yellow_cow
+      next: airport-not-sla
+      vpn_off_only: false
+    - id: airport-not-sla
+      question_en: Airport one-stop is closed or out of SIMs?
+      advice_en: That desk can help; it is not a service-hall SLA. Use the official hall links or the hotlines. Never buy a non-real-name card from a street seller.
+      never:
+        - yellow_cow
+        - non_real_name
+      next: vpn-off
+      vpn_off_only: false
+    - id: vpn-off
+      question_en: The operator app will not complete real-name?
+      advice_en: Turn the VPN off and retry in the official app or at the window. VPN-off only.
+      never:
+        - yellow_cow
+      next: null
+      vpn_off_only: true
+attached_playbooks: []
+steps:
+  - id: split-esim
+    title_en: Split the job — data eSIM vs mainland number
+    slot: required_check
+    why: Landing WhatsApp on an eSIM is not the same as a +86 number for SMS. Pick the job you actually need.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: know-job
+        label_en: I know whether I need data only, or a mainland number for SMS
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: hall-refuses
+    timer: null
+  - id: not-every-branch
+    title_en: Not every branch handles foreigners
+    slot: click_path
+    why: A random China Mobile shop can refuse a passport. Use the official hall pages and the hotlines. We do not invent street addresses.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport before any shop QR
+      body_en: Real-name needs the physical passport. Do not let a street seller photograph it “to register for you.”
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the Longhua and Futian official pages in official_urls. Call 10086 / 10000 / 10010 and ask which window takes a foreign passport today.
+          screenshot: null
+        - n: 2
+          text_en: Do not invent a hall street address from memory. Follow the page you opened.
+          screenshot: null
+    official_urls:
+      - label: Longhua hall page
+        url: https://www.szlhq.gov.cn/english/licc/newsevents/newsevent/content/post_12692962.html
+        kind: official
+      - label: Futian service center
+        url: https://www.szft.gov.cn/xxgk/ztbd/yshj/yszx/content/post_10936751.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open a hall page
+    stuck_node: hall-refuses
+    timer: null
+  - id: airport-sim-not-sla
+    title_en: Airport one-stop can help SIM — not a hall SLA
+    slot: getting_there
+    why: T3 one-stop sells tourist SIMs when stocked. It does not replace a city-hall real-name number.
+    skippable: true
+    skip_if:
+      field: location
+      equals: already_in_city
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Bao'an Airport T3 international-arrivals one-stop desk
+      copy_name_zh: 宝安机场T3国际到达出口旁 外籍人员一站式综合服务中心
+      metro_line: null
+      metro_exit: null
+      notes_en: Can help with a tourist SIM. Not a promise of a mainland number or a city-hall appointment.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: SZNews 2025-01-25
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at the one-stop desk
+    stuck_node: airport-not-sla
+    timer: null
+  - id: never-yellow-cow
+    title_en: Never yellow-cow or non-real-name
+    slot: required_check
+    why: A stall that “registers it for you” is how numbers get killed. Official window or official hotline only.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-yellow-cow
+        label_en: I will not buy a card from a yellow-cow / street seller
+      - id: real-name
+        label_en: I will only take a real-name official card
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: hall-refuses
+    timer: null
+  - id: take-number-speech
+    title_en: What to say at the counter
+    slot: speech
+    why: Ask for a number on your passport. Do not add a story about a friend's ID.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 你好，我持护照办理手机卡，请帮我取号。
+      pinyin: Nǐ hǎo, wǒ chí hùzhào bànlǐ shǒujī kǎ, qǐng bāng wǒ qǔ hào.
+      en: Hello, I am here with my passport to get a mobile number. Please help me take a number.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show clerk
+    stuck_node: hall-refuses
+    timer: null

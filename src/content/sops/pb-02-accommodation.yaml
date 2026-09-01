@@ -1,0 +1,292 @@
+id: pb-02
+title_en: 24-hour accommodation registration
+status: draft
+last_verified: null
+source_max_age_days: 14
+lifecycle: 72h
+public_slug: accommodation-registration
+summary_en: Hotels register you. An apartment does not. You have 24 hours. Scan 房屋码. Skip i深圳 face. This copilot never submits the form.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: stay_is
+    value: not_hotel
+  - when: broken_contains
+    value: need_24h
+primary_cta:
+  id: next_step
+  label_en: Start the 24-hour clock
+official_urls:
+  - label: HeyShenzhen — registered address
+    url: https://heyshenzhen.com/registered-address
+    kind: guide
+  - label: HiShenzhen — temporary accommodation registration
+    url: https://hishenzhen.com/how-to-get-temporary-accommodation-registration-shenzhen/
+    kind: guide
+  - label: NowShenzhen — Shekou MSCE
+    url: https://nowshenzhen.com/blog/shekou-msce-empowering-shenzhens-expat-community-through-service-and-volunteerism/
+    kind: guide
+conflicts:
+  - id: national-2026-pilot
+    title_en: 2026 national online pilot may exclude Guangdong
+    resolution: verify_at_window
+    sources:
+      - label: HeyShenzhen — WeChat 深圳公安 path
+        url: https://heyshenzhen.com/registered-address
+        kind: guide
+        claim_en: Shenzhen still documents a WeChat 深圳公安 path for 境外人员临时住宿登记. That is a local channel, not a promise that a new national website covers Guangdong.
+        as_of: "2026-01"
+      - label: HiShenzhen — police-station fallback
+        url: https://hishenzhen.com/how-to-get-temporary-accommodation-registration-shenzhen/
+        kind: guide
+        claim_en: If an online national pilot rejects a Guangdong address, use the local WeChat path or the window (Shekou MSCE or the covering 派出所). Verify there. We do not pick a winner.
+        as_of: "2026-01"
+failure_tree:
+  id: stay-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: no-house-code
+      question_en: You cannot find the 房屋码 sticker?
+      advice_en: Do not type a street address into the form. Ask the landlord or property desk for the door QR. If it is missing, go to the window with your passport and the lease — Shekou MSCE if you are in that catchment, otherwise the covering 派出所.
+      never:
+        - type_address
+      next: ishenzhen-face
+      vpn_off_only: false
+    - id: ishenzhen-face
+      question_en: i深圳 asks for mainland face / mainland ID?
+      advice_en: Skip i深圳 face. Use 深圳公安 → 政务服务 → 出入境业务 → 境外人员临时住宿登记, or the window. We never submit.
+      never:
+        - ishenzhen_face
+      next: vpn-off
+      vpn_off_only: false
+    - id: vpn-off
+      question_en: WeChat will not open 深圳公安?
+      advice_en: Turn the VPN off and retry. VPN-off is the only network step. Do not ask a friend to register in their name.
+      never:
+        - friend_bind
+      next: null
+      vpn_off_only: true
+attached_playbooks: []
+steps:
+  - id: twenty-four-hours
+    title_en: 24 hours is the legal clock
+    slot: timer
+    why: Hotels file you at check-in. An apartment, dorm, or friend's sofa does not. The clock starts at arrival, not at “when I feel settled.”
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I understand the 24-hour clock
+    stuck_node: no-house-code
+    timer:
+      kind: arrival_24h
+      label_en: 24 hours from arrival
+  - id: hotel-vs-apartment
+    title_en: Hotel auto vs apartment self
+    slot: required_check
+    why: If reception scanned your passport, you are done for this stay. If you hold keys to a flat, you (or the host) must register.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: stay-kind
+        label_en: I know whether this stay is a hotel (auto) or not a hotel (I must register)
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: no-house-code
+    timer: null
+  - id: wechat-click-path
+    title_en: WeChat path — 深圳公安
+    slot: click_path
+    why: This is the local channel documented by city guides. We never submit the form for you.
+    skippable: true
+    skip_if:
+      field: stay_type
+      equals: hotel
+    passport_fail_warning:
+      title_en: Passport in hand before any mini-program
+      body_en: Photograph the bio page yourself. Do not hand the passport to a “helper” who is not the police window or Shekou MSCE. Skip i深圳 face.
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: house-code
+        label_en: Access to the door 房屋码
+        required: true
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open WeChat → search and follow 深圳公安.
+          screenshot: null
+        - n: 2
+          text_en: 政务服务 → 出入境业务 → 境外人员临时住宿登记.
+          screenshot: null
+        - n: 3
+          text_en: Scan 房屋码. Do not type a street address. We never submit.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I opened 深圳公安
+    stuck_node: ishenzhen-face
+    timer: null
+  - id: scan-house-code
+    title_en: Scan 房屋码 — do not type the address
+    slot: click_path
+    why: Manual address entry is the usual reject. The door QR is the record the bureau wants.
+    skippable: true
+    skip_if:
+      field: stay_type
+      equals: hotel
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 请问房屋码在哪里？我要办理住宿登记。
+      pinyin: Qǐngwèn fángwū mǎ zài nǎlǐ? Wǒ yào bànlǐ zhùsù dēngjì.
+      en: Excuse me, where is the house QR code? I need to register my stay.
+    click_path:
+      steps:
+        - n: 1
+          text_en: Find the QR on the doorframe or ask 物业 / the landlord. Scan it in the 深圳公安 form.
+          screenshot: null
+        - n: 2
+          text_en: If there is no sticker, stop typing. Go to the window with the lease.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will scan, not type
+    stuck_node: no-house-code
+    timer: null
+  - id: skip-ishenzhen
+    title_en: Skip i深圳 face
+    slot: click_path
+    why: i深圳 face is built for mainland ID. Foreigners bounce. Use 深圳公安 or the window.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: If a poster says “use i深圳”, ignore the face-scan path.
+          screenshot: null
+        - n: 2
+          text_en: Stay on 深圳公安 or walk to Shekou MSCE / the covering 派出所.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will skip i深圳
+    stuck_node: ishenzhen-face
+    timer: null
+  - id: shekou-msce
+    title_en: Shekou MSCE window (if that is your catchment)
+    slot: getting_there
+    why: Shekou MSCE can do temporary registration for its catchment. Metro is not listed here — ask on site. Do not invent a street number.
+    skippable: true
+    skip_if:
+      field: district
+      equals: not_nanshan
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Shekou Management and Service Center for Expats (MSCE)
+      copy_name_zh: 蛇口境外人员管理服务中心
+      metro_line: null
+      metro_exit: null
+      notes_en: Intersection of Nanshui Road and Shiyun Road, Shekou, Nanshan. Confirm catchment at the desk. Metro exit is not listed — do not guess.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: lease
+        label_en: Lease or host letter if you have one
+        required: false
+    speech_card:
+      hanzi: 你好，我办理境外人员临时住宿登记。
+      pinyin: Nǐ hǎo, wǒ bànlǐ jìngwài rényuán línshí zhùsù dēngjì.
+      en: Hello, I am here for temporary accommodation registration.
+    click_path: null
+    official_urls:
+      - label: NowShenzhen — Shekou MSCE
+        url: https://nowshenzhen.com/blog/shekou-msce-empowering-shenzhens-expat-community-through-service-and-volunteerism/
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at the window
+    stuck_node: no-house-code
+    timer: null
+  - id: reregister-after-hk
+    title_en: Re-register after you return from Hong Kong
+    slot: click_path
+    why: A same-day HK hop can reset the stay. Hotels file again. An apartment usually needs a new 住宿登记.
+    skippable: true
+    skip_if:
+      field: location
+      equals: no_hk_trip
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 我从香港回来了，需要重新办理住宿登记。
+      pinyin: Wǒ cóng Xiānggǎng huílái le, xūyào chóngxīn bànlǐ zhùsù dēngjì.
+      en: I just came back from Hong Kong and need to register my stay again.
+    click_path:
+      steps:
+        - n: 1
+          text_en: After you re-enter the mainland, repeat the 深圳公安 scan or the window. Do not reuse an old slip as if it were current.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will re-register after HK
+    stuck_node: vpn-off
+    timer: null
+  - id: national-pilot-conflict
+    title_en: National 2026 online pilot vs Guangdong
+    slot: conflict
+    why: A national website may reject a Guangdong address. That is a conflict, not a verdict. Verify at the window.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify at the window
+    stuck_node: ishenzhen-face
+    timer: null

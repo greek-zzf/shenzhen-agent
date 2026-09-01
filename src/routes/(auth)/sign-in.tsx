@@ -9,6 +9,7 @@ import { authClient, signIn } from "@/core/auth/client";
 import { envConfigs } from "@/config";
 import { usePublicConfig } from "@/hooks/use-public-config";
 import { TextField } from "@/components/form-field";
+import { safeNextPath } from "@/lib/playbooks/safe-next";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -39,13 +40,18 @@ function SignInPage() {
   const [redirectParam, setRedirectParam] = useState<string | null>(null);
   const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
 
+  const [nextParam, setNextParam] = useState<string | null>(null);
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     setRedirectParam(params.get("redirect"));
     setCallbackUrl(params.get("callbackUrl"));
+    setNextParam(params.get("next"));
   }, []);
 
-  const afterLoginUrl = redirectParam
+  const afterLoginUrl = nextParam
+    ? safeNextPath(nextParam)
+    : redirectParam
     ? `/auth-callback?redirect=${encodeURIComponent(redirectParam)}`
     : callbackUrl || "/settings";
 
