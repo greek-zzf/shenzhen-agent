@@ -5,7 +5,7 @@ import { PlaybookView } from '@/components/copilot/playbook-view';
 import { envConfigs } from '@/config';
 import { getPublicPlaybook } from '@/lib/playbooks/catalog';
 import type { PlaybookFreshness } from '@/lib/playbooks/freshness';
-import { getPlaybookFreshnessFn } from '@/lib/playbooks/freshness.server';
+import { getPlaybookFreshnessFn } from '@/lib/playbooks/get-freshness';
 import { EMPTY_PROFILE } from '@/lib/playbooks/profile';
 import type { Playbook } from '@/lib/playbooks/schema';
 

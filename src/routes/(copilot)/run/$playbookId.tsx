@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { PlaybookView } from '@/components/copilot/playbook-view';
 import { attachPlaybooks } from '@/lib/playbooks/attach';
 import { getPlaybook, PLAYBOOKS } from '@/lib/playbooks/catalog';
-import { getPlaybookFreshnessFn } from '@/lib/playbooks/freshness.server';
+import { getPlaybookFreshnessFn } from '@/lib/playbooks/get-freshness';
 import { loadProfile } from '@/lib/playbooks/profile';
 
 function RunPage() {

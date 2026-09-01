@@ -9,7 +9,8 @@ const inputSchema = z.object({
 });
 
 /**
- * Server-only freshness check. Call from playbook loaders.
+ * Freshness RPC. The stub is safe to import from route files; the handler
+ * dynamically loads freshness-fetch so outbound GETs stay on the server.
  * URLs come from the YAML catalog — never from the client.
  */
 export const getPlaybookFreshnessFn = createServerFn({ method: 'GET' })
