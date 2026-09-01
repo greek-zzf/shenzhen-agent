@@ -1,0 +1,382 @@
+id: pb-01
+title_en: Get something paid
+status: draft
+last_verified: null
+source_max_age_days: 30
+lifecycle: 72h
+public_slug: alipay-metro
+summary_en: Start KYC before you fly, pick a stack without assuming a winner, keep cash as backup, and use Alipay Transport for metro — not a friend-bound WeChat identity.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: payments
+primary_cta:
+  id: start_kyc
+  label_en: Start KYC before I fly
+official_urls:
+  - label: HiShenzhen — Alipay and WeChat Pay setup
+    url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
+    kind: guide
+  - label: Shenzhen Decoded — How to pay in China
+    url: https://www.shenzhendecoded.com/en/guides/payment-shenzhen
+    kind: guide
+  - label: SZNews — one-stop centers opened 2025-01-25
+    url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+    kind: official
+  - label: Pingshan English — airport and Bay one-stop centers
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+    kind: official
+conflicts:
+  - id: alipay-vs-wechat
+    title_en: Alipay vs WeChat Pay — do not assume one is easier
+    resolution: verify_at_window
+    sources:
+      - label: HiShenzhen payment guide
+        url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
+        kind: guide
+        claim_en: Both wallets can work with a foreign number and card. US Alipay KYC is reported to stall for more than a month for some passports. Do not treat either app as the default winner.
+        as_of: "2026-01"
+      - label: Shenzhen Decoded payment guide
+        url: https://www.shenzhendecoded.com/en/guides/payment-shenzhen
+        kind: guide
+        claim_en: WeChat Pay is a useful backup and is less reliable for some foreign numbers. Start both KYC flows if you can; keep cash.
+        as_of: "2026-01"
+  - id: tourcard-vs-direct
+    title_en: TourCard top-up vs binding a foreign card directly
+    resolution: verify_at_window
+    sources:
+      - label: Shenzhen Decoded — Tour Card fees
+        url: https://www.shenzhendecoded.com/en/guides/payment-shenzhen
+        kind: guide
+        claim_en: Alipay Tour Card is a prepaid top-up path with its own fee and balance cap. It is not the same as a direct foreign-card bind.
+        as_of: "2026-01"
+      - label: HiShenzhen — card bind failures
+        url: https://hishenzhen.com/alipay-binding-failed-5-reasons-your-foreign-card-wont-work-and-how-to-fix-it/
+        kind: guide
+        claim_en: Direct Visa/Mastercard bind can fail on bank blocks, address mismatch, or card type. Ask the window which path they can see on your passport today.
+        as_of: "2026-01"
+  - id: t3-onestop-not-bank
+    title_en: Airport T3 one-stop helps payments and SIM — not a bank SLA
+    resolution: verify_at_window
+    sources:
+      - label: SZNews 2025-01-25 one-stop opening
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+        claim_en: The T3 and Shenzhen Bay one-stop desks cover payment help, SIM, transport cards, and immigration questions. They are not a bank-account counter and do not quote a bank-opening SLA.
+        as_of: "2025-01-25"
+      - label: Pingshan English one-stop locations
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+        kind: official
+        claim_en: Airport desk is Level 1, Terminal 3, next to the international arrivals exit. Use it for wallet setup help. Do not treat it as a promised bank appointment.
+        as_of: "2025-05-01"
+failure_tree:
+  id: payments-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: wechat-dead
+      question_en: WeChat Pay will not open or will not accept your foreign number?
+      advice_en: Switch to Alipay and finish KYC there. Do not ask a friend to bind WeChat Pay to their identity for you.
+      never:
+        - friend_bind
+      next: metro-miniprogram
+      vpn_off_only: false
+    - id: metro-miniprogram
+      question_en: A Shenzhen Metro mini-program will not load or will not issue a ride code?
+      advice_en: Leave the mini-program. Open the Alipay app itself → Transport / 出行 → 乘车码. That is the first hotspot, not the metro mini-program.
+      never:
+        - friend_bind
+      next: vpn-off
+      vpn_off_only: false
+    - id: vpn-off
+      question_en: The wallet or Transport tab errors after you land?
+      advice_en: Turn the VPN off and retry in the official app. VPN-off is the only network step we recommend. Never friend-bind identity.
+      never:
+        - friend_bind
+      next: null
+      vpn_off_only: true
+attached_playbooks:
+  - pb-05
+steps:
+  - id: start-kyc
+    title_en: Start KYC before you fly
+    slot: click_path
+    why: Passport photo and face checks often stall on hotel Wi-Fi. Starting both wallets at home gives you a path if one side rejects the card.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Install Alipay and WeChat from your home app store. Do not use a third-party APK.
+          screenshot: null
+        - n: 2
+          text_en: Sign up with your existing foreign number. Photograph the passport bio page when asked.
+          screenshot: null
+        - n: 3
+          text_en: Start real-name / KYC in both apps. We never submit this for you.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: start_kyc
+      label_en: I started KYC
+    stuck_node: wechat-dead
+    timer: null
+  - id: choose-stack
+    title_en: Choose a stack — do not assume a winner
+    slot: conflict
+    why: Guides disagree on which wallet is smoother. US Alipay KYC may take more than a month. Keep both attempts and cash.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will try both
+    stuck_node: wechat-dead
+    timer: null
+  - id: us-card-warning
+    title_en: US card and US-passport KYC warning
+    slot: passport_fail
+    why: Some US-issued cards and US-passport Alipay KYC queues are reported to sit for weeks. That is not a reason to skip the other wallet or cash.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport / KYC may stall before any mini-program
+      body_en: If Alipay KYC is still pending, do not tap merchant mini-programs that demand a mainland wallet. Use the other stack, TourCard only if you accept its fees, or cash ¥10/¥20. Never ask a friend to bind their identity to your WeChat.
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I read the KYC warning
+    stuck_node: wechat-dead
+    timer: null
+  - id: tourcard-conflict
+    title_en: TourCard vs binding a foreign card directly
+    slot: conflict
+    why: TourCard is a prepaid top-up product. Direct card bind is a different path with different failure modes. We do not pick one.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify at the window
+    stuck_node: wechat-dead
+    timer: null
+  - id: bind-in-real-apps
+    title_en: Bind inside the real Alipay and WeChat apps
+    slot: click_path
+    why: This copilot never submits a bind. You tap Me → Bank cards / Pay in the official apps only.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Finish passport KYC before merchant mini-programs
+      body_en: Do not open a shop or metro mini-program to “fix” an unbound wallet. Complete KYC and card bind in Alipay or WeChat first. We never submit on your behalf.
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open Alipay → Me → Bank cards → Add card. Enter the card as your bank has it. We never submit this form.
+          screenshot: null
+        - n: 2
+          text_en: Open WeChat → Me → Services → Wallet → Cards. Same rule — official app only.
+          screenshot: null
+        - n: 3
+          text_en: If a bind fails, try the other app. Do not hand your passport to a stranger or a “helper” kiosk that is not the official one-stop desk.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I opened the official apps
+    stuck_node: wechat-dead
+    timer: null
+  - id: cash-backup
+    title_en: Keep ¥10 and ¥20 notes as backup
+    slot: speech
+    why: Some windows and small shops still take cash when a foreign wallet fails. Ask first. Do not assume cards work.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: cash-10
+        label_en: A few ¥10 notes
+        required: false
+      - id: cash-20
+        label_en: A few ¥20 notes
+        required: false
+    speech_card:
+      hanzi: 请问可以收现金吗？我只有十块和二十的。
+      pinyin: Qǐngwèn kěyǐ shōu xiànjīn ma? Wǒ zhǐ yǒu shí kuài hé èrshí de.
+      en: Excuse me, can you take cash? I only have ten- and twenty-yuan notes.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I have cash backup
+    stuck_node: wechat-dead
+    timer: null
+  - id: metro-transport-tab
+    title_en: Metro ride code — Alipay Transport tab
+    slot: click_path
+    why: Skip the metro mini-program. The first hotspot is the Alipay app itself. Same path lives in pb-05.
+    skippable: true
+    skip_if:
+      field: broken
+      equals: no_metro
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the Alipay app (not a Shenzhen Metro mini-program).
+          screenshot: null
+        - n: 2
+          text_en: Tap Transport / 出行.
+          screenshot: null
+        - n: 3
+          text_en: Open 乘车码 and scan the gate. If it fails, use the cash ticket machine (see pb-05).
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I opened Transport
+    stuck_node: metro-miniprogram
+    timer: null
+  - id: wechat-foreign-number
+    title_en: Foreign-number WeChat is merchant-only
+    slot: click_path
+    why: A WeChat registered on a foreign number can pay some merchants and still fail on government or metro mini-programs. That is not a reason to friend-bind.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Treat foreign-number WeChat Pay as merchant QR only until KYC says otherwise.
+          screenshot: null
+        - n: 2
+          text_en: If a government mini-program demands a mainland account, stop. Do not ask a friend to bind their ID to your chat.
+          screenshot: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will not friend-bind
+    stuck_node: wechat-dead
+    timer: null
+  - id: t3-onestop
+    title_en: Airport T3 one-stop — payments and SIM help, not a bank
+    slot: getting_there
+    why: Staff can walk you through wallet download and a tourist SIM. They do not promise a mainland bank account.
+    skippable: true
+    skip_if:
+      field: location
+      equals: already_in_city
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Bao'an Airport T3 international-arrivals one-stop desk
+      copy_name_zh: 宝安机场T3国际到达出口旁 外籍人员一站式综合服务中心
+      metro_line: null
+      metro_exit: null
+      notes_en: Level 1, Terminal 3, beside the international arrivals exit. Helps payments and SIM. Not a bank-opening SLA.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card:
+      hanzi: 你好，请帮我开通手机支付。
+      pinyin: Nǐ hǎo, qǐng bāng wǒ kāitōng shǒujī zhīfù.
+      en: Hello, please help me set up mobile payment.
+    click_path: null
+    official_urls:
+      - label: SZNews 2025-01-25
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at the one-stop desk
+    stuck_node: vpn-off
+    timer: null
+  - id: mainland-account-required
+    title_en: When a mainland account is actually required
+    slot: required_check
+    why: Some renewals and government mini-programs demand a mainland-bound wallet. That is a later problem. Do not fake it with a friend's ID.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-friend-bind
+        label_en: I will not ask a friend to bind WeChat or Alipay to their identity for me
+      - id: later-bank
+        label_en: I understand a mainland bank account is a separate later step, not this playbook
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: wechat-dead
+    timer: null
+  - id: confirm-one-path
+    title_en: Confirm one path actually paid
+    slot: required_check
+    why: The job is one successful payment, not every wallet green. Mark the path that worked.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: one-path-paid
+        label_en: I paid once with Alipay, WeChat, TourCard, or cash
+    primary_cta:
+      id: mark_paid
+      label_en: One path paid
+    stuck_node: vpn-off
+    timer: null

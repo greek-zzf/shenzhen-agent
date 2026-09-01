@@ -1,0 +1,73 @@
+# Shenzhen Copilot playbook schema (documentation).
+# Runtime validation lives in src/lib/playbooks/schema.ts (zod).
+# An LLM must never rewrite, reorder, or invent steps. last_verified: null
+# always renders a SourceStaleBadge — draft SOP, never field-verified.
+
+playbook:
+  id: string                    # pb-01 … pb-10
+  title_en: string
+  status: draft | published     # v1 files are draft
+  last_verified: null | date    # null → always stale badge
+  source_max_age_days: number
+  lifecycle: 72h | first_week | later
+  public_slug: string | null    # maps /p/<slug> → this playbook
+  summary_en: string
+  disclaimer_en: string         # procedure guide, not legal/medical/immigration advice
+  attach_when: AttachRule[]     # simple ifs only — no LLM
+  primary_cta: { id: CtaId, label_en: string }
+  official_urls: OfficialUrl[]
+  conflicts: Conflict[]
+  failure_tree: FailureTree
+  attached_playbooks: string[]  # e.g. pb-10 attaches pb-02
+  steps: Step[]                 # order is law — never reorder
+
+AttachRule:
+  when: broken_contains | visa_type_in | location_is | stay_is | flag_is
+  value: string                 # payments | VOA | hk_no_visa | not_hotel | need_24h | no_cn_phone | metro_qr | hr_lease_6m
+
+CtaId: next_step | start_kyc | open_official | i_have_these | preview_hr_letter | mark_paid | i_am_at_window | confirm_single_entry
+
+OfficialUrl:
+  label: string
+  url: string
+  kind: official | guide | user_report
+  # kind=guide → UI label "指南, 非法律" (Hey/HiShenzhen)
+  # kind=user_report → UI label "非法律来源" (Reddit only)
+
+Conflict:
+  id: string
+  title_en: string
+  resolution: verify_at_window  # NEVER pick a winner
+  sources: { label, url, kind, claim_en, as_of }[]
+
+FailureTree:
+  id: string
+  title_en: string
+  nodes: FailureNode[]          # decision tree, not chat
+
+FailureNode:
+  id: string
+  question_en: string
+  advice_en: string
+  never: string[]               # e.g. friend_bind, yellow_cow
+  next: string | null           # next node id
+  vpn_off_only: boolean
+
+Step:                           # every key required; unused slots are null
+  id: string
+  title_en: string
+  slot: getting_there | what_to_bring | passport_fail | speech | click_path | required_check | timer | conflict
+  why: string
+  skippable: boolean
+  skip_if: { field: string, equals: string } | null
+  passport_fail_warning: { title_en, body_en } | null
+  getting_there: { poi_en, copy_name_zh, metro_line, metro_exit, notes_en } | null
+  what_to_bring: { id, label_en, required }[]
+  speech_card: { hanzi, pinyin, en } | null
+  click_path: { steps: { n, text_en, screenshot }[] } | null   # screenshot null → missing-art placeholder
+  official_urls: OfficialUrl[]
+  prefill: object
+  required_checkboxes: { id, label_en }[]
+  primary_cta: { id: CtaId, label_en: string }
+  stuck_node: string            # failure_tree node id
+  timer: { kind: arrival_24h, label_en } | null

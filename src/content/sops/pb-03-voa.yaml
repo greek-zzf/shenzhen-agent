@@ -1,0 +1,274 @@
+id: pb-03
+title_en: 5-day visa on arrival
+status: draft
+last_verified: null
+source_max_age_days: 14
+lifecycle: 72h
+public_slug: voa-hours
+summary_en: Check the NIA list on the i口岸 English page. Do not treat posted hours as current. Luohu visa office. No approval promise.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: visa_type_in
+    value: VOA
+  - when: location_is
+    value: hk_no_visa
+primary_cta:
+  id: open_official
+  label_en: Open the NIA list
+official_urls:
+  - label: i口岸 English — NIA visa services (do not hardcode countries)
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
+    kind: official
+  - label: Pingshan English — major port visa offices / FAQs
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/index.html
+    kind: official
+conflicts:
+  - id: voa-hours
+    title_en: Published hours vs a 2025-11 field report — we do not pick a winner
+    resolution: verify_at_window
+    sources:
+      - label: Published port-hours range (6:30–24:00 appears in older port copy)
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/index.html
+        kind: official
+        claim_en: Some public pages describe long port operating windows (including a 6:30–24:00 range). This playbook does not treat those numbers as today's visa-office hours.
+        as_of: "2024-07"
+      - label: r/shenzhen 1ptwzwe field report
+        url: https://www.reddit.com/r/shenzhen/comments/1ptwzwe/
+        kind: user_report
+        claim_en: A November 2025 field report described the visa window closing around 17:00. That is one traveler's note, not a timetable. Verify on the board the day you go.
+        as_of: "2025-11"
+  - id: west-kowloon-outbound
+    title_en: West Kowloon outbound VOA — field report only
+    resolution: verify_at_window
+    sources:
+      - label: r/shenzhen 1ptwzwe
+        url: https://www.reddit.com/r/shenzhen/comments/1ptwzwe/
+        kind: user_report
+        claim_en: A November 2025 report described outbound visa-on-arrival handling at West Kowloon. Treat it as a field note from 2025-11, not a current service fact.
+        as_of: "2025-11"
+      - label: i口岸 English — official visa pointer
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
+        kind: official
+        claim_en: Official copy points you to the National Immigration Administration bilingual platform for visa categories. Use that list. Do not rely on a Reddit itinerary.
+        as_of: "2024-12"
+failure_tree:
+  id: voa-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: not-on-list
+      question_en: Your passport is not on the live NIA list?
+      advice_en: Stop. Do not buy a story about a workaround. Read the i口岸 English page and the NIA list it links. This playbook will not invent eligibility.
+      never:
+        - fake_eligibility
+      next: hours-unknown
+      vpn_off_only: false
+    - id: hours-unknown
+      question_en: The door is closed or the queue is gone?
+      advice_en: Do not trust a screenshot of hours. Ask the board / the officer. We will not tell you they are open until 24:00 or until 17:00.
+      never:
+        - assert_hours
+      next: vpn-off
+      vpn_off_only: false
+    - id: vpn-off
+      question_en: The i口岸 or NIA page will not load?
+      advice_en: Turn the VPN off and retry. That is the only network step.
+      never: []
+      next: null
+      vpn_off_only: true
+attached_playbooks: []
+steps:
+  - id: nia-list
+    title_en: Check the live NIA list — do not hardcode countries
+    slot: click_path
+    why: Eligibility changes. This SOP will not list nationalities. Open the official English pointer and follow it to the NIA list.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport first — before any mini-program
+      body_en: Bring the physical passport. Screenshot the NIA list for your nationality the same day. If you are not on the list, do not queue for a story.
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: photo
+        label_en: Visa photo if you already have one
+        required: false
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the i口岸 English page (official_urls). Use it to reach the National Immigration Administration bilingual list.
+          screenshot: null
+        - n: 2
+          text_en: Confirm your nationality on that live list. We do not store a country table in this playbook.
+          screenshot: null
+        - n: 3
+          text_en: If you are not listed, stop. This is not an approval path.
+          screenshot: null
+    official_urls:
+      - label: i口岸 English page
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open the NIA list
+    stuck_node: not-on-list
+    timer: null
+  - id: hours-conflict
+    title_en: Hours conflict — 6:30–24:00 vs a 17:00 field report
+    slot: conflict
+    why: We show both claims. We never pick a winner. Verify on the board.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify hours at the door
+    stuck_node: hours-unknown
+    timer: null
+  - id: west-kowloon-note
+    title_en: West Kowloon outbound VOA is a 2025-11 field report
+    slot: conflict
+    why: One traveler described outbound VOA at West Kowloon in November 2025. That is not a current-hours fact and not a promise it still runs.
+    skippable: true
+    skip_if:
+      field: location
+      equals: already_in_shenzhen
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will not treat that as current
+    stuck_node: hours-unknown
+    timer: null
+  - id: fee-user-report
+    title_en: 130 RMB is a user report
+    slot: required_check
+    why: A traveler reported 130 RMB. That is not a tariff. Bring extra cash and ask the window.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: cash-rmb
+        label_en: RMB cash (amount is not confirmed here)
+        required: true
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: fee-not-official
+        label_en: I understand 130 RMB is a user report, not an official fee
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: hours-unknown
+    timer: null
+  - id: luohu-office
+    title_en: Getting there — Luohu visa office
+    slot: getting_there
+    why: The named window is 罗湖口岸签证办公室. Metro exit is not listed — do not invent one.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Luohu Port visa office
+      copy_name_zh: 罗湖口岸签证办公室
+      metro_line: null
+      metro_exit: null
+      notes_en: Follow port signs to the visa office. Metro exit is unknown in this draft — ask on site. Hours are not asserted here.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at the visa office
+    stuck_node: hours-unknown
+    timer: null
+  - id: window-speech
+    title_en: What to say at the window
+    slot: speech
+    why: Short and specific. Do not add a story about guaranteed approval.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 你好，我办理口岸签证。
+      pinyin: Nǐ hǎo, wǒ bànlǐ kǒu'àn qiānzhèng.
+      en: Hello, I am applying for a port visa.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show clerk
+    stuck_node: not-on-list
+    timer: null
+  - id: single-entry
+    title_en: Single-entry only unless the officer says otherwise
+    slot: required_check
+    why: This playbook is a 5-day VOA path. Do not assume multiple entry.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: single-entry
+        label_en: I am asking for a single-entry port visa unless the officer offers something else
+    primary_cta:
+      id: confirm_single_entry
+      label_en: Single-entry
+    stuck_node: not-on-list
+    timer: null
+  - id: no-promise
+    title_en: No approval promise
+    slot: required_check
+    why: A complete folder is not a visa. The officer decides.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-promise
+        label_en: I understand this guide cannot promise approval
+    primary_cta:
+      id: next_step
+      label_en: I understand
+    stuck_node: not-on-list
+    timer: null
