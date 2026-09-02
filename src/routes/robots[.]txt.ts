@@ -9,6 +9,7 @@ export const Route = createFileRoute('/robots.txt')({
         const body = [
           'User-Agent: *',
           'Allow: /',
+          'Allow: /p/',
           'Disallow: /admin',
           'Disallow: /settings',
           'Disallow: /intake',

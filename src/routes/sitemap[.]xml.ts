@@ -2,13 +2,12 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
 import { getLocalPosts, mergePosts } from '@/content/posts';
+import { PUBLIC_PLAYBOOK_PATHS } from '@/lib/playbooks/public-seo';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 
 const STATIC_PATHS = [
   '',
-  '/p/voa-hours',
-  '/p/alipay-metro',
-  '/p/accommodation-registration',
+  ...PUBLIC_PLAYBOOK_PATHS,
   '/disclaimer',
   '/unsupported-city',
   '/pricing',
