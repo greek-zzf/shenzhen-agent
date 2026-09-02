@@ -79,7 +79,7 @@ function MePage() {
       <Button
         type="button"
         variant="outline"
-        className="h-11 w-full"
+        className="h-12 w-full rounded-full"
         onClick={async () => {
           await signOut();
           router.push('/');

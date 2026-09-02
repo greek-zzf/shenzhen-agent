@@ -402,7 +402,7 @@ function IntakePage() {
         <h2 className="text-sm font-medium">Arrival (optional, for the 24h clock)</h2>
         <input
           type="datetime-local"
-          className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm"
+          className="h-11 w-full rounded-full border border-input bg-white px-4 text-sm"
           value={
             profile.arrival_at
               ? profile.arrival_at.slice(0, 16)
@@ -452,7 +452,7 @@ function IntakePage() {
 
       <Button
         type="button"
-        className="h-12 w-full"
+        className="h-12 w-full rounded-full"
         disabled={!canStartPlaybook(profile)}
         onClick={diagnose}
       >

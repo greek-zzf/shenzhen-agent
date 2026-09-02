@@ -150,7 +150,7 @@ export function SpeechCardView({ card }: { card: SpeechCard }) {
   }
 
   return (
-    <div className="rounded-lg border-2 border-foreground bg-card px-3 py-3">
+    <div className="rounded-[1.75rem] bg-white px-5 py-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)]">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
         Say this
       </p>

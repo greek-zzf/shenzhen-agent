@@ -110,7 +110,7 @@ function LoginPage() {
                     {(isSubmitting) => (
                       <Button
                         type="submit"
-                        className="h-11 w-full"
+                        className="h-12 w-full rounded-full"
                         disabled={isSubmitting}
                       >
                         {isSubmitting ? '…' : 'Log in'}
@@ -129,7 +129,7 @@ function LoginPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 w-full"
+                className="h-12 w-full rounded-full"
                 onClick={() =>
                   signIn.social({ provider: 'google', callbackURL: afterLoginUrl })
                 }
@@ -141,7 +141,7 @@ function LoginPage() {
               <Button
                 type="button"
                 variant="outline"
-                className="h-11 w-full"
+                className="h-12 w-full rounded-full"
                 onClick={() =>
                   signIn.social({ provider: 'github', callbackURL: afterLoginUrl })
                 }

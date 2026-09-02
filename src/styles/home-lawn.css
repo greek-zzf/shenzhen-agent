@@ -1,0 +1,177 @@
+.home-lawn {
+  --lawn: #82cc5c;
+  --lawn-ink: #2f3130;
+  --lawn-cream: #eee8da;
+  --lawn-tomato: #fe6255;
+  --lawn-cobalt: #116de8;
+  --lawn-violet: #5d308d;
+  --font-home: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
+  background: var(--lawn);
+  color: var(--lawn-ink);
+  font-family: var(--font-home);
+  min-height: 100svh;
+}
+
+.home-lawn ::selection {
+  background: var(--lawn-violet);
+  color: #fff;
+}
+
+.home-lawn a:focus-visible,
+.home-lawn button:focus-visible {
+  outline: 2px solid var(--lawn-ink);
+  outline-offset: 3px;
+}
+
+.home-lawn {
+  scrollbar-color: var(--lawn-ink) var(--lawn);
+}
+
+.home-lawn-headline {
+  font-weight: 600;
+  font-size: clamp(1.7rem, 6.6vw, 5.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  max-width: min(18ch, 100%);
+}
+
+.home-lawn-pill {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-height: 5.25rem;
+  padding: 0.5rem 2rem 0.5rem 0.5rem;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--lawn-ink);
+  font-weight: 600;
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-lawn-pill:hover {
+  transform: translateX(8px);
+}
+
+.home-lawn-pill:hover .home-lawn-disc {
+  transform: translateX(6px);
+}
+
+.home-lawn-disc {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 999px;
+  color: #fff;
+  flex: none;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-lawn-slab {
+  border-top-left-radius: 48px;
+  border-top-right-radius: 48px;
+  background: var(--lawn-cream);
+}
+
+.home-lawn-passport {
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--lawn-ink);
+}
+
+.home-lawn-passport:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Operate / errand shell — same world, cream as the work surface */
+.lawn-shell {
+  --lawn: #82cc5c;
+  --lawn-ink: #2f3130;
+  --lawn-cream: #eee8da;
+  --lawn-tomato: #fe6255;
+  --background: var(--lawn-cream);
+  --foreground: var(--lawn-ink);
+  --card: #ffffff;
+  --card-foreground: var(--lawn-ink);
+  --popover: #ffffff;
+  --popover-foreground: var(--lawn-ink);
+  --primary: var(--lawn-ink);
+  --primary-foreground: #ffffff;
+  --secondary: #ffffff;
+  --secondary-foreground: var(--lawn-ink);
+  --muted: #ffffff;
+  --muted-foreground: color-mix(in oklab, var(--lawn-ink) 58%, var(--lawn-cream));
+  --accent: #ffffff;
+  --accent-foreground: var(--lawn-ink);
+  --destructive: #fe6255;
+  --destructive-foreground: #fe6255;
+  --border: color-mix(in oklab, var(--lawn-ink) 14%, #ffffff);
+  --input: #ffffff;
+  --ring: var(--lawn-ink);
+  --radius: 1.25rem;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-home: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
+  background: var(--lawn);
+  color: var(--lawn-ink);
+  font-family: var(--font-home);
+  min-height: 100svh;
+}
+
+.lawn-shell ::selection {
+  background: #5d308d;
+  color: #fff;
+}
+
+.lawn-shell a:focus-visible,
+.lawn-shell button:focus-visible {
+  outline: 2px solid var(--lawn-ink);
+  outline-offset: 3px;
+}
+
+.lawn-slab {
+  border-top-left-radius: 48px;
+  border-top-right-radius: 48px;
+  background: var(--lawn-cream);
+}
+
+.lawn-nav-link {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  color: color-mix(in oklab, var(--lawn-ink) 62%, #fff);
+  text-decoration: none;
+}
+
+.lawn-nav-link:hover,
+.lawn-nav-link[data-active='true'] {
+  color: var(--lawn-ink);
+  font-weight: 600;
+}

@@ -28,7 +28,7 @@ function arrivalLabel(iso: string | null): string {
 
 export function ProfileCard({ profile }: { profile: CopilotProfile }) {
   return (
-    <section className="rounded-xl border border-border bg-card px-4 py-3">
+    <section className="rounded-[1.75rem] bg-white px-5 py-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)]">
       <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
         Profile
       </p>

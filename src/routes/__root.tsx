@@ -98,6 +98,19 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="font-sans antialiased">
+        <div
+          hidden
+          dangerouslySetInnerHTML={{
+            __html: `<!--
+THESIS: Three equal situation doors sit on a drenched green lawn; cream is only the passport shelf. Refuses the max-w-lg app column and a magazine hero.
+OWN-WORLD: Ground #82CC5C, ink #2F3130, white 999-radius capsules, cream #EEE8DA 48px-top slab, discs tomato #FE6255 / cobalt #116DE8 / violet #5D308D. Poppins 600 flush-left display. Colour lives in discs.
+STORY: Visitor reads the one-liner, taps Can't pay, 5-day VOA, or 24h register, or starts with a passport.
+FIRST VIEWPORT: Floating nav capsule (wordmark + Log in). Left headline. Three equal pills. Cream slab from the bottom with Start with my passport. Paper shards lower right.
+FORM: One-colour site (sd-seedbed-lobes), seed 994252eb.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->`,
+          }}
+        />
         {children}
         <Scripts />
       </body>

@@ -1,7 +1,10 @@
 import { Link, usePathname } from '@/core/i18n/navigation';
 import { useSession } from '@/core/auth/client';
 import { cn } from '@/lib/utils';
-import { BookOpen, Home, User } from 'lucide-react';
+
+import '@fontsource/poppins/500.css';
+import '@fontsource/poppins/600.css';
+import '@/styles/home-lawn.css';
 
 const WORDMARK = 'Shenzhen Copilot';
 
@@ -17,93 +20,55 @@ export function CopilotChrome({
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur-sm">
-        <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4">
-          <Link href="/" className="text-[15px] font-semibold tracking-tight">
+    <div className="lawn-shell flex min-h-svh flex-col">
+      <header className="px-4 pt-5 sm:px-6 lg:px-8">
+        <nav
+          aria-label="Shenzhen Copilot"
+          className="mx-auto flex h-14 w-full max-w-6xl items-center gap-6 rounded-full bg-white px-5 shadow-[0_8px_24px_rgba(47,49,48,0.08)]"
+        >
+          <Link
+            href="/"
+            className="shrink-0 whitespace-nowrap text-[15px] font-semibold tracking-tight"
+          >
             {WORDMARK}
           </Link>
-          <nav className="flex items-center gap-4 text-sm">
+          <div className="ml-auto flex items-center gap-5">
             <Link
               href="/library"
-              className={cn(
-                'hidden sm:inline text-muted-foreground hover:text-foreground',
-                pathname.startsWith('/library') && 'text-foreground font-medium'
-              )}
+              className="lawn-nav-link"
+              data-active={pathname.startsWith('/library') ? 'true' : undefined}
             >
               Library
             </Link>
             {user ? (
               <Link
                 href="/me"
-                className={cn(
-                  'text-muted-foreground hover:text-foreground',
-                  pathname.startsWith('/me') && 'text-foreground font-medium'
-                )}
+                className="lawn-nav-link"
+                data-active={pathname.startsWith('/me') ? 'true' : undefined}
               >
                 Me
               </Link>
             ) : (
               <Link
                 href={`/login?next=${encodeURIComponent(pathname === '/' ? '/intake' : pathname)}`}
-                className="font-medium underline underline-offset-4"
+                className="lawn-nav-link"
+                data-active={pathname.startsWith('/login') ? 'true' : undefined}
               >
                 Log in
               </Link>
             )}
-          </nav>
-        </div>
+          </div>
+        </nav>
       </header>
 
-      <main className={cn('mx-auto w-full max-w-lg px-4 pb-24 pt-6', className)}>
-        {children}
-      </main>
-
-      <nav
-        aria-label="Copilot"
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-background/95 backdrop-blur-sm sm:hidden"
+      <main
+        className={cn(
+          'lawn-slab relative mt-8 flex-1 px-4 py-10 sm:px-10 sm:py-12 lg:px-12',
+          className
+        )}
       >
-        <div className="mx-auto grid max-w-lg grid-cols-3">
-          <BottomLink href="/" label="Home" icon={Home} active={pathname === '/'} />
-          <BottomLink
-            href="/library"
-            label="Library"
-            icon={BookOpen}
-            active={pathname.startsWith('/library')}
-          />
-          <BottomLink
-            href={user ? '/me' : `/login?next=${encodeURIComponent('/me')}`}
-            label="Me"
-            icon={User}
-            active={pathname.startsWith('/me')}
-          />
-        </div>
-      </nav>
+        <div className="mx-auto w-full max-w-6xl">{children}</div>
+      </main>
     </div>
-  );
-}
-
-function BottomLink({
-  href,
-  label,
-  icon: Icon,
-  active,
-}: {
-  href: string;
-  label: string;
-  icon: typeof Home;
-  active: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={cn(
-        'flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium',
-        active ? 'text-foreground' : 'text-muted-foreground'
-      )}
-    >
-      <Icon className="size-5" />
-      {label}
-    </Link>
   );
 }

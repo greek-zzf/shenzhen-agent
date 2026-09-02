@@ -103,7 +103,7 @@ export function PlaybookView({
       {mode === 'public' ? (
         <Link
           href={`/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`}
-          className="flex h-11 w-full items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground"
+          className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
         >
           Run this with my passport
         </Link>
@@ -200,7 +200,7 @@ export function PlaybookView({
                 <Button
                   type="button"
                   size="lg"
-                  className="h-11 w-full"
+                  className="h-12 w-full rounded-full"
                   disabled={!stepReady(step) || done[step.id]}
                   onClick={() => runPrimary(step)}
                 >
@@ -209,7 +209,7 @@ export function PlaybookView({
                 <Button
                   type="button"
                   variant="outline"
-                  className="h-11 w-full"
+                  className="h-12 w-full rounded-full"
                   onClick={() => {
                     setStuckNode(step.stuck_node);
                     setStuckOpen(true);
@@ -227,7 +227,7 @@ export function PlaybookView({
         <Button
           type="button"
           variant="outline"
-          className="h-11 w-full"
+          className="h-12 w-full rounded-full"
           onClick={() => {
             setStuckNode(playbook.failure_tree.nodes[0]?.id);
             setStuckOpen(true);
@@ -238,7 +238,7 @@ export function PlaybookView({
       ) : (
         <Link
           href={`/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`}
-          className="flex h-11 w-full items-center justify-center rounded-lg bg-primary text-sm font-medium text-primary-foreground"
+          className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
         >
           Run this with my passport
         </Link>

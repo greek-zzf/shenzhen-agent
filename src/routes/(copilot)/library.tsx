@@ -52,7 +52,7 @@ function LibraryPage() {
         {LATER.map((item) => (
           <div
             key={item.title}
-            className="rounded-xl border border-border bg-muted/50 px-4 py-3 opacity-70"
+            className="rounded-[1.75rem] bg-white/70 px-5 py-4 opacity-70"
           >
             <p className="text-sm font-medium">{item.title}</p>
             <p className="mt-1 text-xs text-muted-foreground">{item.note}</p>
@@ -72,10 +72,10 @@ function Group({
 }) {
   return (
     <section className="space-y-3">
-      <h2 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+      <h2 className="text-sm font-semibold tracking-tight">
         {title}
       </h2>
-      <div className="space-y-3">{children}</div>
+      <div className="grid gap-3 sm:grid-cols-2">{children}</div>
     </section>
   );
 }
@@ -95,7 +95,7 @@ function PlaybookCard({
     <Link
       href={`/run/${id}`}
       className={cn(
-        'block rounded-xl border border-border px-4 py-3 hover:bg-muted',
+        'block rounded-[1.75rem] bg-white px-5 py-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)] transition-transform duration-300 ease-out hover:translate-x-1',
         !live && 'pointer-events-none opacity-60'
       )}
     >

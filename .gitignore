@@ -64,3 +64,9 @@ package-lock.json
 
 # Runtime image uploads (no-storage local fallback)
 /public/uploads/
+
+# Impeccable session artifacts (keep config, briefs, surfaces)
+.impeccable/questions/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/live/sessions/
