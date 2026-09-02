@@ -8,10 +8,17 @@ export {
 } from './catalog';
 export {
   attachPlaybooks,
+  isNeverPlaybook,
   primaryAttachedId,
   shouldSkipStep,
   ATTACH_PRIORITY,
 } from './attach';
+export {
+  applyIntakeFill,
+  parseIntakeFill,
+  profileFromModelJson,
+} from './intake-fill';
+export type { IntakeFill } from './intake-fill';
 export { safeNextPath } from './safe-next';
 export { sourceKindLabel, STEP_CONFLICT_ID } from './labels';
 export {
