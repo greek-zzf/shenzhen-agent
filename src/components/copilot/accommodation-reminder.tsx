@@ -61,12 +61,13 @@ export function AccommodationReminderOptIn({
   });
 
   const optedIn = query.data?.reminder?.optedIn === true;
+  const shownChecked = optedIn && !hotel;
   const emailConfigured = query.data?.emailConfigured;
   const disableToggle =
     mutation.isPending ||
     query.isPending ||
-    (hotel && !optedIn) ||
-    (!arrivalAt && !optedIn);
+    hotel ||
+    (!arrivalAt && !shownChecked);
 
   return (
     <section className="space-y-3 rounded-lg border border-border px-3 py-3">
@@ -79,7 +80,7 @@ export function AccommodationReminderOptIn({
 
       <label className="flex cursor-pointer items-start gap-3">
         <Checkbox
-          checked={optedIn}
+          checked={shownChecked}
           disabled={disableToggle}
           onCheckedChange={(value) => mutation.mutate(value === true)}
           className="mt-0.5"
@@ -101,14 +102,14 @@ export function AccommodationReminderOptIn({
         </p>
       ) : null}
 
-      {query.data && emailConfigured === false ? (
+      {query.data && emailConfigured === false && !hotel ? (
         <p className="text-xs text-muted-foreground">
           Email is not configured. The 24-hour timer and opt-in state still work
           here.
         </p>
       ) : null}
 
-      {optedIn && query.data?.reminder?.sentAt ? (
+      {shownChecked && query.data?.reminder?.sentAt ? (
         <p className="text-xs text-muted-foreground">
           Clock-started email sent to {query.data.email}. The in-app timer still
           counts down.
