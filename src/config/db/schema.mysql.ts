@@ -567,3 +567,26 @@ export type NewTicketMessage = typeof ticketMessage.$inferInsert;
 
 // ─── Custom tables ───────────────────────────────────────────────────────────
 // Add your own tables below this line.
+
+// ─── Accommodation registration reminder (24h clock) ─────────────────────────
+
+export const accommodationReminder = table(
+  'accommodation_reminder',
+  {
+    id: varchar191('id').primaryKey(),
+    userId: varchar191('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' })
+      .unique(),
+    arrivalAt: timestamp('arrival_at').notNull(),
+    email: varchar('email', { length: 255 }).notNull(),
+    optedIn: boolean('opted_in').notNull().default(false),
+    sentAt: timestamp('sent_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().onUpdateNow().notNull(),
+  },
+  (t) => [index('idx_accommodation_reminder_user').on(t.userId)]
+);
+
+export type AccommodationReminder = typeof accommodationReminder.$inferSelect;
+export type NewAccommodationReminder = typeof accommodationReminder.$inferInsert;

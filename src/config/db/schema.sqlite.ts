@@ -697,3 +697,30 @@ export type InviteCode = typeof inviteCode.$inferSelect;
 export type NewInviteCode = typeof inviteCode.$inferInsert;
 export type UserInvite = typeof userInvite.$inferSelect;
 export type NewUserInvite = typeof userInvite.$inferInsert;
+
+// ─── Accommodation registration reminder (24h clock) ─────────────────────────
+
+export const accommodationReminder = table(
+  'accommodation_reminder',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' })
+      .unique(),
+    arrivalAt: integer('arrival_at', { mode: 'timestamp' }).notNull(),
+    email: text('email').notNull(),
+    optedIn: integer('opted_in', { mode: 'boolean' }).notNull().default(false),
+    sentAt: integer('sent_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [index('idx_accommodation_reminder_user').on(t.userId)]
+);
+
+export type AccommodationReminder = typeof accommodationReminder.$inferSelect;
+export type NewAccommodationReminder = typeof accommodationReminder.$inferInsert;
