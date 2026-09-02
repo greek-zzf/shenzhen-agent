@@ -10,7 +10,7 @@ export const Route = createFileRoute('/p/alipay-metro')({
   loader: () => loadPublicPlaybook('alipay-metro'),
   head: publicPlaybookHead('alipay-metro'),
   component: function Page() {
-    const { playbook } = Route.useLoaderData();
-    return <PublicPlaybookPage playbook={playbook} />;
+    const { playbook, freshness } = Route.useLoaderData();
+    return <PublicPlaybookPage playbook={playbook} freshness={freshness} />;
   },
 });

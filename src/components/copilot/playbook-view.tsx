@@ -3,6 +3,7 @@ import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { shouldSkipStep } from '@/lib/playbooks/attach';
+import { freshnessByUrl, type PlaybookFreshness } from '@/lib/playbooks/freshness';
 import { STEP_CONFLICT_ID } from '@/lib/playbooks/labels';
 import type { CopilotProfile } from '@/lib/playbooks/profile';
 import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
@@ -10,13 +11,13 @@ import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
 import { SourceStaleBadge } from './source-stale-badge';
 import {
   ArrivalTimer,
+  CitationFooter,
   ClickPathView,
   ConflictCallout,
   DisclaimerBanner,
   FailureTreeOverlay,
   GettingThereCard,
   PassportFailWarning,
-  PlaybookFooter,
   RequiredChecks,
   SpeechCardView,
   WhatToBring,
@@ -36,12 +37,14 @@ export function PlaybookView({
   mode,
   attachedIds = [],
   loginNext,
+  freshness,
 }: {
   playbook: Playbook;
   profile: CopilotProfile;
   mode: 'public' | 'run';
   attachedIds?: string[];
   loginNext?: string;
+  freshness?: PlaybookFreshness | null;
 }) {
   const router = useRouter();
   const [stuckOpen, setStuckOpen] = useState(false);
@@ -241,9 +244,10 @@ export function PlaybookView({
         </Link>
       )}
 
-      <PlaybookFooter
+      <CitationFooter
         urls={playbook.official_urls}
         lastVerified={playbook.last_verified}
+        freshnessByUrl={freshnessByUrl(freshness)}
       />
 
       <FailureTreeOverlay

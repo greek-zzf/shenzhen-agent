@@ -10,7 +10,7 @@ export const Route = createFileRoute('/p/accommodation-registration')({
   loader: () => loadPublicPlaybook('accommodation-registration'),
   head: publicPlaybookHead('accommodation-registration'),
   component: function Page() {
-    const { playbook } = Route.useLoaderData();
-    return <PublicPlaybookPage playbook={playbook} />;
+    const { playbook, freshness } = Route.useLoaderData();
+    return <PublicPlaybookPage playbook={playbook} freshness={freshness} />;
   },
 });

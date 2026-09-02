@@ -11,6 +11,10 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
+import {
+  formatOfficialFetchedAt,
+  type UrlFreshness,
+} from '@/lib/playbooks/freshness';
 import { sourceKindLabel } from '@/lib/playbooks/labels';
 import type {
   Conflict,
@@ -30,7 +34,32 @@ export function DisclaimerBanner({ text }: { text: string }) {
   );
 }
 
-export function OfficialUrlList({ urls }: { urls: OfficialUrl[] }) {
+function SourceFetchStatus({ status }: { status?: UrlFreshness }) {
+  if (!status) return null;
+  if (status.status === 'ok' && status.fetched_at) {
+    return (
+      <p className="mt-1 text-[11px] text-muted-foreground">
+        official page fetched {formatOfficialFetchedAt(status.fetched_at)}
+      </p>
+    );
+  }
+  if (status.status === 'fail') {
+    return (
+      <p className="mt-1 text-[11px] font-medium text-amber-700 dark:text-amber-400">
+        could not refresh official source
+      </p>
+    );
+  }
+  return null;
+}
+
+export function OfficialUrlList({
+  urls,
+  freshnessByUrl = {},
+}: {
+  urls: OfficialUrl[];
+  freshnessByUrl?: Record<string, UrlFreshness>;
+}) {
   if (!urls.length) return null;
   return (
     <ul className="space-y-2">
@@ -48,6 +77,7 @@ export function OfficialUrlList({ urls }: { urls: OfficialUrl[] }) {
             <div className="mt-0.5 text-[11px] text-muted-foreground">
               {sourceKindLabel(item.kind)}
             </div>
+            <SourceFetchStatus status={freshnessByUrl[item.url]} />
           </a>
         </li>
       ))}
@@ -404,12 +434,14 @@ export function FailureTreeOverlay({
   );
 }
 
-export function PlaybookFooter({
+export function CitationFooter({
   urls,
   lastVerified,
+  freshnessByUrl = {},
 }: {
   urls: OfficialUrl[];
   lastVerified: string | null;
+  freshnessByUrl?: Record<string, UrlFreshness>;
 }) {
   return (
     <footer className="space-y-3 border-t border-border pt-4">
@@ -421,9 +453,11 @@ export function PlaybookFooter({
           last_verified: {lastVerified ?? 'null'}
         </span>
       </div>
-      <OfficialUrlList urls={urls} />
+      <OfficialUrlList urls={urls} freshnessByUrl={freshnessByUrl} />
     </footer>
   );
 }
+
+export { CitationFooter as PlaybookFooter };
 
 export { buttonVariants };

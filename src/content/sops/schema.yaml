@@ -31,8 +31,10 @@ OfficialUrl:
   label: string
   url: string
   kind: official | guide | user_report
+  fetched_at: null | datetime   # runtime only; git YAML stays null
   # kind=guide → UI label "指南, 非法律" (Hey/HiShenzhen)
   # kind=user_report → UI label "非法律来源" (Reddit only)
+  # Fetch never rewrites steps or invents hours/fees. Reddit / 非法律来源 are not fetched.
 
 Conflict:
   id: string

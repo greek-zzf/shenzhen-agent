@@ -6,6 +6,8 @@ export const officialUrlSchema = z.object({
   label: z.string().min(1),
   url: z.string().url(),
   kind: urlKindSchema,
+  // Runtime-only. Git YAML stays null — never commit generated timestamps.
+  fetched_at: z.string().nullable().optional().default(null),
 });
 
 export const ctaIdSchema = z.enum([
