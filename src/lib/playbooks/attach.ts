@@ -39,12 +39,21 @@ export function ruleMatches(rule: AttachRule, profile: CopilotProfile): boolean 
   }
 }
 
+/** Playbooks this copilot must never invent or attach (there is no VPN SOP). */
+const NEVER_ATTACH = /vpn|friend[-_ ]?bind|yellow[-_ ]?cow|fake[-_ ]?(residence|登记|居住)/i;
+
+export function isNeverPlaybook(playbook: Pick<Playbook, 'id'> & { title_en?: string }): boolean {
+  return NEVER_ATTACH.test(playbook.id) || NEVER_ATTACH.test(playbook.title_en ?? '');
+}
+
 export function attachPlaybooks(
   profile: CopilotProfile,
   playbooks: Playbook[]
 ): Playbook[] {
-  const matched = playbooks.filter((pb) =>
-    pb.attach_when.some((rule) => ruleMatches(rule, profile))
+  const matched = playbooks.filter(
+    (pb) =>
+      !isNeverPlaybook(pb) &&
+      pb.attach_when.some((rule) => ruleMatches(rule, profile))
   );
   return matched.sort(
     (a, b) => ATTACH_PRIORITY.indexOf(a.id as (typeof ATTACH_PRIORITY)[number]) -

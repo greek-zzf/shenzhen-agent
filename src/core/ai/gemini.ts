@@ -171,3 +171,77 @@ export class GeminiProvider implements AIProvider {
     };
   }
 }
+
+export const GEMINI_TEXT_MODEL = 'gemini-2.5-flash';
+
+export type GeminiStructuredOptions = {
+  apiKey: string;
+  model?: string;
+  system: string;
+  user: string;
+  responseSchema: Record<string, unknown>;
+  temperature?: number;
+};
+
+/**
+ * Structured JSON via Gemini generateContent. No tools. Temperature stays low.
+ * Reuses the same admin/env API key as GeminiProvider — no extra SDK.
+ */
+export async function generateStructuredJson(
+  options: GeminiStructuredOptions
+): Promise<unknown> {
+  const model = options.model || GEMINI_TEXT_MODEL;
+  const temperature =
+    typeof options.temperature === 'number' ? options.temperature : 0.1;
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${options.apiKey}`;
+
+  const payload = {
+    system_instruction: {
+      parts: [{ text: options.system }],
+    },
+    contents: [
+      {
+        role: 'user',
+        parts: [{ text: options.user }],
+      },
+    ],
+    generationConfig: {
+      temperature,
+      responseMimeType: 'application/json',
+      responseSchema: options.responseSchema,
+    },
+  };
+
+  const resp = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+
+  if (!resp.ok) {
+    const errorText = await resp.text();
+    throw new Error(
+      `Gemini structured request failed: ${resp.status} ${errorText.slice(0, 400)}`
+    );
+  }
+
+  const data = (await resp.json()) as {
+    candidates?: Array<{
+      content?: { parts?: Array<{ text?: string }> };
+    }>;
+  };
+  const text = data.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text || '')
+    .join('')
+    .trim();
+
+  if (!text) {
+    throw new Error('Gemini returned no structured text');
+  }
+
+  try {
+    return JSON.parse(text) as unknown;
+  } catch {
+    throw new Error('Gemini returned invalid JSON');
+  }
+}

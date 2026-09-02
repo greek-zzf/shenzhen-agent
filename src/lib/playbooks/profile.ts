@@ -29,20 +29,35 @@ export const BROKEN_OPTIONS = [
   'hr_lease_6m',
 ] as const;
 
+export const PAY_STATES = ['works', 'dead', 'unknown'] as const;
+export const YES_NO_UNKNOWN = ['yes', 'no', 'unknown'] as const;
+export const LOCATIONS = [
+  'hk_no_visa',
+  'already_in_shenzhen',
+  'already_in_city',
+] as const;
+
 export type VisaType = (typeof VISA_TYPES)[number];
 export type StayType = (typeof STAY_TYPES)[number];
 export type District = (typeof DISTRICTS)[number];
 export type BrokenFlag = (typeof BROKEN_OPTIONS)[number];
+export type PayState = (typeof PAY_STATES)[number];
+export type YesNoUnknown = (typeof YES_NO_UNKNOWN)[number];
+export type LocationFlag = (typeof LOCATIONS)[number];
 
 export type CopilotProfile = {
   passport_country: string;
   visa_type: VisaType | '';
-  location: 'hk_no_visa' | 'already_in_shenzhen' | 'already_in_city' | '';
+  location: LocationFlag | '';
   stay_type: StayType | '';
   district: District | '';
   broken: BrokenFlag[];
   flags: string[];
   arrival_at: string | null;
+  wechat_pay: PayState | '';
+  alipay: PayState | '';
+  has_cn_phone: YesNoUnknown | '';
+  has_cn_bank: YesNoUnknown | '';
 };
 
 export const EMPTY_PROFILE: CopilotProfile = {
@@ -54,6 +69,10 @@ export const EMPTY_PROFILE: CopilotProfile = {
   broken: [],
   flags: [],
   arrival_at: null,
+  wechat_pay: '',
+  alipay: '',
+  has_cn_phone: '',
+  has_cn_bank: '',
 };
 
 export type WalletDoc = {
@@ -69,6 +88,11 @@ export function filledIntakeCount(profile: CopilotProfile): number {
   if (profile.stay_type) n += 1;
   if (profile.district) n += 1;
   if (profile.location) n += 1;
+  if (profile.wechat_pay) n += 1;
+  if (profile.alipay) n += 1;
+  if (profile.has_cn_phone) n += 1;
+  if (profile.has_cn_bank) n += 1;
+  if (profile.arrival_at) n += 1;
   return n;
 }
 
@@ -87,6 +111,10 @@ export function loadProfile(): CopilotProfile {
       ...parsed,
       broken: Array.isArray(parsed.broken) ? parsed.broken : [],
       flags: Array.isArray(parsed.flags) ? parsed.flags : [],
+      wechat_pay: parsed.wechat_pay ?? '',
+      alipay: parsed.alipay ?? '',
+      has_cn_phone: parsed.has_cn_phone ?? '',
+      has_cn_bank: parsed.has_cn_bank ?? '',
     };
   } catch {
     return { ...EMPTY_PROFILE };

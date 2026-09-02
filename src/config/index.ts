@@ -72,6 +72,7 @@ export const envConfigs: Record<string, string> = {
 
   // AI
   replicate_api_token: procEnv.REPLICATE_API_TOKEN ?? '',
+  gemini_api_key: procEnv.GEMINI_API_KEY ?? '',
 
   // Locale (public)
   locale: publicEnv('VITE_DEFAULT_LOCALE') ?? 'en',
