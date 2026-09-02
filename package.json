@@ -21,7 +21,7 @@
     "db:studio": "tsx scripts/with-env.ts drizzle-kit studio --config=drizzle.config.ts",
     "rbac:init": "tsx scripts/with-env.ts tsx scripts/init-rbac.ts",
     "rbac:assign": "tsx scripts/with-env.ts tsx scripts/assign-role.ts",
-    "test": "tsx --test src/lib/playbooks/*.test.ts"
+    "test": "tsx --test src/lib/playbooks/*.test.ts src/modules/accommodation-reminders/*.test.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",

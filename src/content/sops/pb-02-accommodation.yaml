@@ -109,6 +109,27 @@ steps:
       label_en: Continue
     stuck_node: no-house-code
     timer: null
+  - id: email-nudge
+    title_en: Optional email before the 24-hour deadline
+    slot: required_check
+    why: If this stay is not a hotel, you can opt in to one English email. No SMS. No China phone number. The email explains the 12-hour check and the 24-hour deadline. The in-app timer still runs if email is not configured.
+    skippable: true
+    skip_if:
+      field: stay_type
+      equals: hotel
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: no-house-code
+    timer: null
   - id: wechat-click-path
     title_en: WeChat path — 深圳公安
     slot: click_path

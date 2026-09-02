@@ -8,6 +8,7 @@ import { STEP_CONFLICT_ID } from '@/lib/playbooks/labels';
 import type { CopilotProfile } from '@/lib/playbooks/profile';
 import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
 
+import { AccommodationReminderOptIn } from './accommodation-reminder';
 import { SourceStaleBadge } from './source-stale-badge';
 import {
   ArrivalTimer,
@@ -184,6 +185,13 @@ export function PlaybookView({
               <ArrivalTimer
                 arrivalAt={profile.arrival_at}
                 label={step.timer.label_en}
+              />
+            ) : null}
+
+            {mode === 'run' && step.id === 'email-nudge' ? (
+              <AccommodationReminderOptIn
+                arrivalAt={profile.arrival_at}
+                stayType={profile.stay_type}
               />
             ) : null}
 

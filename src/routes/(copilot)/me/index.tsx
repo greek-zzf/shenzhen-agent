@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { AccommodationReminderOptIn } from '@/components/copilot/accommodation-reminder';
 import { ProfileCard } from '@/components/copilot/profile-card';
 import { Button } from '@/components/ui/button';
 import { signOut, useSession } from '@/core/auth/client';
@@ -42,6 +43,12 @@ function MePage() {
       </div>
 
       <ProfileCard profile={profile} />
+
+      <AccommodationReminderOptIn
+        arrivalAt={profile.arrival_at}
+        stayType={profile.stay_type}
+        showTimer
+      />
 
       <p className="text-sm">
         <Link href="/intake" className="underline underline-offset-4">
