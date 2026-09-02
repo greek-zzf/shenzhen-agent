@@ -19,6 +19,13 @@ export {
   profileFromModelJson,
 } from './intake-fill';
 export type { IntakeFill } from './intake-fill';
+export {
+  buildGuidancePack,
+  collectAllowedCitationIds,
+  detectHardRefuse,
+  GUIDANCE_EMPTY_STATE,
+} from './guidance';
+export type { GuidanceAnswer, GuidancePack } from './guidance';
 export { safeNextPath } from './safe-next';
 export { sourceKindLabel, STEP_CONFLICT_ID } from './labels';
 export {

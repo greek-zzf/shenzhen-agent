@@ -9,6 +9,7 @@ import type { CopilotProfile } from '@/lib/playbooks/profile';
 import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
 
 import { AccommodationReminderOptIn } from './accommodation-reminder';
+import { PlaybookHelp, PlaybookHelpTrigger } from './playbook-help';
 import { SourceStaleBadge } from './source-stale-badge';
 import {
   ArrivalTimer,
@@ -39,6 +40,7 @@ export function PlaybookView({
   attachedIds = [],
   loginNext,
   freshness,
+  assistAvailable = false,
 }: {
   playbook: Playbook;
   profile: CopilotProfile;
@@ -46,6 +48,7 @@ export function PlaybookView({
   attachedIds?: string[];
   loginNext?: string;
   freshness?: PlaybookFreshness | null;
+  assistAvailable?: boolean;
 }) {
   const router = useRouter();
   const [stuckOpen, setStuckOpen] = useState(false);
@@ -54,11 +57,18 @@ export function PlaybookView({
   );
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [done, setDone] = useState<Record<string, boolean>>({});
+  const [helpOpen, setHelpOpen] = useState(false);
+  const [currentStepId, setCurrentStepId] = useState(
+    playbook.steps[0]?.id ?? playbook.id
+  );
 
   const visibleSteps = useMemo(
     () => playbook.steps.filter((step) => !shouldSkipStep(step, profile, mode)),
     [playbook.steps, profile, mode]
   );
+  const activeStepId = visibleSteps.some((step) => step.id === currentStepId)
+    ? currentStepId
+    : (visibleSteps[0]?.id ?? playbook.steps[0]?.id ?? playbook.id);
 
   const others = attachedIds.filter((id) => id !== playbook.id);
 
@@ -88,7 +98,7 @@ export function PlaybookView({
     setDone((prev) => ({ ...prev, [step.id]: true }));
   }
 
-  return (
+  const body = (
     <article className="space-y-6">
       <DisclaimerBanner text={playbook.disclaimer_en} />
 
@@ -96,6 +106,13 @@ export function PlaybookView({
         <div className="flex flex-wrap items-center gap-2">
           <SourceStaleBadge lastVerified={playbook.last_verified} />
           <span className="text-xs text-muted-foreground">{playbook.id}</span>
+          {mode === 'run' ? (
+            <PlaybookHelpTrigger
+              onClick={() => {
+                setHelpOpen(true);
+              }}
+            />
+          ) : null}
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">{playbook.title_en}</h1>
         <p className="text-sm leading-6 text-muted-foreground">{playbook.summary_en}</p>
@@ -141,12 +158,32 @@ export function PlaybookView({
 
       <ol className="space-y-8">
         {visibleSteps.map((step, index) => (
-          <li key={step.id} id={step.id} className="space-y-3">
+          <li
+            key={step.id}
+            id={step.id}
+            className={
+              mode === 'run' && step.id === activeStepId
+                ? 'space-y-3 rounded-xl border border-border bg-white/70 px-3 py-3'
+                : 'space-y-3'
+            }
+          >
             <div className="flex items-baseline gap-2">
               <span className="text-xs font-medium text-muted-foreground">
                 {index + 1}/{visibleSteps.length}
               </span>
-              <h2 className="text-lg font-semibold">{step.title_en}</h2>
+              <h2 className="text-lg font-semibold">
+                {mode === 'run' ? (
+                  <button
+                    type="button"
+                    className="text-left hover:underline hover:underline-offset-4"
+                    onClick={() => setCurrentStepId(step.id)}
+                  >
+                    {step.title_en}
+                  </button>
+                ) : (
+                  step.title_en
+                )}
+              </h2>
             </div>
             <p className="text-sm leading-6 text-muted-foreground">{step.why}</p>
 
@@ -225,6 +262,16 @@ export function PlaybookView({
                 >
                   I'm stuck
                 </Button>
+                <button
+                  type="button"
+                  className="self-center text-xs text-muted-foreground underline-offset-4 hover:underline lg:hidden"
+                  onClick={() => {
+                    setCurrentStepId(step.id);
+                    setHelpOpen(true);
+                  }}
+                >
+                  Ask about this step
+                </button>
               </div>
             ) : null}
           </li>
@@ -265,5 +312,25 @@ export function PlaybookView({
         onOpenChange={setStuckOpen}
       />
     </article>
+  );
+
+  if (mode !== 'run') return body;
+
+  return (
+    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-8">
+      {body}
+      <PlaybookHelp
+        playbook={playbook}
+        profile={profile}
+        currentStepId={activeStepId}
+        available={assistAvailable}
+        mobileOpen={helpOpen}
+        onMobileOpenChange={setHelpOpen}
+        onOpenFailureNode={(nodeId) => {
+          setStuckNode(nodeId);
+          setStuckOpen(true);
+        }}
+      />
+    </div>
   );
 }
