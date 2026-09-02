@@ -35,4 +35,11 @@ export type {
   PlaybookFreshness,
   UrlFreshness,
 } from './freshness';
+export {
+  PUBLIC_PLAYBOOK_PATHS,
+  PUBLIC_PLAYBOOK_SEO,
+  PUBLIC_PLAYBOOK_SLUGS,
+  buildPublicPlaybookHead,
+  getPublicPlaybookSeo,
+} from './public-seo';
 export type { Playbook, PlaybookStep, Conflict, FailureNode } from './schema';

@@ -7,6 +7,7 @@ import { getPublicPlaybook } from '@/lib/playbooks/catalog';
 import type { PlaybookFreshness } from '@/lib/playbooks/freshness';
 import { getPlaybookFreshnessFn } from '@/lib/playbooks/get-freshness';
 import { EMPTY_PROFILE } from '@/lib/playbooks/profile';
+import { buildPublicPlaybookHead } from '@/lib/playbooks/public-seo';
 import type { Playbook } from '@/lib/playbooks/schema';
 
 export async function loadPublicPlaybook(slug: string): Promise<{
@@ -22,20 +23,7 @@ export async function loadPublicPlaybook(slug: string): Promise<{
 }
 
 export function publicPlaybookHead(slug: string) {
-  return ({
-    loaderData,
-  }: {
-    loaderData?: { playbook: Playbook; freshness?: PlaybookFreshness };
-  }) => {
-    const title = loaderData?.playbook.title_en ?? 'Playbook';
-    return {
-      meta: [
-        { title: `${title} — Shenzhen Copilot` },
-        { name: 'description', content: loaderData?.playbook.summary_en ?? '' },
-      ],
-      links: [{ rel: 'canonical', href: `${envConfigs.app_url}/p/${slug}` }],
-    };
-  };
+  return () => buildPublicPlaybookHead(slug, envConfigs.app_url);
 }
 
 export function PublicPlaybookPage({
