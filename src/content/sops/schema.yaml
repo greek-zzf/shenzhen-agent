@@ -7,7 +7,8 @@ playbook:
   id: string                    # pb-01 … pb-10
   title_en: string
   status: draft | published     # v1 files are draft
-  last_verified: null | date    # null → always stale badge
+  version: number               # bump when YAML sources/conflicts change
+  last_verified: null | date    # null → always stale badge; remote fetch ≠ verified
   source_max_age_days: number
   lifecycle: 72h | first_week | later
   public_slug: string | null    # maps /p/<slug> → this playbook
@@ -31,9 +32,9 @@ OfficialUrl:
   label: string
   url: string
   kind: official | guide | user_report
-  fetched_at: null | datetime   # runtime only; git YAML stays null
+  fetched_at: null | datetime   # remote-research timestamp may be committed; last_verified stays null
   # kind=guide → UI label "指南, 非法律" (Hey/HiShenzhen)
-  # kind=user_report → UI label "非法律来源" (Reddit only)
+  # kind=user_report → UI label "非法律来源" (Reddit / Xiaohongshu 非法律)
   # Fetch never rewrites steps or invents hours/fees. Reddit / 非法律来源 are not fetched.
 
 Conflict:

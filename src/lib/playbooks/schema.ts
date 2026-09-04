@@ -6,7 +6,8 @@ export const officialUrlSchema = z.object({
   label: z.string().min(1),
   url: z.string().url(),
   kind: urlKindSchema,
-  // Runtime-only. Git YAML stays null — never commit generated timestamps.
+  // Remote-research fetch time may be committed. last_verified stays null
+  // until a door photo / live field check. Never treat fetched_at as verified.
   fetched_at: z.string().nullable().optional().default(null),
 });
 
@@ -152,6 +153,7 @@ export const playbookSchema = z.object({
   id: z.string().regex(/^pb-\d{2}$/),
   title_en: z.string().min(1),
   status: z.enum(['draft', 'published']),
+  version: z.number().int().positive(),
   last_verified: z.string().nullable(),
   source_max_age_days: z.number().int().positive(),
   lifecycle: z.enum(['72h', 'first_week', 'later']),

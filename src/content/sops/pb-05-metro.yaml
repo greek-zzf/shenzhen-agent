@@ -1,6 +1,7 @@
 id: pb-05
 title_en: Ride the metro
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
@@ -20,6 +21,14 @@ official_urls:
   - label: HiShenzhen — Alipay / WeChat Pay setup
     url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
     kind: guide
+  - label: GBA news — tap-to-ride trial 2026-06-30
+    url: https://www.gba.net.cn/news/2026/25310.html
+    kind: official
+    fetched_at: "2026-09-04T16:46:00Z"
+  - label: Shenzhen transport bureau — 2024 metro ride notice
+    url: https://jtys.sz.gov.cn/jtzx/wycx/dtcx/cxtx/content/post_11264753.html
+    kind: official
+    fetched_at: "2026-09-04T16:46:00Z"
 conflicts:
   - id: octopus-note
     title_en: Octopus-since-2023 is a payment-post note, not law
@@ -35,6 +44,44 @@ conflicts:
         kind: guide
         claim_en: Some posts mention Hong Kong Octopus acceptance on Shenzhen metro after 2023. Treat that as a payment-post note. Confirm at the gate; it is not written here as law.
         as_of: "2026-01"
+  - id: c-transport-tab
+    title_en: Alipay Transport tab — guides vs field threads
+    resolution: verify_at_window
+    sources:
+      - label: Shenzhen Decoded — metro QR
+        url: https://www.shenzhendecoded.com/en/guides/getting-around-shenzhen
+        kind: guide
+        claim_en: The everyday path described here is Alipay Transport / 乘车码 or a cash token. That is a how-to, not a statute. This playbook does not delete that path.
+        as_of: "2026-01"
+      - label: HiShenzhen payment guide
+        url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
+        kind: guide
+        claim_en: Guides describe Alipay / WeChat Pay setup for riding. Confirm the Transport tab still issues a code on your passport the day you ride.
+        as_of: "2026-01"
+      - label: r/shenzhen 1htndt5 (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1htndt5/
+        kind: user_report
+        claim_en: Field thread on riding Shenzhen metro / Transport tab. One traveler cluster, not a timetable and not a replacement for the Alipay Transport path. Confirm at the gate.
+        as_of: "2026-09-04"
+      - label: r/shenzhen 18xi3iv (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/18xi3iv/
+        kind: user_report
+        claim_en: Field thread on metro payment / ride-code friction. Not law. Keep Alipay → Transport / 出行 → 乘车码 as the first hotspot; cash machine is the backup.
+        as_of: "2026-09-04"
+  - id: c-tap-to-ride-trial
+    title_en: Tap-to-ride trial vs Alipay Transport path
+    resolution: verify_at_window
+    sources:
+      - label: GBA news — tap-to-ride trial 2026-06-30
+        url: https://www.gba.net.cn/news/2026/25310.html
+        kind: official
+        claim_en: A 2026-06-30 news item describes a Shenzhen metro tap-to-ride trial. That is a trial announcement, not a promise every gate accepts a foreign card today.
+        as_of: "2026-06-30"
+      - label: Shenzhen transport bureau — 2024 metro ride notice
+        url: https://jtys.sz.gov.cn/jtzx/wycx/dtcx/cxtx/content/post_11264753.html
+        kind: official
+        claim_en: Official 2024 metro-ride notice. It does not delete the Alipay Transport / 乘车码 path in this playbook. Confirm at the gate which method the reader will accept.
+        as_of: "2024"
 failure_tree:
   id: metro-stuck
   title_en: I'm stuck
@@ -187,4 +234,50 @@ steps:
       id: next_step
       label_en: I will not treat Octopus as law
     stuck_node: vpn-off
+    timer: null
+  - id: transport-tab-conflict
+    title_en: Transport tab — guides vs field threads
+    slot: conflict
+    why: Guides point at Alipay Transport. Reddit threads report friction. We do not pick a winner. The Alipay Transport path stays in this playbook.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will try Transport, then cash
+    stuck_node: miniprogram-fail
+    timer: null
+  - id: tap-to-ride-trial
+    title_en: Tap-to-ride is a trial — not a replacement path
+    slot: conflict
+    why: A 2026-06-30 news item describes a tap-to-ride trial. A 2024 official metro notice exists. Neither deletes Alipay → Transport / 出行 → 乘车码. Confirm at the gate.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: GBA news — tap-to-ride trial 2026-06-30
+        url: https://www.gba.net.cn/news/2026/25310.html
+        kind: official
+        fetched_at: "2026-09-04T16:46:00Z"
+      - label: Shenzhen transport bureau — 2024 metro ride notice
+        url: https://jtys.sz.gov.cn/jtzx/wycx/dtcx/cxtx/content/post_11264753.html
+        kind: official
+        fetched_at: "2026-09-04T16:46:00Z"
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will confirm at the gate
+    stuck_node: cash-machine
     timer: null

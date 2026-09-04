@@ -1,0 +1,34 @@
+# Field verification
+
+Draft SOPs only. `last_verified` stays `null` until a door photo or live window check. A remote fetch is not field verification.
+
+## 2026-09-05 远程已补
+
+Remote research batch of 2026-09-04 / 2026-09-05. Conflicts were expanded, not deleted. No winner was picked. Playbook YAML `version` is 2. `status` remains `draft`.
+
+### Remote-settled vs still need a door photo
+
+| Topic | Remote batch (2026-09-04/05) | Still need live / door photo |
+|---|---|---|
+| NIA 2026 online registration pilot | Official page: seven provinces from 2026-03-20. Guangdong is not listed. HiShenzhen stays as the local-path secondary. | Whether a Guangdong address is accepted on any live form the day you file. |
+| NIA EN FAQ / Instructions | Ordinary passport + urgent need. No nationality roster published (fetched 2026-09-04). Fees follow State standards only — no 130 figure. | Same-day list at the window. Cash amount the clerk quotes. |
+| Luohu VOA hours | ConflictCallout kept. Added sz.gov.cn 罗湖 6:00–24:00 *port-operation* framing (2025-06-30); archived 9:00–17:00 (2024-07-25); Reddit ~09:00 desk (2024-08); szpsq English phones only, no timetable (fetched 2026-09-04); Luohu +86 755 82324022. | Door photo of the visa-office board. Do not treat any of these as settled hours. |
+| West Kowloon | China News 2025-11-05 + MTR 240h visa-free transit. No confirmed VOA desk. **240h transit ≠ 5-day SEZ VOA.** | Whether any VOA window exists at West Kowloon the day you go. |
+| ~130 RMB SEZ fee | Reddit 1ehxb25 / 1em2zn3 / 1eot29d (~130 SEZ). NIA English Instructions publish no figure. | Receipt / window quote. |
+| Tour Card vs foreign-card direct | Reddit 1dhkk9w (direct bind). chinaguidelines.com Tour Card wind-down (~2026-05 Alipay new open/activate stop). HiShenzhen kept. | In-app check: can you still open or activate Tour Card today? |
+| Airport English one-stop | Pingshan English page reachable 2026-09-04. | Desk open / what they will actually do. |
+| Metro Transport tab | Reddit 1htndt5 and 18xi3iv added. Alipay Transport path **not** deleted. | Gate that day. |
+| Tap-to-ride trial | gba.net.cn 2026-06-30 trial + official 2024 metro notice. | Whether that gate accepts tap-to-ride on your card. |
+| SIM halls | Longhua / Futian official English URLs fetched 2026-09-04T16:45:30Z. No street addresses invented. | Which window takes a foreign passport today. |
+| HR / official materials | Remote check lists Registration Form of Temporary Residence; lease not listed (as of 2026-09-04). | What HR will accept. |
+| Xiaohongshu residence-window hours | 非法律/含 AI. Prerequisite lodging registration. **Not** Luohu port VOA hours. | Do not copy those hours onto PB-03. |
+
+### New live checklist
+
+- [ ] Call Luohu VOA phone **+86 755 82324022** and ask today's visa-office hours. Photograph the door board.
+- [ ] Tour Card in-app check: new open / activate still offered or stopped.
+- [ ] Tap-to-Ride at a real gate — does it work, or stay on Alipay Transport / cash token.
+- [ ] West Kowloon: confirm 240-hour visa-free transit vs 5-day SEZ VOA as two different things. Look for a VOA desk; do not assume one.
+- [ ] Do not mix residence-permit window hours (Xiaohongshu / 居留) with port VOA hours.
+
+Until those live checks land, every playbook stays `last_verified: null`.
