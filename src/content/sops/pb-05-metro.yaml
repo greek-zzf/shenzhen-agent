@@ -208,6 +208,18 @@ steps:
         - n: 2
           text_en: Tap the token to enter. Insert the token to exit.
           screenshot: null
+        - n: 3
+          text_en: Tap-to-Ride floor-gate stock. Physical entry art only — not an Alipay Transport screenshot.
+          screenshot: /copilot-stock/pb05-tap-to-ride-floor-gate.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Floor-gate art is Tap-to-Ride / physical entry, not the cash-token close-up and not Alipay Transport UI.
+        - n: 4
+          text_en: Ordinary-gate card reader (stock). Keep using the Alipay Transport text path — no public Alipay UI was recovered.
+          screenshot: /copilot-stock/pb05-tap-to-ride-card-reader.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Business-coach reader is a secondary reference only (not this ordinary gate).
+        - n: 5
+          text_en: Secondary only — Line 11 business-coach tap reader, not an ordinary metro gate.
+          screenshot: /copilot-stock/pb05-business-coach-tap-reader.jpg
+          note: Stock photo — confirm at the window. Secondary reference. Community/news stock, not founder-verified. Not the ordinary gate.
     official_urls: []
     prefill: {}
     required_checkboxes: []
@@ -264,7 +276,20 @@ steps:
     getting_there: null
     what_to_bring: []
     speech_card: null
-    click_path: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Tap-to-Ride floor-gate stock. Physical entry art only — not an Alipay Transport screenshot.
+          screenshot: /copilot-stock/pb05-tap-to-ride-floor-gate.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Floor-gate art is Tap-to-Ride / physical entry, not Alipay Transport UI.
+        - n: 2
+          text_en: Ordinary-gate card reader (stock). Keep the Alipay Transport click-path screenshots empty — no public Alipay UI was recovered.
+          screenshot: /copilot-stock/pb05-tap-to-ride-card-reader.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Business-coach reader is a secondary reference only (not this ordinary gate).
+        - n: 3
+          text_en: Secondary only — Line 11 business-coach tap reader, not an ordinary metro gate.
+          screenshot: /copilot-stock/pb05-business-coach-tap-reader.jpg
+          note: Stock photo — confirm at the window. Secondary reference. Community/news stock, not founder-verified. Not the ordinary gate.
     official_urls:
       - label: GBA news — tap-to-ride trial 2026-06-30
         url: https://www.gba.net.cn/news/2026/25310.html

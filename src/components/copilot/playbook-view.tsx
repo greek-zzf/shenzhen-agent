@@ -210,9 +210,7 @@ export function PlaybookView({
               <SpeechCardView card={step.speech_card} />
             ) : null}
 
-            {step.slot === 'click_path' && step.click_path ? (
-              <ClickPathView path={step.click_path} />
-            ) : null}
+            {step.click_path ? <ClickPathView path={step.click_path} /> : null}
 
             {step.slot === 'conflict' ? (
               <ConflictCallout conflict={conflictForStep(playbook, step)} />

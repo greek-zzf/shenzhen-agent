@@ -177,10 +177,12 @@ steps:
       steps:
         - n: 1
           text_en: Open WeChat → search and follow 深圳公安.
-          screenshot: null
+          screenshot: /copilot-stock/pb02-house-code-search-ui.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Search UI may have changed.
         - n: 2
           text_en: 政务服务 → 出入境业务 → 境外人员临时住宿登记.
-          screenshot: null
+          screenshot: /copilot-stock/pb02-house-code-lookup-ui.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Lookup UI may have changed.
         - n: 3
           text_en: Scan 房屋码. Do not type a street address. We never submit.
           screenshot: null
@@ -211,7 +213,8 @@ steps:
       steps:
         - n: 1
           text_en: Find the QR on the doorframe or ask 物业 / the landlord. Scan it in the 深圳公安 form.
-          screenshot: null
+          screenshot: /copilot-stock/pb02-house-qr-doorframe.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Door stickers vary by building.
         - n: 2
           text_en: If there is no sticker, stop typing. Go to the window with the lease.
           screenshot: null

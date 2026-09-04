@@ -72,6 +72,9 @@ export const clickPathStepSchema = z.object({
   n: z.number().int().positive(),
   text_en: z.string().min(1),
   screenshot: z.string().nullable(),
+  // Caption under a non-null screenshot. Stock art must say
+  // "Stock photo — confirm at the window". Omit on missing-art steps.
+  note: z.string().min(1).optional(),
 });
 
 export const clickPathSchema = z.object({
