@@ -1,6 +1,7 @@
 id: pb-02
 title_en: 24-hour accommodation registration
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 14
 lifecycle: 72h
@@ -16,6 +17,14 @@ primary_cta:
   id: next_step
   label_en: Start the 24-hour clock
 official_urls:
+  - label: NIA — seven-province online registration pilot (2026-03-20)
+    url: https://www.nia.gov.cn/n741440/n741577/c1771556/content.html
+    kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
+  - label: sz.gov.cn English living / planning materials
+    url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+    kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
   - label: HeyShenzhen — registered address
     url: https://heyshenzhen.com/registered-address
     kind: guide
@@ -27,18 +36,32 @@ official_urls:
     kind: guide
 conflicts:
   - id: national-2026-pilot
-    title_en: 2026 national online pilot may exclude Guangdong
+    title_en: 2026 national online pilot — Guangdong is not on the NIA list
     resolution: verify_at_window
     sources:
-      - label: HeyShenzhen — WeChat 深圳公安 path
-        url: https://heyshenzhen.com/registered-address
-        kind: guide
-        claim_en: Shenzhen still documents a WeChat 深圳公安 path for 境外人员临时住宿登记. That is a local channel, not a promise that a new national website covers Guangdong.
-        as_of: "2026-01"
+      - label: NIA — seven provinces from 2026-03-20
+        url: https://www.nia.gov.cn/n741440/n741577/c1771556/content.html
+        kind: official
+        claim_en: NIA published an online temporary-registration pilot starting 2026-03-20 covering seven provinces. Guangdong is not listed. This is the official list as fetched, not a verdict that a Guangdong address will never work online. Verify at the local window or WeChat path.
+        as_of: "2026-03-20"
       - label: HiShenzhen — police-station fallback
         url: https://hishenzhen.com/how-to-get-temporary-accommodation-registration-shenzhen/
         kind: guide
-        claim_en: If an online national pilot rejects a Guangdong address, use the local WeChat path or the window (Shekou MSCE or the covering 派出所). Verify there. We do not pick a winner.
+        claim_en: If an online national path rejects a Guangdong address, use the local WeChat 深圳公安 path or the window (Shekou MSCE or the covering 派出所). Verify there. We do not pick a winner.
+        as_of: "2026-01"
+  - id: c-registration-form-vs-lease
+    title_en: Official materials list a Registration Form — not a lease
+    resolution: verify_at_window
+    sources:
+      - label: sz.gov.cn English living / planning materials
+        url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+        kind: official
+        claim_en: Remote check on 2026-09-04 lists a Registration Form of Temporary Residence among official materials. A lease is not listed. This is not a promise HR will accept the form in place of a lease.
+        as_of: "2026-09-04"
+      - label: HiShenzhen — temporary accommodation registration
+        url: https://hishenzhen.com/how-to-get-temporary-accommodation-registration-shenzhen/
+        kind: guide
+        claim_en: City guides still describe a local registration path. They are not HR policy. If an employer asks for a six-month lease, show both claims and verify with HR and at the window.
         as_of: "2026-01"
 failure_tree:
   id: stay-stuck
@@ -295,7 +318,7 @@ steps:
   - id: national-pilot-conflict
     title_en: National 2026 online pilot vs Guangdong
     slot: conflict
-    why: A national website may reject a Guangdong address. That is a conflict, not a verdict. Verify at the window.
+    why: NIA lists seven provinces from 2026-03-20. Guangdong is not on that list. HiShenzhen still describes a local path. That is a conflict, not a verdict. Verify at the window.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -303,11 +326,38 @@ steps:
     what_to_bring: []
     speech_card: null
     click_path: null
-    official_urls: []
+    official_urls:
+      - label: NIA — seven-province online registration pilot (2026-03-20)
+        url: https://www.nia.gov.cn/n741440/n741577/c1771556/content.html
+        kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
     prefill: {}
     required_checkboxes: []
     primary_cta:
       id: next_step
       label_en: I will verify at the window
     stuck_node: ishenzhen-face
+    timer: null
+  - id: registration-form-vs-lease
+    title_en: Official list names a Registration Form — lease is not listed
+    slot: conflict
+    why: A remote check of the NIA page on 2026-09-04 lists a Registration Form of Temporary Residence. A lease is not listed. That is not an HR verdict. Verify at the window.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: sz.gov.cn English living / planning materials
+        url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+        kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify at the window
+    stuck_node: no-house-code
     timer: null

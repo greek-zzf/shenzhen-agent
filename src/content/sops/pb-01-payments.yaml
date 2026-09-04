@@ -1,6 +1,7 @@
 id: pb-01
 title_en: Get something paid
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
@@ -17,6 +18,9 @@ official_urls:
   - label: HiShenzhen — Alipay and WeChat Pay setup
     url: https://hishenzhen.com/how-to-set-up-alipay-and-wechat-pay-in-shenzhen-2026-guide/
     kind: guide
+  - label: China Guidelines — Tour Card wind-down
+    url: https://chinaguidelines.com/zh/posts/tour-card
+    kind: guide
   - label: Shenzhen Decoded — How to pay in China
     url: https://www.shenzhendecoded.com/en/guides/payment-shenzhen
     kind: guide
@@ -26,6 +30,7 @@ official_urls:
   - label: Pingshan English — airport and Bay one-stop centers
     url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
 conflicts:
   - id: alipay-vs-wechat
     title_en: Alipay vs WeChat Pay — do not assume one is easier
@@ -55,6 +60,16 @@ conflicts:
         kind: guide
         claim_en: Direct Visa/Mastercard bind can fail on bank blocks, address mismatch, or card type. Ask the window which path they can see on your passport today.
         as_of: "2026-01"
+      - label: r/shenzhen 1dhkk9w — foreign-card direct (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1dhkk9w/firsttime_us_citizen_going_to_shenzhen/
+        kind: user_report
+        claim_en: A first-time US traveler reported paying with a foreign card bound directly. That is one itinerary, not a rule that Tour Card is unnecessary. We do not pick a winner.
+        as_of: "2026-09-04"
+      - label: China Guidelines — Tour Card wind-down
+        url: https://chinaguidelines.com/zh/posts/tour-card
+        kind: guide
+        claim_en: A 2026-05 guide says Alipay stopped new Tour Card open/activate. Verify in-app the day you try. This is not a verdict that Tour Card is dead or still required.
+        as_of: "2026-05"
   - id: t3-onestop-not-bank
     title_en: Airport T3 one-stop helps payments and SIM — not a bank SLA
     resolution: verify_at_window
@@ -67,8 +82,8 @@ conflicts:
       - label: Pingshan English one-stop locations
         url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
         kind: official
-        claim_en: Airport desk is Level 1, Terminal 3, next to the international arrivals exit. Use it for wallet setup help. Do not treat it as a promised bank appointment.
-        as_of: "2025-05-01"
+        claim_en: Airport desk is Level 1, Terminal 3, next to the international arrivals exit. Page was reachable on 2026-09-04. Use it for wallet setup help. Do not treat it as a promised bank appointment.
+        as_of: "2026-09-04"
 failure_tree:
   id: payments-stuck
   title_en: I'm stuck
@@ -169,7 +184,7 @@ steps:
   - id: tourcard-conflict
     title_en: TourCard vs binding a foreign card directly
     slot: conflict
-    why: TourCard is a prepaid top-up product. Direct card bind is a different path with different failure modes. We do not pick one.
+    why: TourCard is a prepaid top-up product. Direct foreign-card bind is a different path. A 2026-05 guide says new Tour Card open/activate stopped — verify in-app. We do not pick one.
     skippable: false
     skip_if: null
     passport_fail_warning: null

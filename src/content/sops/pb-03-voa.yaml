@@ -1,6 +1,7 @@
 id: pb-03
 title_en: 5-day visa on arrival
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 14
 lifecycle: 72h
@@ -19,12 +20,30 @@ official_urls:
   - label: i口岸 English — NIA visa services (do not hardcode countries)
     url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
   - label: Pingshan English — major port visa offices / FAQs
     url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/index.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
+  - label: NIA English FAQ — visa on arrival (no nationality roster)
+    url: https://en.nia.gov.cn/n147418/n147463/c156102/content.html
+    kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
+  - label: NIA English Instructions — visa / fees per State standards
+    url: https://en.nia.gov.cn/n147423/n147478/n147715/c158232/content.html
+    kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
+  - label: Pingshan English — checkpoints phones only (no timetable)
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11417750.html
+    kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
+  - label: sz.gov.cn — 罗湖口岸运行 6时–24时 (port-operation framing)
+    url: https://www.sz.gov.cn/cn/xxgk/zfxxgj/zwdt/content/post_12253319.html
+    kind: official
+    fetched_at: "2026-09-04T16:46:00Z"
 conflicts:
   - id: voa-hours
-    title_en: Published hours vs a 2025-11 field report — we do not pick a winner
+    title_en: Published hours vs field reports — we do not pick a winner
     resolution: verify_at_window
     sources:
       - label: Published port-hours range (6:30–24:00 appears in older port copy)
@@ -37,20 +56,74 @@ conflicts:
         kind: user_report
         claim_en: A November 2025 field report described the visa window closing around 17:00. That is one traveler's note, not a timetable. Verify on the board the day you go.
         as_of: "2025-11"
+      - label: sz.gov.cn — 罗湖口岸运行 6时–24时 (port-operation framing)
+        url: https://www.sz.gov.cn/cn/xxgk/zfxxgj/zwdt/content/post_12253319.html
+        kind: official
+        claim_en: A 2025-06-30 city notice frames 罗湖 port operations as 6:00–24:00. That is port-operation copy, not a settled visa-office timetable. Do not treat it as today's VOA desk hours.
+        as_of: "2025-06-30"
+      - label: ka.sz.gov.cn archived 9:00–17:00
+        url: https://ka.sz.gov.cn/ztzl/zxxd/xgzx/content/post_11469845.html
+        kind: official
+        claim_en: An archived 2024-07-25 page states 9:00–17:00. It is archived copy. We do not treat it as current, and we do not pick it over other hour claims.
+        as_of: "2024-07-25"
+      - label: r/Chinavisa 1ehxb25 — ~09:00 desk open (Huanggang field)
+        url: https://www.reddit.com/r/Chinavisa/comments/1ehxb25/getting_a_5day_shenzhen_port_visa_in_huanggang/
+        kind: user_report
+        claim_en: An August 2024 Huanggang field note described a desk opening around 09:00. One traveler, one port, not a Luohu timetable. Verify on the board.
+        as_of: "2024-08"
+      - label: Pingshan English checkpoints — phones only, no timetable
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11417750.html
+        kind: official
+        claim_en: Fetched 2026-09-04. The English checkpoints page lists phones and does not publish a visa-office timetable. Luohu phone on that page +86 755 82324022. Call or read the door. Do not invent hours from this page.
+        as_of: "2026-09-04"
   - id: west-kowloon-outbound
-    title_en: West Kowloon outbound VOA — field report only
+    title_en: West Kowloon 240-hour transit is not 5-day SEZ VOA
     resolution: verify_at_window
     sources:
       - label: r/shenzhen 1ptwzwe
         url: https://www.reddit.com/r/shenzhen/comments/1ptwzwe/
         kind: user_report
-        claim_en: A November 2025 report described outbound visa-on-arrival handling at West Kowloon. Treat it as a field note from 2025-11, not a current service fact.
+        claim_en: A November 2025 report described outbound visa-on-arrival handling at West Kowloon. Treat it as a field note from 2025-11, not a current service fact. No confirmed VOA desk in later remote checks.
         as_of: "2025-11"
       - label: i口岸 English — official visa pointer
         url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
         kind: official
         claim_en: Official copy points you to the National Immigration Administration bilingual platform for visa categories. Use that list. Do not rely on a Reddit itinerary.
         as_of: "2024-12"
+      - label: China News — 240-hour visa-free transit (2025-11-05)
+        url: https://www.chinanews.com.cn/sh/2025/11-05/10510459.shtml
+        kind: official
+        claim_en: Reports the 240-hour visa-free transit policy. That is transit without a visa, not a 5-day Shenzhen SEZ visa on arrival. West Kowloon high-speed rail is a 240h port of entry, not a confirmed VOA desk.
+        as_of: "2025-11-05"
+      - label: MTR High Speed — 240-hour visa-free transit
+        url: https://www.highspeed.mtr.com.hk/sc/latest-news/240-hr-visa-freetransit-policy.html
+        kind: official
+        claim_en: MTR copy on 240-hour visa-free transit at the high-speed rail port. Distinct from 5-day SEZ VOA. This playbook does not treat West Kowloon as a VOA window.
+        as_of: "2025-11"
+  - id: c-fee-130
+    title_en: ~130 RMB is a field report — NIA publishes no SEZ figure
+    resolution: verify_at_window
+    sources:
+      - label: r/Chinavisa 1ehxb25 (~130 SEZ)
+        url: https://www.reddit.com/r/Chinavisa/comments/1ehxb25/getting_a_5day_shenzhen_port_visa_in_huanggang/
+        kind: user_report
+        claim_en: A traveler reported paying about 130 RMB for a 5-day SEZ port visa. Field note, not a tariff.
+        as_of: "2024-08"
+      - label: r/Chinavisa 1em2zn3 (~130 SEZ)
+        url: https://www.reddit.com/r/Chinavisa/comments/1em2zn3/
+        kind: user_report
+        claim_en: Another traveler note in the same cluster reported about 130 RMB for the SEZ port visa. Still a user report.
+        as_of: "2024-08"
+      - label: r/Chinavisa 1eot29d (~130 SEZ)
+        url: https://www.reddit.com/r/Chinavisa/comments/1eot29d/
+        kind: user_report
+        claim_en: A third field note in the same cluster cited about 130 RMB. Bring extra cash and ask the window. We do not treat 130 as official.
+        as_of: "2024-08"
+      - label: NIA English Instructions — fees per State standards only
+        url: https://en.nia.gov.cn/n147423/n147478/n147715/c158232/content.html
+        kind: official
+        claim_en: Fetched 2026-09-04. The English Instructions page says fees follow State standards. It does not publish a 130 RMB SEZ figure. We do not invent a tariff.
+        as_of: "2026-09-04"
 failure_tree:
   id: voa-stuck
   title_en: I'm stuck
@@ -80,7 +153,7 @@ steps:
   - id: nia-list
     title_en: Check the live NIA list — do not hardcode countries
     slot: click_path
-    why: Eligibility changes. This SOP will not list nationalities. Open the official English pointer and follow it to the NIA list.
+    why: NIA English FAQ (fetched 2026-09-04) frames port visa as ordinary passport plus urgent need. It does not publish a nationality roster. This SOP will not list nationalities. Open the official English pages the same day.
     skippable: false
     skip_if: null
     passport_fail_warning:
@@ -110,6 +183,19 @@ steps:
       - label: i口岸 English page
         url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11674450.html
         kind: official
+        fetched_at: "2026-09-04T16:46:00Z"
+      - label: NIA English FAQ — ordinary passport + urgent need, no roster
+        url: https://en.nia.gov.cn/n147418/n147463/c156102/content.html
+        kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
+      - label: NIA English Instructions
+        url: https://en.nia.gov.cn/n147423/n147478/n147715/c158232/content.html
+        kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
+      - label: Pingshan English checkpoints — phones only
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_11417750.html
+        kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
     prefill: {}
     required_checkboxes: []
     primary_cta:
@@ -139,7 +225,7 @@ steps:
   - id: west-kowloon-note
     title_en: West Kowloon outbound VOA is a 2025-11 field report
     slot: conflict
-    why: One traveler described outbound VOA at West Kowloon in November 2025. That is not a current-hours fact and not a promise it still runs.
+    why: One traveler described outbound VOA at West Kowloon in November 2025. Official 240-hour visa-free transit at that rail port is a different policy. 240h transit is not 5-day SEZ VOA. No confirmed VOA desk. We do not pick a winner.
     skippable: true
     skip_if:
       field: location
@@ -159,8 +245,8 @@ steps:
     timer: null
   - id: fee-user-report
     title_en: 130 RMB is a user report
-    slot: required_check
-    why: A traveler reported 130 RMB. That is not a tariff. Bring extra cash and ask the window.
+    slot: conflict
+    why: Travelers reported about 130 RMB for SEZ port visa. NIA English Instructions (fetched 2026-09-04) say fees follow State standards and publish no 130 figure. We do not pick a winner. Bring extra cash and ask the window.
     skippable: false
     skip_if: null
     passport_fail_warning: null

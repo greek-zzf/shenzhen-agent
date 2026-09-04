@@ -1,6 +1,7 @@
 id: pb-10
 title_en: HR asked for a 6-month lease
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 30
 lifecycle: first_week
@@ -19,8 +20,12 @@ official_urls:
   - label: Shenzhen government English — living / planning materials
     url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
   - label: r/shenzhen 1upmequ (非法律来源)
     url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
+    kind: user_report
+  - label: Xiaohongshu 6a72dc3e (非法律/含 AI)
+    url: https://www.xiaohongshu.com/explore/6a72dc3e0000000022033bde
     kind: user_report
 conflicts:
   - id: official-vs-reddit-lease
@@ -30,13 +35,18 @@ conflicts:
       - label: sz.gov.cn English living / planning page
         url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
         kind: official
-        claim_en: The city English page is background on living in Shenzhen. It is not an HR policy and it does not require a six-month lease for an employment letter.
-        as_of: "2024-01"
+        claim_en: Fetched 2026-09-04. The city English page is background on living in Shenzhen. Remote check lists a Registration Form of Temporary Residence among official materials. A lease is not listed. This is not an HR policy and it does not require a six-month lease for an employment letter.
+        as_of: "2026-09-04"
       - label: r/shenzhen 1upmequ
         url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
         kind: user_report
         claim_en: Users report some employers asking for a six-month lease or 住宿登记 before they will issue HR paperwork. That is a field report — 非法律来源 — not a statute. Verify with HR and, if needed, at the window.
         as_of: "2025-01"
+      - label: Xiaohongshu 6a72dc3e (非法律/含 AI)
+        url: https://www.xiaohongshu.com/explore/6a72dc3e0000000022033bde
+        kind: user_report
+        claim_en: Non-legal, may include AI. Describes residence-permit window hours and lodging registration as a prerequisite for a residence permit. Those hours are NOT Luohu port VOA hours. Do not copy them onto PB-03.
+        as_of: "2026-09-04"
 failure_tree:
   id: hr-stuck
   title_en: I'm stuck
@@ -73,8 +83,12 @@ steps:
       - label: sz.gov.cn English materials
         url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
         kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
       - label: r/shenzhen 1upmequ
         url: https://www.reddit.com/r/shenzhen/comments/1upmequ/
+        kind: user_report
+      - label: Xiaohongshu 6a72dc3e (非法律/含 AI)
+        url: https://www.xiaohongshu.com/explore/6a72dc3e0000000022033bde
         kind: user_report
     prefill: {}
     required_checkboxes: []

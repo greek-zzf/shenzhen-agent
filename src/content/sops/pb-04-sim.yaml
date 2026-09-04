@@ -1,6 +1,7 @@
 id: pb-04
 title_en: Get a working SIM or eSIM
 status: draft
+version: 2
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
@@ -17,9 +18,11 @@ official_urls:
   - label: Longhua — service hall / foreigner SIM notes
     url: https://www.szlhq.gov.cn/english/licc/newsevents/newsevent/content/post_12692962.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
   - label: Futian — service center page
     url: https://www.szft.gov.cn/xxgk/ztbd/yshj/yszx/content/post_10936751.html
     kind: official
+    fetched_at: "2026-09-04T16:45:30Z"
   - label: SZNews — airport one-stop (SIM help, not a hall SLA)
     url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
     kind: official
@@ -114,9 +117,11 @@ steps:
       - label: Longhua hall page
         url: https://www.szlhq.gov.cn/english/licc/newsevents/newsevent/content/post_12692962.html
         kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
       - label: Futian service center
         url: https://www.szft.gov.cn/xxgk/ztbd/yshj/yszx/content/post_10936751.html
         kind: official
+        fetched_at: "2026-09-04T16:45:30Z"
     prefill: {}
     required_checkboxes: []
     primary_cta:
