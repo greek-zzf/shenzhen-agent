@@ -409,7 +409,26 @@ export function FailureTreeOverlay({
             </p>
           ) : null}
           <div className="flex flex-wrap gap-2">
-            {next ? (
+            {current.options?.length ? (
+              current.options.map((option) => (
+                <Button
+                  key={option.label_en}
+                  type="button"
+                  onClick={() => {
+                    if (option.next) {
+                      const target = tree.nodes.find((n) => n.id === option.next);
+                      if (target) {
+                        setCurrent(target);
+                        return;
+                      }
+                    }
+                    onOpenChange(false);
+                  }}
+                >
+                  {option.label_en}
+                </Button>
+              ))
+            ) : next ? (
               <Button type="button" onClick={() => setCurrent(next)}>
                 Next
               </Button>

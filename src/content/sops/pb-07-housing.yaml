@@ -67,33 +67,54 @@ conflicts:
         claim_en: Wellcee is an English board with small inventory. It is not a city marketplace we operate, and it is not a promise the flat is still free.
         as_of: "2026-01"
 failure_tree:
-  id: housing-stuck
-  title_en: I'm stuck
-  nodes:
-    - id: fifty-eight-too-good
-      question_en: A 58 listing is far cheaper than Beike / Wellcee for the same building?
-      advice_en: Treat it as a trap. Do not wire a deposit to a personal WeChat. Walk the building with a licensed agent or skip the listing. HiShenzhen tells foreigners not to use 58 as the channel.
-      never:
-        - fifty_eight_wire
-        - wechat_deposit
-      next: no-wangqian
-      vpn_off_only: false
-    - id: no-wangqian
-      question_en: The landlord or agent says skip 网签 / the city platform?
-      advice_en: The 2025-09-15 ordinance and the city platform exist so the lease is on record. Unfiled leases can block later residence steps. Do not skip 网签 to “save commission.”
-      never:
-        - skip_wangqian
-        - fake_residence
-      next: asked-fake-juzhu
-      vpn_off_only: false
-    - id: asked-fake-juzhu
-      question_en: Someone offers a printed 居住证明 or a chop you did not earn at the window?
-      advice_en: Refuse. A fake slip is worse than a late one. Run pb-02 for a real 住宿登记. This copilot never produces a fake 居住证明.
-      never:
-        - fake_residence
-        - fake_chop
-      next: null
-      vpn_off_only: false
+  fifty-eight-too-good:
+    prompt_en: A 58 listing is far cheaper than Beike / Wellcee for the same building?
+    options:
+      - label_en: Yes — treat 58 as a trap
+        next: no-wangqian
+        never:
+          - fifty_eight_wire
+          - wechat_deposit
+        advice_en: Treat it as a trap. Do not wire a deposit to a personal WeChat. Walk the building with a licensed agent or skip the listing. HiShenzhen tells foreigners not to use 58 as the channel.
+        vpn_off_only: false
+      - label_en: I did not use 58
+        next: no-wangqian
+        never:
+          - wechat_deposit
+        advice_en: Still never wire a deposit to a personal WeChat.
+        vpn_off_only: false
+  no-wangqian:
+    prompt_en: The landlord or agent says skip 网签 / the city platform?
+    options:
+      - label_en: Yes — they want to skip filing
+        next: asked-fake-juzhu
+        never:
+          - skip_wangqian
+          - fake_residence
+        advice_en: The 2025-09-15 ordinance and the city platform exist so the lease is on record. Unfiled leases can block later residence steps. Do not skip 网签 to “save commission.”
+        vpn_off_only: false
+      - label_en: They will file 网签
+        next: asked-fake-juzhu
+        never:
+          - fake_residence
+        advice_en: Confirm the receipt, not a WeChat screenshot.
+        vpn_off_only: false
+  asked-fake-juzhu:
+    prompt_en: Someone offers a printed 居住证明 or a chop you did not earn at the window?
+    options:
+      - label_en: Yes — refuse the fake slip
+        next: null
+        never:
+          - fake_residence
+          - fake_chop
+        advice_en: Refuse. A fake slip is worse than a late one. Run pb-02 for a real 住宿登记. This copilot never produces a fake 居住证明.
+        vpn_off_only: false
+      - label_en: No one offered a fake slip
+        next: null
+        never:
+          - fake_residence
+        advice_en: Keep it real. If you still need to register, run pb-02.
+        vpn_off_only: false
 attached_playbooks:
   - pb-02
 steps:

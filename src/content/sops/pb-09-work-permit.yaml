@@ -66,35 +66,57 @@ conflicts:
         claim_en: City foreigners-service pages are the local window and status surface. Use them to read what HR already filed. Do not treat a personal account as a substitute employer.
         as_of: "2026-01"
 failure_tree:
-  id: work-stuck
-  title_en: I'm stuck
-  nodes:
-    - id: hr-not-started
-      question_en: HR has not opened a filing, or the city on the permit is not Shenzhen?
-      advice_en: You cannot file around the employer. Send the personal-list + official URL. If the work city and the employer city differ, HR must fix the filing entity — we do not invent a 挂靠.
-      never:
-        - guakao
-        - file_around_employer
-        - buy_permit
-      next: asked-guakao
-      vpn_off_only: false
-    - id: asked-guakao
-      question_en: Someone offers a 挂靠, a purchased permit, or “fly to Thailand and come back”?
-      advice_en: Refuse. Those are not product steps. Official next step only — ask the local exit-entry window or 12345 (English hours are unverified). Never a visa-run.
-      never:
-        - guakao
-        - visa_run
-        - buy_permit
-      next: laid-off
-      vpn_off_only: false
-    - id: laid-off
-      question_en: The job ended or the permit was cancelled?
-      advice_en: Do not take a visa-run as a product step. Ask HR for the cancellation paper. Call the local 出入境 window or 12345 for the official next step. Confirm 12345 English hours at the number — we do not invent them.
-      never:
-        - visa_run
-        - guakao
-      next: null
-      vpn_off_only: false
+  hr-not-started:
+    prompt_en: HR has not opened a filing, or the city on the permit is not Shenzhen?
+    options:
+      - label_en: Yes — employer has not filed
+        next: asked-guakao
+        never:
+          - guakao
+          - file_around_employer
+          - buy_permit
+        advice_en: You cannot file around the employer. Send the personal-list + official URL. If the work city and the employer city differ, HR must fix the filing entity — we do not invent a 挂靠.
+        vpn_off_only: false
+      - label_en: HR already filed
+        next: asked-guakao
+        never:
+          - file_around_employer
+        advice_en: Read the official URL / SMS screenshot. Do not file around them.
+        vpn_off_only: false
+  asked-guakao:
+    prompt_en: Someone offers a 挂靠, a purchased permit, or a visa-run?
+    options:
+      - label_en: Yes — refuse
+        next: laid-off
+        never:
+          - guakao
+          - visa_run
+          - buy_permit
+        advice_en: Refuse. Those are not product steps. Official next step only — ask the local exit-entry window or 12345 (English hours are unverified). Never a visa-run.
+        vpn_off_only: false
+      - label_en: No one offered that
+        next: laid-off
+        never:
+          - visa_run
+          - guakao
+        advice_en: Keep it official. No 挂靠 and no visa-run.
+        vpn_off_only: false
+  laid-off:
+    prompt_en: The job ended or the permit was cancelled?
+    options:
+      - label_en: Yes — official next step only
+        next: null
+        never:
+          - visa_run
+          - guakao
+        advice_en: Do not take a visa-run as a product step. Ask HR for the cancellation paper. Call the local 出入境 window or 12345 for the official next step. Confirm 12345 English hours at the number — we do not invent them.
+        vpn_off_only: false
+      - label_en: Job is still active
+        next: null
+        never:
+          - visa_run
+        advice_en: Stay on the employer filing. No visa-run step.
+        vpn_off_only: false
 attached_playbooks:
   - pb-02
   - pb-10

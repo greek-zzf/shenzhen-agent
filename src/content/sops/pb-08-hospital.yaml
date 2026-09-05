@@ -62,36 +62,59 @@ conflicts:
         claim_en: Official booking copy is for this hospital's own windows and phones. It is not a city-wide exclusive. Confirm vaccine stock at the 急诊 you can reach now.
         as_of: "2026-01"
 failure_tree:
-  id: hospital-stuck
-  title_en: I'm stuck
-  nodes:
-    - id: waiting-for-english
-      question_en: You are waiting for an English-speaking private clinic?
-      advice_en: For a bite or scratch, go to the nearest public 急诊 now. Use the speech card. An international clinic can wait. This is routing, not a diagnosis.
-      never:
-        - wait_for_english
-        - diagnose
-        - prescribe
-      next: wechat-passport-fail
-      vpn_off_only: false
-    - id: wechat-passport-fail
-      question_en: The WeChat mini-program rejects a foreign passport?
-      advice_en: Official HKU-SZH copy says foreign documents often fail online booking. Walk to 急诊 or the international desk with the physical passport. Call 0755-86913388 (IMC) or 0755-86913366 (English line). We never RPA WeChat.
-      never:
-        - wechat_rpa
-        - diagnose
-      next: asked-for-diagnosis
-      vpn_off_only: false
-    - id: asked-for-diagnosis
-      question_en: You want this copilot to say whether you need the vaccine, a drug, or a claim decision?
-      advice_en: We do not diagnose, prescribe, or decide insurance. Ask 急诊. For ADHD / controlled meds, go to a licensed hospital — we will not advise a cross-border pill.
-      never:
-        - diagnose
-        - prescribe
-        - insurance_decision
-        - controlled_meds
-      next: null
-      vpn_off_only: false
+  waiting-for-english:
+    prompt_en: You are waiting for an English-speaking private clinic?
+    options:
+      - label_en: Yes — go to public 急诊 now
+        next: wechat-passport-fail
+        never:
+          - wait_for_english
+          - diagnose
+          - prescribe
+        advice_en: For a bite or scratch, go to the nearest public 急诊 now. Use the speech card. An international clinic can wait. This is routing, not a diagnosis.
+        vpn_off_only: false
+      - label_en: I am already at a public hospital
+        next: wechat-passport-fail
+        never:
+          - diagnose
+          - prescribe
+        advice_en: Stay there. Ask 急诊 for 狂犬疫苗. This is routing, not a diagnosis.
+        vpn_off_only: false
+  wechat-passport-fail:
+    prompt_en: The WeChat mini-program rejects a foreign passport?
+    options:
+      - label_en: Yes — walk in / call
+        next: asked-for-diagnosis
+        never:
+          - wechat_rpa
+          - diagnose
+        advice_en: Official HKU-SZH copy says foreign documents often fail online booking. Walk to 急诊 or the international desk with the physical passport. Call 0755-86913388 (IMC) or 0755-86913366 (English line). We never RPA WeChat.
+        vpn_off_only: false
+      - label_en: I did not try WeChat
+        next: asked-for-diagnosis
+        never:
+          - wechat_rpa
+        advice_en: Do not start a WeChat RPA. Counter or phone only.
+        vpn_off_only: false
+  asked-for-diagnosis:
+    prompt_en: You want this copilot to say whether you need the vaccine, a drug, or a claim decision?
+    options:
+      - label_en: I will ask 急诊, not this copilot
+        next: null
+        never:
+          - diagnose
+          - prescribe
+          - insurance_decision
+          - controlled_meds
+        advice_en: We do not diagnose, prescribe, or decide insurance. Ask 急诊. For ADHD / controlled meds, go to a licensed hospital — we will not advise a cross-border pill.
+        vpn_off_only: false
+      - label_en: I only needed routing
+        next: null
+        never:
+          - diagnose
+          - prescribe
+        advice_en: Routing only. The clinician decides treatment.
+        vpn_off_only: false
 attached_playbooks: []
 steps:
   - id: rabies-now

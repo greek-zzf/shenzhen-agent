@@ -64,41 +64,71 @@ conflicts:
         claim_en: Airport desk is described as Level 1, Terminal 3, next to the international arrivals exit. Use it for wallet setup help. Do not treat it as a promised bank appointment.
         as_of: "2026-09-04"
 failure_tree:
-  id: bank-stuck
-  title_en: I'm stuck
-  nodes:
-    - id: visa-refused
-      question_en: The clerk refused because your visa is L, tourist, or VOA?
-      advice_en: That is the usual window outcome for a short-stay visa. Do not hire a proxy opener or change cash on the street. Finish payments with PB-01 wallets and cash. Come back with a work / residence document if you later have one.
-      never:
-        - proxy_account
-        - underground_fx
-      next: branch-refuses
-      vpn_off_only: false
-    - id: branch-refuses
-      question_en: This branch says they do not open foreign-passport accounts?
-      advice_en: Neighborhood windows often refuse. Try another window in a guide-named area (Futian Coco Park, Shekou, Hi-Tech) — follow the page you opened, do not invent a street. Never a yellow-cow or proxy opener.
-      never:
-        - proxy_account
-        - invent_street
-      next: airport-not-sla
-      vpn_off_only: false
-    - id: airport-not-sla
-      question_en: Airport one-stop will not open an account today?
-      advice_en: Official copy is payment and SIM help, not a bank SLA. The HeyShenzhen same-day claim is a guide, not a promise. Ask what they can actually do today. Do not treat the desk as a quoted opening time.
-      never:
-        - treat_as_sla
-        - proxy_account
-      next: asked-for-agent
-      vpn_off_only: false
-    - id: asked-for-agent
-      question_en: Someone offers to open the account for you, or to change a large amount off the books?
-      advice_en: Walk away. Opening must be you, in person, at a licensed counter. This copilot never assists a proxy account or underground FX.
-      never:
-        - proxy_account
-        - underground_fx
-      next: null
-      vpn_off_only: false
+  visa-refused:
+    prompt_en: The clerk refused because your visa is L, tourist, or VOA?
+    options:
+      - label_en: Yes — short-stay visa refused
+        next: branch-refuses
+        never:
+          - proxy_account
+          - underground_fx
+        advice_en: That is the usual window outcome for a short-stay visa. Do not hire a proxy opener or change cash on the street. Finish payments with PB-01 wallets and cash. Come back with a work / residence document if you later have one.
+        vpn_off_only: false
+      - label_en: Different problem
+        next: branch-refuses
+        never:
+          - proxy_account
+        advice_en: Skip to the next stuck node. Still never a proxy opener.
+        vpn_off_only: false
+  branch-refuses:
+    prompt_en: This branch says they do not open foreign-passport accounts?
+    options:
+      - label_en: Yes — this window refused a foreign passport
+        next: airport-not-sla
+        never:
+          - proxy_account
+          - invent_street
+        advice_en: Neighborhood windows often refuse. Try another window in a guide-named area (Futian Coco Park, Shekou, Hi-Tech) — follow the page you opened, do not invent a street. Never a yellow-cow or proxy opener.
+        vpn_off_only: false
+      - label_en: Different problem
+        next: airport-not-sla
+        never:
+          - invent_street
+        advice_en: Do not invent a street. Open the guide page again.
+        vpn_off_only: false
+  airport-not-sla:
+    prompt_en: Airport one-stop will not open an account today?
+    options:
+      - label_en: Yes — desk will not open an account
+        next: asked-for-agent
+        never:
+          - treat_as_sla
+          - proxy_account
+        advice_en: Official copy is payment and SIM help, not a bank SLA. The HeyShenzhen same-day claim is a guide, not a promise. Ask what they can actually do today. Do not treat the desk as a quoted opening time.
+        vpn_off_only: false
+      - label_en: I am not at the airport
+        next: asked-for-agent
+        never:
+          - treat_as_sla
+        advice_en: Airport one-stop is not an SLA. Use a city window from the guide page.
+        vpn_off_only: false
+  asked-for-agent:
+    prompt_en: Someone offers to open the account for you, or to change a large amount off the books?
+    options:
+      - label_en: Yes — walk away
+        next: null
+        never:
+          - proxy_account
+          - underground_fx
+        advice_en: Walk away. Opening must be you, in person, at a licensed counter. This copilot never assists a proxy account or underground FX.
+        vpn_off_only: false
+      - label_en: No one offered that
+        next: null
+        never:
+          - proxy_account
+          - underground_fx
+        advice_en: Keep it that way. Licensed counter, you in person, only.
+        vpn_off_only: false
 attached_playbooks:
   - pb-01
 steps:

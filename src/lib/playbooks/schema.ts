@@ -163,6 +163,26 @@ export const conflictSchema = z.object({
   sources: z.array(conflictSourceSchema).min(2),
 });
 
+export const failureTreeOptionSchema = z.object({
+  label_en: z.string().min(1),
+  next: z.string().nullable(),
+  never: z.array(z.string()).optional().default([]),
+  advice_en: z.string().optional(),
+  vpn_off_only: z.boolean().optional().default(false),
+});
+
+/** Authored expansion shape: failure_tree is a map of node_id → {prompt_en, options}. */
+export const authoredFailureMapNodeSchema = z.object({
+  prompt_en: z.string().min(1),
+  options: z.array(failureTreeOptionSchema).min(1),
+});
+
+export const authoredFailureMapSchema = z
+  .record(z.string().min(1), authoredFailureMapNodeSchema)
+  .refine((map) => Object.keys(map).length >= 1, {
+    message: 'failure_tree map needs at least one node',
+  });
+
 export const failureNodeSchema = z.object({
   id: z.string().min(1),
   question_en: z.string().min(1),
@@ -170,6 +190,7 @@ export const failureNodeSchema = z.object({
   never: z.array(z.string()),
   next: z.string().nullable(),
   vpn_off_only: z.boolean(),
+  options: z.array(failureTreeOptionSchema).optional(),
 });
 
 export const failureTreeSchema = z.object({
@@ -204,6 +225,8 @@ export type OfficialUrl = z.infer<typeof officialUrlSchema>;
 export type Conflict = z.infer<typeof conflictSchema>;
 export type FailureTree = z.infer<typeof failureTreeSchema>;
 export type FailureNode = z.infer<typeof failureNodeSchema>;
+export type FailureTreeOption = z.infer<typeof failureTreeOptionSchema>;
+export type AuthoredFailureMap = z.infer<typeof authoredFailureMapSchema>;
 export type AttachRule = z.infer<typeof attachWhenSchema>;
 export type SpeechCard = z.infer<typeof speechCardSchema>;
 export type GettingThere = z.infer<typeof gettingThereSchema>;

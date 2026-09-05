@@ -1,4 +1,4 @@
-export { parsePlaybookYaml } from './parse';
+export { parsePlaybookYaml, normalizeFailureTree } from './parse';
 export {
   PLAYBOOKS,
   PLAYBOOK_BY_ID,

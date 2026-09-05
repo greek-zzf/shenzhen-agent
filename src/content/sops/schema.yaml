@@ -43,18 +43,34 @@ Conflict:
   resolution: verify_at_window  # NEVER pick a winner
   sources: { label, url, kind, claim_en, as_of }[]
 
+# Runtime FailureTree (after parse) is always { id, title_en, nodes }.
+# Authored expansion YAML (PB-06–09) writes a map instead:
+#   failure_tree:
+#     node_id:
+#       prompt_en: string
+#       options: { label_en, next, never?, advice_en?, vpn_off_only? }[]
+# parse.ts normalizes the map → nodes. Legacy v1 files keep `nodes:`.
+
 FailureTree:
   id: string
   title_en: string
-  nodes: FailureNode[]          # decision tree, not chat; not a node_id → {prompt, options} map
+  nodes: FailureNode[]          # runtime decision tree, not chat
 
 FailureNode:
   id: string
-  question_en: string
+  question_en: string           # from prompt_en when authored as a map
   advice_en: string
   never: string[]               # e.g. friend_bind, yellow_cow
   next: string | null           # next node id
   vpn_off_only: boolean
+  options?: FailureOption[]     # preserved from the authored map
+
+FailureOption:
+  label_en: string
+  next: string | null
+  never: string[]
+  advice_en?: string
+  vpn_off_only?: boolean
 
 Step:                           # every key required; unused slots are null
   id: string
