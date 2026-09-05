@@ -1,0 +1,318 @@
+id: pb-09
+title_en: Work permit and residence permit — personal list
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: work-residence
+summary_en: The employer files. You pack a personal list and the official URL. Age-policy notes sit as a conflict, not a product step. No 挂靠 and no visa-run.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: work_permit
+  - when: flag_is
+    value: work_permit
+  - when: visa_type_in
+    value: work
+  - when: visa_type_in
+    value: residence
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+  - label: Shenzhen foreigners service platform
+    url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+    kind: official
+  - label: STIC FAQ — foreign talent
+    url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+    kind: official
+  - label: National foreigner work-permit system
+    url: https://fwp.safea.gov.cn/lhgzweb/
+    kind: official
+  - label: sz.gov.cn English — living / planning materials
+    url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+    kind: official
+  - label: China Briefing — 2026 age policy (指南, 非法律)
+    url: https://www.china-briefing.com/news/work-permit-renewal-shenzhen-age-policy-update/
+    kind: guide
+conflicts:
+  - id: age-policy-2026
+    title_en: 2026 age-policy notes — conflict only, not a product step
+    resolution: verify_at_window
+    sources:
+      - label: China Briefing — 2026 age policy
+        url: https://www.china-briefing.com/news/work-permit-renewal-shenzhen-age-policy-update/
+        kind: guide
+        claim_en: A 2026 briefing describes category B/C renewal age notes (men 60 / women 55 in that write-up). That is a secondary explainer, not a statute we execute. We do not add an “age workaround” step.
+        as_of: "2026-01"
+      - label: STIC FAQ — foreign talent
+        url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+        kind: official
+        claim_en: Official FAQ copy is the window's document. Confirm any age or category rule there or with the employer's filer. We do not pick a winner and we do not invent a visa-run.
+        as_of: "2026-01"
+  - id: employer-files
+    title_en: Employer submits — you do not file around them
+    resolution: verify_at_window
+    sources:
+      - label: National foreigner work-permit system
+        url: https://fwp.safea.gov.cn/lhgzweb/
+        kind: official
+        claim_en: The national work-permit system is an employer-side filing. The individual does not submit around a company. This copilot never files and never sells a permit.
+        as_of: "2026-01"
+      - label: Shenzhen foreigners service platform
+        url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+        kind: official
+        claim_en: City foreigners-service pages are the local window and status surface. Use them to read what HR already filed. Do not treat a personal account as a substitute employer.
+        as_of: "2026-01"
+failure_tree:
+  id: work-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: hr-not-started
+      question_en: HR has not opened a filing, or the city on the permit is not Shenzhen?
+      advice_en: You cannot file around the employer. Send the personal-list + official URL. If the work city and the employer city differ, HR must fix the filing entity — we do not invent a 挂靠.
+      never:
+        - guakao
+        - file_around_employer
+        - buy_permit
+      next: asked-guakao
+      vpn_off_only: false
+    - id: asked-guakao
+      question_en: Someone offers a 挂靠, a purchased permit, or “fly to Thailand and come back”?
+      advice_en: Refuse. Those are not product steps. Official next step only — ask the local exit-entry window or 12345 (English hours are unverified). Never a visa-run.
+      never:
+        - guakao
+        - visa_run
+        - buy_permit
+      next: laid-off
+      vpn_off_only: false
+    - id: laid-off
+      question_en: The job ended or the permit was cancelled?
+      advice_en: Do not take a visa-run as a product step. Ask HR for the cancellation paper. Call the local 出入境 window or 12345 for the official next step. Confirm 12345 English hours at the number — we do not invent them.
+      never:
+        - visa_run
+        - guakao
+      next: null
+      vpn_off_only: false
+attached_playbooks:
+  - pb-02
+  - pb-10
+steps:
+  - id: employer-submits
+    title_en: The employer files — you do not
+    slot: required_check
+    why: FESCO / CIIC / the company account submits. This copilot makes a personal checklist. It does not submit, guarantee approval, or sell a permit.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: National foreigner work-permit system
+        url: https://fwp.safea.gov.cn/lhgzweb/
+        kind: official
+      - label: Shenzhen foreigners service platform
+        url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+        kind: official
+    prefill: {}
+    required_checkboxes:
+      - id: employer-files
+        label_en: I understand the employer submits — I do not file around them
+      - id: no-guarantee
+        label_en: I understand this copilot does not guarantee approval
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: hr-not-started
+    timer: null
+  - id: personal-materials
+    title_en: Personal materials list
+    slot: what_to_bring
+    why: Typical individual pack — no-crime record, degree authentication, medical exam, lodging registration, photos. Non-Chinese papers need a company-chopped translation. Confirm against the official URL, not this list alone.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport scans you control
+      body_en: Photograph the bio page yourself. Do not send the book to a 挂靠 “agent” who is not your employer’s filer.
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport bio page (clear scan)
+        required: true
+      - id: no-crime
+        label_en: No-crime record (as HR specified)
+        required: true
+      - id: degree
+        label_en: Degree + authentication
+        required: true
+      - id: medical
+        label_en: Medical exam report
+        required: true
+      - id: lodging
+        label_en: Temporary lodging registration (real)
+        required: true
+      - id: photos
+        label_en: Visa-size photos as HR specified
+        required: true
+      - id: translation
+        label_en: Company-chopped translation of non-Chinese papers
+        required: false
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: sz.gov.cn English — living / planning materials
+        url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_have_these
+      label_en: I have these
+    stuck_node: hr-not-started
+    timer: null
+  - id: official-url
+    title_en: Official URL and city window
+    slot: click_path
+    why: Open the national system and the Shenzhen foreigners-service page. Guides say a city parallel window is often about 7 working days after intake — confirm on the page, do not treat that as an SLA.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Municipal employment and residence service center (Civic Center) — confirm on the official page
+      copy_name_zh: 深圳市就业与居留服务中心（市民中心，以官网为准）
+      metro_line: null
+      metro_exit: null
+      notes_en: Do not invent a street or a metro exit. Follow the official page or HR’s appointment SMS. We do not book the window.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open https://fwp.safea.gov.cn/lhgzweb/ and https://wgfw.ga.sz.gov.cn/user/wgrfwpt. Read what HR already filed. We never submit.
+          screenshot: null
+        - n: 2
+          text_en: If HR sends a Chinese SMS, use the speech card to ask them to screenshot the status. Do not invent a 7-day promise.
+          screenshot: null
+    official_urls:
+      - label: National foreigner work-permit system
+        url: https://fwp.safea.gov.cn/lhgzweb/
+        kind: official
+      - label: Shenzhen foreigners service platform
+        url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+        kind: official
+      - label: STIC FAQ
+        url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open the official URL
+    stuck_node: hr-not-started
+    timer: null
+  - id: age-policy-conflict
+    title_en: 2026 age policy — conflict, not a step
+    slot: conflict
+    why: A briefing describes B/C renewal age notes. Official FAQ is the window's document. We show both. We do not add an age workaround or a visa-run.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: China Briefing — 2026 age policy
+        url: https://www.china-briefing.com/news/work-permit-renewal-shenzhen-age-policy-update/
+        kind: guide
+      - label: STIC FAQ
+        url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify with HR / the window
+    stuck_node: asked-guakao
+    timer: null
+  - id: never-guakao
+    title_en: No 挂靠 and no visa-run
+    slot: required_check
+    why: A permit tied to a shell employer, a purchased letter, or “fly out and come back” is not a product step. Official next step only.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-guakao
+        label_en: I will not use a 挂靠 / purchased permit / fake employer
+      - id: no-visa-run
+        label_en: I will not treat a visa-run as a product step
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: asked-guakao
+    timer: null
+  - id: hr-speech
+    title_en: What to send HR
+    slot: speech
+    why: A short status ask. No accusation. Attach the official URL and your real materials list.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 您好，工作许可和居留许可由公司提交。我已按官方清单准备个人材料，请查收。请把系统进度截图发给我。
+      pinyin: Nín hǎo, gōngzuò xǔkě hé jūliú xǔkě yóu gōngsī tíjiāo. Wǒ yǐ àn guānfāng qīngdān zhǔnbèi gèrén cáiliào, qǐng cháshōu. Qǐng bǎ xìtǒng jìndù jiétú fā gěi wǒ.
+      en: Hello. The company files the work and residence permits. I have prepared my personal materials against the official list. Please send a screenshot of the system status.
+    click_path: null
+    official_urls:
+      - label: Shenzhen foreigners service platform
+        url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show HR
+    stuck_node: hr-not-started
+    timer: null
+  - id: laid-off-official-only
+    title_en: If the job ended — official next step only
+    slot: required_check
+    why: Cancellation is an HR + window process. We do not teach a visa-run. 12345 English hours are unverified — confirm when you call.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 请问许可取消后，我下一步应该去哪个出入境窗口？
+      pinyin: Qǐngwèn xǔkě qǔxiāo hòu, wǒ xià yí bù yīnggāi qù nǎge chūrùjìng chuāngkǒu?
+      en: After the permit is cancelled, which exit-entry window should I go to next?
+    click_path: null
+    official_urls:
+      - label: Shenzhen foreigners service platform
+        url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+        kind: official
+    prefill: {}
+    required_checkboxes:
+      - id: official-next
+        label_en: I will ask 出入境 or 12345 — I will not treat a visa-run as the next step
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: laid-off
+    timer: null

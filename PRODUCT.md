@@ -55,6 +55,13 @@ v1 is **Shenzhen-only**. Other cities route to an unsupported-city screen. There
 - PB-05 metro / Alipay Transport QR
 - PB-10 HR myth-buster one-pager (registration slip vs six-month lease)
 
+**Expansion drafts (same schema, `version: 1`, still `last_verified: null` — not field-verified):**
+
+- PB-06 bank materials + visa refuse predict (`/p/bank`) — not a live queue walkthrough
+- PB-07 housing lease / 网签 / 58 trap (`/p/housing-lease`) — not a marketplace
+- PB-08 public hospital / rabies routing (`/p/hospital-rabies`) — no diagnosis, prescription, or WeChat RPA
+- PB-09 work / residence personal list (`/p/work-residence`) — employer files; no 挂靠 or visa-run step
+
 **v1 does not:** housing marketplace, hospital booking RPA, social/events, Huaqiangbei, schools, IIT subsidy calculator, driver's license, housing fund, 12306 ticketing, bank-account opening as a walkthrough, WeChat/Alipay/i深圳 login or RPA, computer-use, Chinese UI, App Store, community feed, credits, or live border queues.
 
 **Engine rules already in the SOP schema:** an LLM must not rewrite, reorder, or invent steps. Official vs field conflicts display side by side with resolution `verify_at_window` — the model does not pick a winner. Reddit and English guides are labeled non-legal. Passport face-login failure is a first-class warning plus a window bypass, not a claim that Copilot “connected i深圳.”
@@ -79,7 +86,7 @@ No logo, color, or type system is committed here. `public/logo.png` and default 
 ## Evidence on Hand
 
 - Product spec: `docs/shenzhen-copilot-product-docs/shenzhen-copilot-spec.md` (2026-09-02). IA: `docs/shenzhen-copilot-product-docs/shenzhen-copilot-v1-ia.md`. Page-design notes in that folder are not this file and are not a visual system of record.
-- Playbook YAML: `src/content/sops/pb-01-payments.yaml`, `pb-02-accommodation.yaml`, `pb-03-voa.yaml`, `pb-04-sim.yaml`, `pb-05-metro.yaml`, `pb-10-hr-letter.yaml`. Schema: `src/content/sops/schema.yaml`. All six are drafts; **no SOP is field-verified**.
+- Playbook YAML: `src/content/sops/pb-01-payments.yaml`, `pb-02-accommodation.yaml`, `pb-03-voa.yaml`, `pb-04-sim.yaml`, `pb-05-metro.yaml`, `pb-06-bank.yaml`, `pb-07-housing.yaml`, `pb-08-hospital.yaml`, `pb-09-work-permit.yaml`, `pb-10-hr-letter.yaml`. Schema: `src/content/sops/schema.yaml`. All are drafts; **no SOP is field-verified**. Expansion on-site stubs: `docs/field-verification-expansion.md`.
 - North-star format (information slots, not content to clone): [Want to swim at Bao'an Stadium but don't speak Chinese?](https://www.reddit.com/r/shenzhen/comments/1srgutv/want_to_swim_at_baoan_stadium_but_dont_speak/).
 - Official and guide URLs live on each YAML playbook. Reddit links are user reports, labeled non-legal.
 - Spec-cited research files (`r-shenzhen-research.md`, `shenzhen-expat-landscape.md`) are **not in this repo**. Do not invent subscriber counts, testimonials, field-verified hours, branch addresses, or “live” wait times. Missing click-path screenshots must show as missing art, not prose.

@@ -1,5 +1,34 @@
 import { z } from 'zod';
 
+export const PLAYBOOK_IDS = [
+  'pb-01',
+  'pb-02',
+  'pb-03',
+  'pb-04',
+  'pb-05',
+  'pb-06',
+  'pb-07',
+  'pb-08',
+  'pb-09',
+  'pb-10',
+] as const;
+
+export const PUBLIC_SLUGS = [
+  'voa-hours',
+  'alipay-metro',
+  'accommodation-registration',
+  'bank',
+  'housing-lease',
+  'hospital-rabies',
+  'work-residence',
+] as const;
+
+export type PlaybookId = (typeof PLAYBOOK_IDS)[number];
+export type PublicSlug = (typeof PUBLIC_SLUGS)[number];
+
+export const playbookIdSchema = z.enum(PLAYBOOK_IDS);
+export const publicSlugSchema = z.enum(PUBLIC_SLUGS).nullable();
+
 export const urlKindSchema = z.enum(['official', 'guide', 'user_report']);
 
 export const officialUrlSchema = z.object({
@@ -150,14 +179,14 @@ export const failureTreeSchema = z.object({
 });
 
 export const playbookSchema = z.object({
-  id: z.string().regex(/^pb-\d{2}$/),
+  id: playbookIdSchema,
   title_en: z.string().min(1),
   status: z.enum(['draft', 'published']),
   version: z.number().int().positive(),
   last_verified: z.string().nullable(),
   source_max_age_days: z.number().int().positive(),
   lifecycle: z.enum(['72h', 'first_week', 'later']),
-  public_slug: z.string().nullable(),
+  public_slug: publicSlugSchema,
   summary_en: z.string().min(1),
   disclaimer_en: z.string().min(1),
   attach_when: z.array(attachWhenSchema),
@@ -165,7 +194,7 @@ export const playbookSchema = z.object({
   official_urls: z.array(officialUrlSchema),
   conflicts: z.array(conflictSchema),
   failure_tree: failureTreeSchema,
-  attached_playbooks: z.array(z.string()),
+  attached_playbooks: z.array(playbookIdSchema),
   steps: z.array(stepSchema).min(1),
 });
 

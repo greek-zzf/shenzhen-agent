@@ -2,11 +2,15 @@ import type { AttachRule, Playbook } from './schema';
 import type { CopilotProfile } from './profile';
 
 export const ATTACH_PRIORITY = [
+  'pb-08',
   'pb-03',
   'pb-01',
   'pb-02',
   'pb-04',
   'pb-05',
+  'pb-06',
+  'pb-07',
+  'pb-09',
   'pb-10',
 ] as const;
 

@@ -4,14 +4,14 @@
 # always renders a SourceStaleBadge — draft SOP, never field-verified.
 
 playbook:
-  id: string                    # pb-01 … pb-10
+  id: pb-01 | pb-02 | pb-03 | pb-04 | pb-05 | pb-06 | pb-07 | pb-08 | pb-09 | pb-10
   title_en: string
   status: draft | published     # v1 files are draft
   version: number               # bump when YAML sources/conflicts change
   last_verified: null | date    # null → always stale badge; remote fetch ≠ verified
   source_max_age_days: number
   lifecycle: 72h | first_week | later
-  public_slug: string | null    # maps /p/<slug> → this playbook
+  public_slug: voa-hours | alipay-metro | accommodation-registration | bank | housing-lease | hospital-rabies | work-residence | null
   summary_en: string
   disclaimer_en: string         # procedure guide, not legal/medical/immigration advice
   attach_when: AttachRule[]     # simple ifs only — no LLM
@@ -24,7 +24,7 @@ playbook:
 
 AttachRule:
   when: broken_contains | visa_type_in | location_is | stay_is | flag_is
-  value: string                 # payments | VOA | hk_no_visa | not_hotel | need_24h | no_cn_phone | metro_qr | hr_lease_6m
+  value: string                 # payments | VOA | hk_no_visa | not_hotel | need_24h | no_cn_phone | metro_qr | hr_lease_6m | need_bank | housing_lease | hospital_rabies | work_permit
 
 CtaId: next_step | start_kyc | open_official | i_have_these | preview_hr_letter | mark_paid | i_am_at_window | confirm_single_entry
 
@@ -46,7 +46,7 @@ Conflict:
 FailureTree:
   id: string
   title_en: string
-  nodes: FailureNode[]          # decision tree, not chat
+  nodes: FailureNode[]          # decision tree, not chat; not a node_id → {prompt, options} map
 
 FailureNode:
   id: string

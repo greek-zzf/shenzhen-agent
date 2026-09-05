@@ -1,6 +1,6 @@
 import { sourceMaxAgeDaysFor } from './freshness';
 import { parsePlaybookYaml } from './parse';
-import type { Playbook } from './schema';
+import { PLAYBOOK_IDS, type Playbook } from './schema';
 
 const rawFiles = import.meta.glob('/src/content/sops/pb-*.yaml', {
   query: '?raw',
@@ -26,14 +26,7 @@ export const PLAYBOOK_BY_PUBLIC_SLUG: Record<string, Playbook> = Object.fromEntr
   PLAYBOOKS.filter((pb) => pb.public_slug).map((pb) => [pb.public_slug as string, pb])
 );
 
-export const REQUIRED_PLAYBOOK_IDS = [
-  'pb-01',
-  'pb-02',
-  'pb-03',
-  'pb-04',
-  'pb-05',
-  'pb-10',
-] as const;
+export const REQUIRED_PLAYBOOK_IDS = PLAYBOOK_IDS;
 
 export function getPlaybook(id: string): Playbook | null {
   return PLAYBOOK_BY_ID[id] ?? null;

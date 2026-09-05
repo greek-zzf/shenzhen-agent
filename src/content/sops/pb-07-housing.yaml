@@ -1,0 +1,320 @@
+id: pb-07
+title_en: Housing lease, 网签, and 58 traps
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: housing-lease
+summary_en: Treat 58 as a fake-listing trap. Tenant commission figures conflict — mark unknown. File 网签. Copy ordinance fields for the PB-02 lodging form. Never a fake 居住证明.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: housing_lease
+  - when: flag_is
+    value: housing_lease
+primary_cta:
+  id: next_step
+  label_en: Continue
+official_urls:
+  - label: Shenzhen housing-lease ordinance (2025-09-15)
+    url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+    kind: official
+  - label: sz.gov.cn English — housing-rental supervision platform
+    url: http://www.sz.gov.cn/en_szgov/services/personal/accommodation/platform/
+    kind: official
+  - label: HiShenzhen — renting as a foreigner (指南, 非法律)
+    url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+    kind: guide
+  - label: Wellcee Shenzhen — English listings
+    url: https://www.wellcee.com/shenzhen/m/rent-apartment
+    kind: guide
+  - label: HeyShenzhen (指南, 非法律)
+    url: https://heyshenzhen.com/
+    kind: guide
+conflicts:
+  - id: commission-half-vs-month
+    title_en: Tenant commission — half month vs one month
+    resolution: verify_at_window
+    sources:
+      - label: HiShenzhen — renting as a foreigner
+        url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+        kind: guide
+        claim_en: HiShenzhen describes tenant-side Beike / Lianjia commission as about half a month's rent. That is a guide figure, not a published official fee schedule.
+        as_of: "2026-01"
+      - label: HeyShenzhen
+        url: https://heyshenzhen.com/
+        kind: guide
+        claim_en: Another English guide cluster describes tenant commission as about one month. The two figures conflict. Mark unknown. Verify on the agency invoice the day you sign. We do not pick a winner.
+        as_of: "2026-01"
+      - label: Shenzhen housing-lease ordinance
+        url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+        kind: official
+        claim_en: The 2025-09-15 ordinance requires a real-name contract and points at the city supervision platform. It does not settle tenant commission as a published half-month or one-month rule.
+        as_of: "2025-09-15"
+  - id: fifty-eight-trap
+    title_en: 58 as a listing trap, not a channel
+    resolution: verify_at_window
+    sources:
+      - label: HiShenzhen — renting as a foreigner
+        url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+        kind: guide
+        claim_en: HiShenzhen explicitly advises against 58 as a primary channel. Treat 58 as a fake-listing trap. Prefer Beike / Lianjia inventory or a smaller English board such as Wellcee.
+        as_of: "2026-01"
+      - label: Wellcee Shenzhen
+        url: https://www.wellcee.com/shenzhen/m/rent-apartment
+        kind: guide
+        claim_en: Wellcee is an English board with small inventory. It is not a city marketplace we operate, and it is not a promise the flat is still free.
+        as_of: "2026-01"
+failure_tree:
+  id: housing-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: fifty-eight-too-good
+      question_en: A 58 listing is far cheaper than Beike / Wellcee for the same building?
+      advice_en: Treat it as a trap. Do not wire a deposit to a personal WeChat. Walk the building with a licensed agent or skip the listing. HiShenzhen tells foreigners not to use 58 as the channel.
+      never:
+        - fifty_eight_wire
+        - wechat_deposit
+      next: no-wangqian
+      vpn_off_only: false
+    - id: no-wangqian
+      question_en: The landlord or agent says skip 网签 / the city platform?
+      advice_en: The 2025-09-15 ordinance and the city platform exist so the lease is on record. Unfiled leases can block later residence steps. Do not skip 网签 to “save commission.”
+      never:
+        - skip_wangqian
+        - fake_residence
+      next: asked-fake-juzhu
+      vpn_off_only: false
+    - id: asked-fake-juzhu
+      question_en: Someone offers a printed 居住证明 or a chop you did not earn at the window?
+      advice_en: Refuse. A fake slip is worse than a late one. Run pb-02 for a real 住宿登记. This copilot never produces a fake 居住证明.
+      never:
+        - fake_residence
+        - fake_chop
+      next: null
+      vpn_off_only: false
+attached_playbooks:
+  - pb-02
+steps:
+  - id: fifty-eight-trap
+    title_en: Treat 58 as a trap
+    slot: required_check
+    why: HiShenzhen tells foreigners not to use 58 as the channel. A too-cheap listing is the usual bait. We do not run a marketplace.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: HiShenzhen — renting as a foreigner
+        url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+        kind: guide
+    prefill: {}
+    required_checkboxes:
+      - id: no-58
+        label_en: I will not use 58 as my listing channel
+      - id: no-wechat-deposit
+        label_en: I will not wire a deposit to a personal WeChat
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: fifty-eight-too-good
+    timer: null
+  - id: commission-conflict
+    title_en: Commission — half month vs one month
+    slot: conflict
+    why: HiShenzhen writes about half a month. Another English guide cluster writes one month. The ordinance does not settle the number. Mark unknown. Verify on the invoice.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: HiShenzhen — renting as a foreigner
+        url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+        kind: guide
+      - label: HeyShenzhen
+        url: https://heyshenzhen.com/
+        kind: guide
+      - label: Shenzhen housing-lease ordinance
+        url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will verify the invoice
+    stuck_node: no-wangqian
+    timer: null
+  - id: channels
+    title_en: Channels — English small, Beike large, 58 out
+    slot: click_path
+    why: Wellcee is English with small stock. Beike / Lianjia has the inventory (tenant commission unknown). Anjuke is mixed. 58 stays a trap. We do not invent a street or a “guaranteed foreigner building.”
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: If you need English first, open Wellcee. Expect thin inventory. Confirm the flat is still free with the agent named on the card.
+          screenshot: null
+        - n: 2
+          text_en: For stock, use Beike / Lianjia. Ask whether the building accepts a foreign passport before you travel. We do not invent that list.
+          screenshot: null
+        - n: 3
+          text_en: Do not start on 58. Do not pay a personal WeChat to “hold” a key.
+          screenshot: null
+    official_urls:
+      - label: Wellcee Shenzhen
+        url: https://www.wellcee.com/shenzhen/m/rent-apartment
+        kind: guide
+      - label: HiShenzhen — renting as a foreigner
+        url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open Wellcee or the guide
+    stuck_node: fifty-eight-too-good
+    timer: null
+  - id: wangqian
+    title_en: 网签 on the city platform
+    slot: click_path
+    why: 2025-09-15 ordinance — real-name contract. City platform filing is commonly 1–3 working days. The UI is Chinese. An unfiled lease can block later residence steps.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport before any agent QR
+      body_en: Real-name 网签 needs your passport. Do not let an agent photograph it “to file for you” on a personal phone and then skip the platform.
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: contract
+        label_en: Bilingual or Chinese lease draft
+        required: true
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the city English platform page in official_urls. The filing UI itself is Chinese — use the speech card with the agent.
+          screenshot: null
+        - n: 2
+          text_en: Ask the agent to complete 网签 / 住房租赁监管服务平台备案. Guides say 1–3 working days. Confirm the receipt, not a WeChat screenshot.
+          screenshot: null
+    official_urls:
+      - label: sz.gov.cn English — housing-rental supervision platform
+        url: http://www.sz.gov.cn/en_szgov/services/personal/accommodation/platform/
+        kind: official
+      - label: Shenzhen housing-lease ordinance
+        url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open the platform page
+    stuck_node: no-wangqian
+    timer: null
+  - id: ordinance-fields-for-pb02
+    title_en: Copy ordinance fields for PB-02 — do not invent an address
+    slot: click_path
+    why: The lodging form wants the door 房屋码 and the address as filed, not a street you type from memory. These fields feed pb-02. We never submit.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: house-code
+        label_en: Door 房屋码 (photo or access)
+        required: true
+      - id: filed-address
+        label_en: Address as written on the 网签 / lease
+        required: true
+      - id: landlord
+        label_en: Landlord name and phone as on the contract
+        required: false
+      - id: start-date
+        label_en: Move-in date
+        required: true
+    speech_card:
+      hanzi: 请问房屋码在哪里？我要按合同地址办理住宿登记，请不要让我手打地址。
+      pinyin: Qǐngwèn fángwū mǎ zài nǎlǐ? Wǒ yào àn hétong dìzhǐ bànlǐ zhùsù dēngjì, qǐng bú yào ràng wǒ shǒu dǎ dìzhǐ.
+      en: Where is the house QR? I will register the stay using the contract address. Please do not ask me to type the street.
+    click_path:
+      steps:
+        - n: 1
+          text_en: Copy 房屋码, filed address, landlord name/phone, and move-in date from the contract or 网签 receipt. Do not retype a street from memory.
+          screenshot: null
+        - n: 2
+          text_en: Open pb-02. Scan the door QR. We never submit the police form. Never invent a 居住证明.
+          screenshot: null
+    official_urls: []
+    prefill:
+      pb02_fields:
+        - house_qr
+        - filed_address
+        - landlord_name_phone
+        - move_in_date
+      attach: pb-02
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I copied the fields
+    stuck_node: asked-fake-juzhu
+    timer: null
+  - id: never-fake-juzhu
+    title_en: Never produce a fake residence slip
+    slot: required_check
+    why: A forged 居住证明 or 住宿登记 is worse than a late real one. If you still need to register, run pb-02.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-fake-slip
+        label_en: I will not use or request a fake 居住证明 / 住宿登记
+      - id: run-pb02
+        label_en: If I still need to register, I will run the accommodation playbook
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: asked-fake-juzhu
+    timer: null
+  - id: short-stay-pets
+    title_en: Short stay and pet clauses — ask, do not invent
+    slot: speech
+    why: Guides say many landlords will not take a 4-month stay. A shepherd / large-dog clause is a contract line, not a city ban we invent. Ask in Chinese. Do not promise the building “accepts foreigners.”
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 请问最短租期是多久？合同能否网签？是否接受外籍租客和宠物？
+      pinyin: Qǐngwèn zuì duǎn zūqī shì duō jiǔ? Hétong néng fǒu wǎngqiān? Shìfǒu jiēshòu wàijí zūkè hé chǒngwù?
+      en: What is the minimum term? Can we file 网签? Do you accept a foreign tenant, and pets?
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show agent
+    stuck_node: no-wangqian
+    timer: null

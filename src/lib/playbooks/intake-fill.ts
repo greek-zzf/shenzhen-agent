@@ -106,6 +106,10 @@ Hard rules:
 - Do not recommend installing a VPN, friend-binding a WeChat identity, a fake 居住证明 / 住宿登记, or a guaranteed visa.
 - "WeChat Pay dead" / Alipay not working → wechat_pay or alipay = "dead" and broken may include "payments".
 - No mainland phone → has_cn_phone = "no" and broken may include "no_cn_phone".
+- Need a mainland bank account → broken may include "need_bank". Do not set it only because has_cn_bank is "no".
+- Looking at a lease / 58 / 网签 → broken may include "housing_lease".
+- Bite, scratch, or "English hospital" → broken may include "hospital_rabies".
+- HR started a work or residence permit → broken may include "work_permit".
 - Landing from Hong Kong without a visa → location = "hk_no_visa". Do not set visa_type to VOA unless they said they need or have a 5-day VOA.
 - Relative dates use the provided UTC today. If the date is unclear, arrival_date = null.
 

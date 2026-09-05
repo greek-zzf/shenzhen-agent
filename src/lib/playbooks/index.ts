@@ -27,7 +27,12 @@ export {
 } from './guidance';
 export type { GuidanceAnswer, GuidancePack } from './guidance';
 export { safeNextPath } from './safe-next';
-export { sourceKindLabel, STEP_CONFLICT_ID } from './labels';
+export {
+  sourceKindLabel,
+  STEP_CONFLICT_ID,
+  PLAYBOOK_ID_LABEL,
+  PUBLIC_SLUG_LABEL,
+} from './labels';
 export {
   collectSkippedUrls,
   formatOfficialFetchedAt,
@@ -50,3 +55,5 @@ export {
   getPublicPlaybookSeo,
 } from './public-seo';
 export type { Playbook, PlaybookStep, Conflict, FailureNode } from './schema';
+export { PLAYBOOK_IDS, PUBLIC_SLUGS } from './schema';
+export type { PlaybookId, PublicSlug } from './schema';

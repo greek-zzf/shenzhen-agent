@@ -10,6 +10,10 @@ function display(value: string | null | undefined): string {
   if (value === 'no_cn_phone') return 'No CN phone';
   if (value === 'metro_qr') return 'Metro QR';
   if (value === 'hr_lease_6m') return 'HR 6-month lease';
+  if (value === 'need_bank') return 'Need a CN bank account';
+  if (value === 'housing_lease') return 'Looking at a lease';
+  if (value === 'hospital_rabies') return 'Hospital / rabies';
+  if (value === 'work_permit') return 'Work / residence permit';
   if (value === 'payments') return "Can't pay";
   if (value === 'works') return 'Works';
   if (value === 'dead') return 'Dead';

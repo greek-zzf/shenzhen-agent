@@ -182,6 +182,10 @@ describe('stale math', () => {
     assert.equal(sourceMaxAgeDaysFor('pb-01'), 30);
     assert.equal(sourceMaxAgeDaysFor('pb-04'), 30);
     assert.equal(sourceMaxAgeDaysFor('pb-05'), 30);
+    assert.equal(sourceMaxAgeDaysFor('pb-06'), 30);
+    assert.equal(sourceMaxAgeDaysFor('pb-07'), 30);
+    assert.equal(sourceMaxAgeDaysFor('pb-08'), 30);
+    assert.equal(sourceMaxAgeDaysFor('pb-09'), 30);
     assert.equal(sourceMaxAgeDaysFor('pb-10'), 30);
   });
 

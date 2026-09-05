@@ -1,0 +1,316 @@
+id: pb-06
+title_en: Open a mainland bank account
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: bank
+summary_en: Predict a tourist or L-visa refuse before you queue. Pack passport, visa or residence, lodging registration, and a mainland number. Guide names areas, not invented streets. Airport one-stop is not a bank SLA. Never a proxy account or underground FX.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: need_bank
+  - when: flag_is
+    value: need_bank
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+  - label: HiShenzhen — open a bank account (指南, 非法律)
+    url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+    kind: guide
+  - label: HeyShenzhen — bank account (指南, 非法律)
+    url: https://heyshenzhen.com/bank-account
+    kind: guide
+  - label: SZNews — airport one-stop (payment help, not a bank SLA)
+    url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+    kind: official
+  - label: Pingshan English — airport and Bay one-stop centers
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+    kind: official
+conflicts:
+  - id: visa-open-predict
+    title_en: Tourist / L / VOA opening is usually refused — not a promise either way
+    resolution: verify_at_window
+    sources:
+      - label: HiShenzhen — open a bank account
+        url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+        kind: guide
+        claim_en: English guides say Z / X / residence holders are the usual successful openers. An L or tourist visa is commonly refused at the window. That is a field pattern, not a statute and not a promise a work visa always works.
+        as_of: "2026-01"
+      - label: HeyShenzhen — bank account
+        url: https://heyshenzhen.com/bank-account
+        kind: guide
+        claim_en: Guides describe in-person opening with passport, visa or residence, lodging registration, and a mainland number. They do not authorize a tourist workaround, a friend account, or a street changer.
+        as_of: "2026-01"
+  - id: airport-onestop-not-bank-sla
+    title_en: Airport one-stop vs same-day opening — not an SLA
+    resolution: verify_at_window
+    sources:
+      - label: SZNews 2025-01-25 one-stop opening
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+        claim_en: Official copy frames T3 and Shenzhen Bay one-stop desks as payment, SIM, transport-card, and immigration help. They are not a bank-account counter and do not quote an opening SLA.
+        as_of: "2025-01-25"
+      - label: HeyShenzhen — bank account
+        url: https://heyshenzhen.com/bank-account
+        kind: guide
+        claim_en: The guide describes China Merchants / ICBC help at the airport desk. That is a guide claim, not an official same-day opening promise. Sit both claims side by side. Verify at the desk.
+        as_of: "2026-01"
+      - label: Pingshan English one-stop locations
+        url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+        kind: official
+        claim_en: Airport desk is described as Level 1, Terminal 3, next to the international arrivals exit. Use it for wallet setup help. Do not treat it as a promised bank appointment.
+        as_of: "2026-09-04"
+failure_tree:
+  id: bank-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: visa-refused
+      question_en: The clerk refused because your visa is L, tourist, or VOA?
+      advice_en: That is the usual window outcome for a short-stay visa. Do not hire a proxy opener or change cash on the street. Finish payments with PB-01 wallets and cash. Come back with a work / residence document if you later have one.
+      never:
+        - proxy_account
+        - underground_fx
+      next: branch-refuses
+      vpn_off_only: false
+    - id: branch-refuses
+      question_en: This branch says they do not open foreign-passport accounts?
+      advice_en: Neighborhood windows often refuse. Try another window in a guide-named area (Futian Coco Park, Shekou, Hi-Tech) — follow the page you opened, do not invent a street. Never a yellow-cow or proxy opener.
+      never:
+        - proxy_account
+        - invent_street
+      next: airport-not-sla
+      vpn_off_only: false
+    - id: airport-not-sla
+      question_en: Airport one-stop will not open an account today?
+      advice_en: Official copy is payment and SIM help, not a bank SLA. The HeyShenzhen same-day claim is a guide, not a promise. Ask what they can actually do today. Do not treat the desk as a quoted opening time.
+      never:
+        - treat_as_sla
+        - proxy_account
+      next: asked-for-agent
+      vpn_off_only: false
+    - id: asked-for-agent
+      question_en: Someone offers to open the account for you, or to change a large amount off the books?
+      advice_en: Walk away. Opening must be you, in person, at a licensed counter. This copilot never assists a proxy account or underground FX.
+      never:
+        - proxy_account
+        - underground_fx
+      next: null
+      vpn_off_only: false
+attached_playbooks:
+  - pb-01
+steps:
+  - id: visa-refuse-predict
+    title_en: Predict a refuse before you queue
+    slot: conflict
+    why: L, tourist, and VOA passports are commonly refused. Z / X / residence are the usual successful cases. This is a field pattern, not a guarantee. Do not treat a tourist visa as a secret path.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: HiShenzhen — open a bank account
+        url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+        kind: guide
+      - label: HeyShenzhen — bank account
+        url: https://heyshenzhen.com/bank-account
+        kind: guide
+    prefill: {}
+    required_checkboxes:
+      - id: read-predict
+        label_en: I understand a tourist / L / VOA opening is commonly refused
+    primary_cta:
+      id: next_step
+      label_en: I read the refuse predict
+    stuck_node: visa-refused
+    timer: null
+  - id: materials-pack
+    title_en: Materials — you, in person
+    slot: what_to_bring
+    why: Guides agree on passport, visa or residence, lodging registration, and a mainland number. We do not add extra documents we have not seen on an official list.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Physical passport at the window
+      body_en: Opening is in person with the physical passport. Do not leave the book with a helper who will “register it for you.”
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport (physical)
+        required: true
+      - id: visa-or-residence
+        label_en: Visa or residence permit
+        required: true
+      - id: lodging
+        label_en: Temporary lodging registration (住宿登记)
+        required: true
+      - id: cn-number
+        label_en: Mainland mobile number
+        required: true
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: HiShenzhen — open a bank account
+        url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_have_these
+      label_en: I have these
+    stuck_node: visa-refused
+    timer: null
+  - id: branch-areas
+    title_en: Guide-named areas — no invented street
+    slot: getting_there
+    why: Guides name Futian Coco Park, Shekou, and Hi-Tech as foreigner-friendlier areas. A random neighborhood window often refuses. We do not invent a hall street address.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Guide-named branch areas (Futian Coco Park, Shekou, Hi-Tech) — not a ranked official list
+      copy_name_zh: 福田 Coco Park / 蛇口 / 高新（指南共识，非官方排名）
+      metro_line: null
+      metro_exit: null
+      notes_en: Open the HiShenzhen or HeyShenzhen page and follow the branch they name the day you go. Do not invent a street number from memory. Neighborhood windows often refuse a foreign passport.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Open the official_urls guide pages. Call the bank hotline on that page and ask which window takes a foreign passport today.
+          screenshot: null
+        - n: 2
+          text_en: Do not invent a street address. Follow the page or the clerk on the phone.
+          screenshot: null
+    official_urls:
+      - label: HiShenzhen — open a bank account
+        url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+        kind: guide
+      - label: HeyShenzhen — bank account
+        url: https://heyshenzhen.com/bank-account
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open a guide page
+    stuck_node: branch-refuses
+    timer: null
+  - id: airport-sla-conflict
+    title_en: Airport one-stop is not a bank SLA
+    slot: conflict
+    why: Official copy is payment and SIM help. HeyShenzhen describes same-day CMB / ICBC help. Sit both claims. Do not treat the desk as a quoted opening time.
+    skippable: true
+    skip_if:
+      field: location
+      equals: already_in_city
+    passport_fail_warning: null
+    getting_there:
+      poi_en: Bao'an Airport T3 international-arrivals one-stop desk
+      copy_name_zh: 宝安机场T3国际到达出口旁 外籍人员一站式综合服务中心
+      metro_line: null
+      metro_exit: null
+      notes_en: Official framing is payments and SIM. Not a promised bank-account appointment. Confirm at the desk what they will actually do today.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card: null
+    click_path: null
+    official_urls:
+      - label: SZNews 2025-01-25
+        url: https://www.sznews.com/news/content/mb/2025-01/25/content_31448742.htm
+        kind: official
+      - label: HeyShenzhen — bank account
+        url: https://heyshenzhen.com/bank-account
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at the one-stop desk
+    stuck_node: airport-not-sla
+    timer: null
+  - id: never-proxy
+    title_en: Never a proxy opener or underground FX
+    slot: required_check
+    why: A helper who opens “for you” or a street changer is how accounts get killed. Licensed counter, you in person, only.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-proxy
+        label_en: I will not let someone open or hold the account for me
+      - id: no-underground
+        label_en: I will not use an underground FX / street changer
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: asked-for-agent
+    timer: null
+  - id: take-number-speech
+    title_en: What to say at the counter
+    slot: speech
+    why: Ask to take a number for a foreign-passport opening. Do not add a story about a friend's ID.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 你好，我持护照办理开户，请帮我取号。
+      pinyin: Nǐ hǎo, wǒ chí hùzhào bànlǐ kāihù, qǐng bāng wǒ qǔ hào.
+      en: Hello, I am here with my passport to open an account. Please help me take a number.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Show clerk
+    stuck_node: branch-refuses
+    timer: null
+  - id: app-bind-note
+    title_en: After the book is open — bind the official app
+    slot: click_path
+    why: Guides say CMB's English app is easier, BOC for inbound wires, ICBC windows are dense. That is guide consensus, not an official ranking. Bind only the official app. VPN-off if the app stalls.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Download the official app the clerk names (CMB / BOC / ICBC). Do not install a look-alike from a stall QR.
+          screenshot: null
+        - n: 2
+          text_en: Turn the VPN off if real-name or SMS stalls. We never submit the form for you.
+          screenshot: null
+    official_urls:
+      - label: HiShenzhen — open a bank account
+        url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+        kind: guide
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: asked-for-agent
+    timer: null

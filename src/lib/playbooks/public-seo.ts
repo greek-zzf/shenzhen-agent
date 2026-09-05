@@ -4,15 +4,19 @@
  * and never copied from YAML fields that may later name hours or fees.
  */
 
+import type { PublicSlug } from './schema';
+
 export const SITE_NAME = 'Shenzhen Copilot';
 
+/** v1 ranking / sitemap URLs — expansion drafts have slugs + SEO but stay off this list. */
 export const PUBLIC_PLAYBOOK_SLUGS = [
   'voa-hours',
   'alipay-metro',
   'accommodation-registration',
 ] as const;
 
-export type PublicPlaybookSlug = (typeof PUBLIC_PLAYBOOK_SLUGS)[number];
+export type RankingPlaybookSlug = (typeof PUBLIC_PLAYBOOK_SLUGS)[number];
+export type PublicPlaybookSlug = PublicSlug;
 
 export type PublicPlaybookSeo = {
   slug: PublicPlaybookSlug;
@@ -45,6 +49,34 @@ export const PUBLIC_PLAYBOOK_SEO: Record<
     title: 'Temporary accommodation registration Shenzhen — Shenzhen Copilot',
     description:
       'Hotels register you; an apartment does not. You have 24 hours. Scan the house QR, skip iShenzhen face, and verify at the window. This copilot never submits the form.',
+  },
+  bank: {
+    slug: 'bank',
+    path: '/p/bank',
+    title: 'Mainland bank account Shenzhen — Shenzhen Copilot',
+    description:
+      'Draft playbook: visa refuse prediction, materials list, guide-named branch areas with no invented streets. Airport one-stop is not a bank SLA. Never a proxy account or underground FX.',
+  },
+  'housing-lease': {
+    slug: 'housing-lease',
+    path: '/p/housing-lease',
+    title: 'Shenzhen housing lease and online filing — Shenzhen Copilot',
+    description:
+      'Draft playbook: treat 58.com as a listing trap, commission figures conflict, file the city lease record, copy fields for 24-hour registration. Never a fake residence slip.',
+  },
+  'hospital-rabies': {
+    slug: 'hospital-rabies',
+    path: '/p/hospital-rabies',
+    title: 'Shenzhen rabies and public hospital routing — Shenzhen Copilot',
+    description:
+      'Draft playbook: a bite means the nearest public emergency desk now. HKU-Shenzhen Hospital phones are listed. Passport WeChat booking often fails. This copilot never diagnoses, prescribes, or books via RPA.',
+  },
+  'work-residence': {
+    slug: 'work-residence',
+    path: '/p/work-residence',
+    title: 'Shenzhen work permit and residence permit checklist — Shenzhen Copilot',
+    description:
+      'Draft playbook: the employer files. Personal materials plus the official URL. Age-policy notes are a conflict, not a product step. No fake employer and no visa-run.',
   },
 };
 

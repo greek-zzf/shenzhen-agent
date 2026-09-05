@@ -1,0 +1,295 @@
+id: pb-08
+title_en: Public hospital and rabies routing
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: 72h
+public_slug: hospital-rabies
+summary_en: Cat or dog bite — nearest public hospital that can vaccinate, now. Do not wait for an English clinic. HKU-SZH phones are listed. Passport WeChat booking often fails. This copilot never diagnoses, prescribes, or RPA-books.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+  - when: broken_contains
+    value: hospital_rabies
+  - when: flag_is
+    value: hospital_rabies
+primary_cta:
+  id: i_am_at_window
+  label_en: I'm at 急诊
+official_urls:
+  - label: HKU-SZH International Medical Center
+    url: https://www.hku-szh.org/en/imc/index.html
+    kind: official
+  - label: HKU-SZH booking guidelines
+    url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+    kind: official
+  - label: HKU-SZH — foreign-document appointment limits
+    url: https://www.hku-szh.org/en/MakeanAppointment(HK-Macao-Residents)/PatientInfo/HospitalizationProcedures/content/post_1574914.html
+    kind: official
+  - label: r/shenzhen 1vxlro8 (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1vxlro8/in_search_of_english_speaking_medical_clinic_that/
+    kind: user_report
+  - label: r/shenzhen 1tcu94o (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1tcu94o/can_anyone_recommend_good_english_speaking/
+    kind: user_report
+conflicts:
+  - id: english-clinic-vs-nearest-public
+    title_en: English clinic vs nearest public — rabies is now
+    resolution: verify_at_window
+    sources:
+      - label: r/shenzhen 1vxlro8 (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1vxlro8/in_search_of_english_speaking_medical_clinic_that/
+        kind: user_report
+        claim_en: Field replies say go to the next hospital and use a translation app; an international clinic can waste a day and money. One voice is “I didn’t know where to go.” That is not a diagnosis and not a ranking of hospitals.
+        as_of: "2026-01"
+      - label: HKU-SZH International Medical Center
+        url: https://www.hku-szh.org/en/imc/index.html
+        kind: official
+        claim_en: HKU-SZH publishes IMC and English-line phones. It is one public hospital, not the only hospital, and not a reason to skip a closer 急诊 that can give rabies vaccine today.
+        as_of: "2026-01"
+  - id: hku-only-myth
+    title_en: “Only HKU-SZH” vs other public / international desks
+    resolution: verify_at_window
+    sources:
+      - label: r/shenzhen 1tcu94o (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1tcu94o/can_anyone_recommend_good_english_speaking/
+        kind: user_report
+        claim_en: Comments often collapse the city to “almost only HKU-SZH.” Peking University Shenzhen Hospital international / VIP and other public desks also appear on the board. For rabies, nearest public that can vaccinate still wins.
+        as_of: "2026-01"
+      - label: HKU-SZH booking guidelines
+        url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+        kind: official
+        claim_en: Official booking copy is for this hospital's own windows and phones. It is not a city-wide exclusive. Confirm vaccine stock at the 急诊 you can reach now.
+        as_of: "2026-01"
+failure_tree:
+  id: hospital-stuck
+  title_en: I'm stuck
+  nodes:
+    - id: waiting-for-english
+      question_en: You are waiting for an English-speaking private clinic?
+      advice_en: For a bite or scratch, go to the nearest public 急诊 now. Use the speech card. An international clinic can wait. This is routing, not a diagnosis.
+      never:
+        - wait_for_english
+        - diagnose
+        - prescribe
+      next: wechat-passport-fail
+      vpn_off_only: false
+    - id: wechat-passport-fail
+      question_en: The WeChat mini-program rejects a foreign passport?
+      advice_en: Official HKU-SZH copy says foreign documents often fail online booking. Walk to 急诊 or the international desk with the physical passport. Call 0755-86913388 (IMC) or 0755-86913366 (English line). We never RPA WeChat.
+      never:
+        - wechat_rpa
+        - diagnose
+      next: asked-for-diagnosis
+      vpn_off_only: false
+    - id: asked-for-diagnosis
+      question_en: You want this copilot to say whether you need the vaccine, a drug, or a claim decision?
+      advice_en: We do not diagnose, prescribe, or decide insurance. Ask 急诊. For ADHD / controlled meds, go to a licensed hospital — we will not advise a cross-border pill.
+      never:
+        - diagnose
+        - prescribe
+        - insurance_decision
+        - controlled_meds
+      next: null
+      vpn_off_only: false
+attached_playbooks: []
+steps:
+  - id: rabies-now
+    title_en: Bite or scratch — nearest public 急诊, now
+    slot: getting_there
+    why: Rabies is a clock. Do not wait for an English clinic. Do not invent a hospital street. Ask the first public 急诊 that can give 狂犬疫苗 today.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Passport at 急诊 — not a WeChat QR
+      body_en: Bring the physical passport. Online booking often rejects a foreign document. We never book for you.
+    getting_there:
+      poi_en: Nearest public hospital emergency desk that can give rabies vaccine today
+      copy_name_zh: 最近能接种狂犬疫苗的公立医院急诊
+      metro_line: null
+      metro_exit: null
+      notes_en: Do not wait for English. Do not invent a street. Ask 急诊 for 狂犬疫苗. HKU-SZH phones below are one public option, not the only hospital and not a reason to skip a closer desk.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: cash-or-card
+        label_en: Cash or a working wallet (expect to pay first)
+        required: false
+    speech_card:
+      hanzi: 我被猫或狗抓伤/咬伤了，需要狂犬疫苗，请帮我看急诊。
+      pinyin: Wǒ bèi māo huò gǒu zhuā shāng / yǎo shāng le, xūyào kuángquǎn yìmiáo, qǐng bāng wǒ kàn jízhěn.
+      en: I was scratched or bitten by a cat or dog. I need the rabies vaccine. Please send me to emergency.
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: go-now
+        label_en: I will go to the nearest public 急诊 now, not wait for English
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'm at 急诊
+    stuck_node: waiting-for-english
+    timer: null
+  - id: hku-szh-phones
+    title_en: HKU-SZH phones — one public option
+    slot: getting_there
+    why: Official IMC and English lines. WeChat id hkuszh. 91160 is a booking channel. Passport often fails online. This is not “the only hospital.”
+    skippable: true
+    skip_if: null
+    passport_fail_warning:
+      title_en: Foreign passport often fails the mini-program
+      body_en: HKU-SZH publishes that foreign documents are limited online. Call or walk in. We never RPA WeChat.
+    getting_there:
+      poi_en: The University of Hong Kong-Shenzhen Hospital (HKU-SZH)
+      copy_name_zh: 香港大学深圳医院
+      metro_line: null
+      metro_exit: null
+      notes_en: IMC 0755-86913388. English line 0755-86913366. WeChat hkuszh. 91160. Confirm vaccine stock when you call. We do not invent a metro exit or a street number.
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card:
+      hanzi: 你好，请问今天急诊能否接种狂犬疫苗？我持外国护照。
+      pinyin: Nǐ hǎo, qǐngwèn jīntiān jízhěn néng fǒu jiēzhòng kuángquǎn yìmiáo? Wǒ chí wàiguó hùzhào.
+      en: Hello, can emergency give the rabies vaccine today? I hold a foreign passport.
+    click_path: null
+    official_urls:
+      - label: HKU-SZH International Medical Center
+        url: https://www.hku-szh.org/en/imc/index.html
+        kind: official
+      - label: HKU-SZH booking guidelines
+        url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: open_official
+      label_en: Open HKU-SZH IMC
+    stuck_node: wechat-passport-fail
+    timer: null
+  - id: passport-wechat-fail
+    title_en: Passport WeChat booking often fails
+    slot: passport_fail
+    why: Official hospitalization / appointment copy limits foreign documents online. Walk to the desk or call. Medical records copies are a counter job. We never RPA WeChat.
+    skippable: false
+    skip_if: null
+    passport_fail_warning:
+      title_en: Mini-program rejects a foreign passport
+      body_en: Stop retrying the QR. Take the physical passport to 急诊 or the international desk. Call the numbers on the HKU-SZH page. We never operate WeChat for you.
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+    speech_card:
+      hanzi: 小程序无法用外国护照预约，我到柜台办理。
+      pinyin: Xiǎo chéngxù wúfǎ yòng wàiguó hùzhào yùyuē, wǒ dào guìtái bànlǐ.
+      en: The mini-program cannot book with a foreign passport. I will do this at the counter.
+    click_path:
+      steps:
+        - n: 1
+          text_en: If WeChat / 91160 rejects the passport, stop. Do not ask a friend to book under their ID.
+          screenshot: null
+        - n: 2
+          text_en: Walk to 急诊 or the international medical desk with the passport. Ask for a paper number.
+          screenshot: null
+    official_urls:
+      - label: HKU-SZH — foreign-document appointment limits
+        url: https://www.hku-szh.org/en/MakeanAppointment(HK-Macao-Residents)/PatientInfo/HospitalizationProcedures/content/post_1574914.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: i_am_at_window
+      label_en: I'll go to the counter
+    stuck_node: wechat-passport-fail
+    timer: null
+  - id: non-emergency-route
+    title_en: Not a bite — international desk vs ordinary vs fever
+    slot: click_path
+    why: Non-emergency routing only. International / IMC vs ordinary outpatient vs fever clinic. Insurance may be direct-bill or full pay-first. Confirm at the window. We do not pick a hospital winner.
+    skippable: true
+    skip_if:
+      field: broken
+      equals: hospital_rabies
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring:
+      - id: passport
+        label_en: Passport
+        required: true
+      - id: insurance
+        label_en: Insurance card if you have one
+        required: false
+    speech_card:
+      hanzi: 你好，我要挂国际门诊，这是护照。
+      pinyin: Nǐ hǎo, wǒ yào guà guójì ménzhěn, zhè shì hùzhào.
+      en: Hello, I would like the international outpatient desk. Here is my passport.
+    click_path:
+      steps:
+        - n: 1
+          text_en: If it is a fever, follow the hospital's 发热门诊 signs — do not invent a clinic.
+          screenshot: null
+        - n: 2
+          text_en: Otherwise ask 国际门诊 / IMC vs 普通门诊. Expect to pay first unless the desk confirms direct-bill.
+          screenshot: null
+    official_urls:
+      - label: HKU-SZH International Medical Center
+        url: https://www.hku-szh.org/en/imc/index.html
+        kind: official
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: wechat-passport-fail
+    timer: null
+  - id: never-diagnose
+    title_en: We do not diagnose, prescribe, or RPA
+    slot: required_check
+    why: Routing and a speech card only. No diagnosis, no prescription, no claim decision, no WeChat robot booking. Controlled meds are “go to a licensed hospital,” nothing more.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: no-diagnosis
+        label_en: I will ask the clinician, not this copilot, what treatment I need
+      - id: no-rpa
+        label_en: I will not ask this product to operate WeChat or book for me
+    primary_cta:
+      id: next_step
+      label_en: Continue
+    stuck_node: asked-for-diagnosis
+    timer: null
+  - id: follow-up-shots
+    title_en: Later shots and leaving the city
+    slot: required_check
+    why: If 急诊 starts a series, ask them the remaining dates before you leave. We do not invent a schedule or a dose.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card:
+      hanzi: 请问下一针是哪一天？如果我要离境，应该怎么衔接？
+      pinyin: Qǐngwèn xià yī zhēn shì nǎ yì tiān? Rúguǒ wǒ yào líjìng, yīnggāi zěnme xiánjiē?
+      en: When is the next shot? If I must leave the country, how should I continue?
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes:
+      - id: ask-schedule
+        label_en: I will ask 急诊 for the remaining dates — this copilot will not invent a schedule
+    primary_cta:
+      id: next_step
+      label_en: Show clinician
+    stuck_node: asked-for-diagnosis
+    timer: null
