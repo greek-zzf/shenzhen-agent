@@ -63,6 +63,11 @@ const BROKEN_LABEL: Record<BrokenFlag, string> = {
   no_cn_phone: 'No CN phone',
   metro_qr: 'Metro QR',
   hr_lease_6m: 'HR wants a 6-month lease',
+  bank: 'Need a mainland bank account',
+  housing: 'Housing / lease / 网签',
+  hospital: 'Need a hospital / English clinic',
+  animal_bite: 'Animal bite / scratch',
+  work_permit: 'Work / residence permit checklist',
 };
 
 const PAY_LABEL: Record<PayState, string> = {

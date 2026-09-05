@@ -1,0 +1,293 @@
+# Converted from product-spec draft; runtime schema for pb-07.
+# last_verified stays null. status: draft. No invented street addresses.
+id: pb-07
+title_en: Housing lease, 网签 filing, and 58 scam trap
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: null
+summary_en: Channel fork with 58 as a scam trap. Commission half-month vs one-month shown side by side.
+  Real-name lease + 网签. No marketplace. Never fake 居住证明.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+- when: broken_contains
+  value: housing
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+- label: HiShenzhen renting guide (指南, 非法律)
+  url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+  kind: guide
+- label: Wellcee Shenzhen (marketplace, not affiliated)
+  url: https://www.wellcee.com/shenzhen/m/rent-apartment
+  kind: guide
+- label: Official — housing lease ordinance related notice
+  url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+  kind: official
+- label: Official English — accommodation / platform explainer
+  url: http://www.sz.gov.cn/en_szgov/services/personal/accommodation/platform/
+  kind: official
+- label: HeyShenzhen (指南, 非法律)
+  url: https://heyshenzhen.com/
+  kind: guide
+- label: r/shenzhen comments (非法律来源)
+  url: https://www.reddit.com/r/shenzhen/
+  kind: user_report
+conflicts:
+- id: c-commission-half-vs-month
+  title_en: 'Tenant agency commission: HiShenzhen says about half a month; HeyShenzhen says about one
+    month. Unknown which is current — show both.'
+  resolution: verify_at_window
+  sources:
+  - label: HiShenzhen renting guide (指南, 非法律)
+    url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+    kind: guide
+    claim_en: Tenant commission often cited as ~half a month of rent via large agencies.
+    as_of: 2026-guide
+  - label: HeyShenzhen (指南, 非法律)
+    url: https://heyshenzhen.com/
+    kind: guide
+    claim_en: Other guides cite ~one month. Do not invent a citywide price list.
+    as_of: guide-conflict
+- id: c-58-scam-trap
+  title_en: 58同城 is treated as a fake-listing trap for foreigners in guides and Reddit comments. Prefer
+    Wellcee / Beike / known agents — still verify in person.
+  resolution: verify_at_window
+  sources:
+  - label: HiShenzhen renting guide (指南, 非法律)
+    url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+    kind: guide
+    claim_en: Explicitly advises against 58 for foreigners.
+    as_of: 2026-guide
+  - label: r/shenzhen comments (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/
+    kind: user_report
+    claim_en: 'Community advice often: avoid 58; prefer 泊寓 / known channels. Not a legal finding.'
+    as_of: community
+failure_tree:
+  id: pb-07-stuck
+  title_en: I'm stuck
+  nodes:
+  - id: fake_listing
+    question_en: Listing looks fake / seller pushes off-platform payment?
+    advice_en: Stop. Do not wire a deposit. Switch channel (Wellcee / Beike / known agent).
+    never:
+    - pay_a_unlock_fee_to_see_the_flat_
+    next: landlord_refuses
+    vpn_off_only: false
+  - id: landlord_refuses
+    question_en: Landlord will not rent to a foreign passport?
+    advice_en: Walk away and keep searching — do not use a local friend as a fake tenant.
+    never:
+    - have_a_chinese_friend_sign_as_the_tenant_while_i
+    next: contract_mismatch
+    vpn_off_only: false
+  - id: contract_mismatch
+    question_en: Name/ID on lease does not match passport?
+    advice_en: Fix the draft before signing. Prefill from passport spelling.
+    never: []
+    next: wangqian_fail
+    vpn_off_only: false
+  - id: wangqian_fail
+    question_en: 网签 platform rejects passport login or agent stalls?
+    advice_en: Ask agent/landlord to file on their account and give you the receipt.
+    never:
+    - skip_and_forge_a_stay_letter_for_hr_
+    next: null
+    vpn_off_only: false
+attached_playbooks:
+- pb-02
+- pb-10
+steps:
+- id: channel-fork-58
+  title_en: Channel fork — Wellcee / Beike / Anjuke; treat 58 as a trap
+  slot: conflict
+  why: Wellcee is English but small stock. Beike/Lianjia has inventory. 58 is the scam-trap callout. We
+    do not list apartments.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: HiShenzhen renting guide (指南, 非法律)
+    url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+    kind: guide
+  - label: Wellcee Shenzhen (marketplace, not affiliated)
+    url: https://www.wellcee.com/shenzhen/m/rent-apartment
+    kind: guide
+  prefill: {}
+  required_checkboxes:
+  - id: no_58
+    label_en: I will not use 58同城 as my primary search for this move.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: fake_listing
+  timer: null
+- id: foreigner-ok-speech
+  title_en: Ask whether foreigners can rent this unit — before deposit
+  slot: speech
+  why: Some landlords refuse foreign passports. Ask before paying anything.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 请问这套房可以租给外国护照持有人吗？我需要签正规租赁合同并做网签备案。
+    pinyin: Qǐngwèn zhè tào fáng kěyǐ zū gěi wàiguó hùzhào chíyǒu rén ma? Wǒ xūyào qiān zhèngguī zūlìn
+      hétong bìng zuò wǎngqiān bèi'àn.
+    en: Can this unit be rented to a foreign-passport holder? I need a proper lease and online filing
+      (网签).
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: foreigner_ok
+    label_en: Landlord/agent confirmed a foreign passport is acceptable — or I walked away.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: landlord_refuses
+  timer: null
+- id: real-name-lease
+  title_en: Real-name lease under the housing-lease ordinance
+  slot: required_check
+  why: '2025-09-15 housing lease ordinance push: real-name contracts. Do not invent clauses. Read the
+    official notice.'
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring:
+  - id: draft-chinese-lease-photo-or-pdf
+    label_en: Draft Chinese lease (photo or PDF)
+    required: true
+  - id: passport-bio-page-for-name-spelling
+    label_en: Passport bio page for name spelling
+    required: true
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: Official — housing lease ordinance related notice
+    url: https://www.sz.gov.cn/ztfw/zfly/wyk_184880/content/post_12341639.html
+    kind: official
+  prefill:
+    fields:
+    - field_en: Tenant name (passport spelling)
+      field_zh: 承租人姓名
+      source: passport
+      note: Copy only into the lease; we do not sign.
+    - field_en: Passport number
+      field_zh: 证件号码
+      source: passport
+      note: Copy only.
+    note: copy_only
+  required_checkboxes:
+  - id: real_name
+    label_en: Names and ID numbers on the lease match my passport spelling.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: contract_mismatch
+  timer: null
+- id: wangqian-filing
+  title_en: 网签 on the Shenzhen housing-lease supervision platform
+  slot: click_path
+  why: Filing is usually within days on the municipal platform; UI is Chinese. Unfiled leases can later
+    block residence paperwork — confirm at the window / HR.
+  skippable: false
+  skip_if: null
+  passport_fail_warning:
+    title_en: Passport / login may fail
+    body_en: The housing-lease platform is Chinese. Passport login may fail. Use the agency/landlord account
+      path or a window — we do not RPA into it.
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 请帮我在住房租赁监管服务平台做网签备案，并给我备案回执。
+    pinyin: Qǐng bāng wǒ zài zhùfáng zūlìn jiānguǎn fúwù píngtái zuò wǎngqiān bèi'àn, bìng gěi wǒ bèi'àn
+      huízhí.
+    en: Please complete online lease filing on the supervision platform and give me the filing receipt.
+  click_path:
+    steps:
+    - n: 1
+      text_en: Browser / agency tablet — Shenzhen housing-lease supervision platform — Open the official
+        platform (Chinese). Screenshot missing — follow agency staff. We do not submit.
+      screenshot: null
+    - n: 2
+      text_en: Platform — Filing result — Save the 备案回执 PDF/photo for PB-02 / residence files.
+      screenshot: null
+  official_urls:
+  - label: Official English — accommodation / platform explainer
+    url: http://www.sz.gov.cn/en_szgov/services/personal/accommodation/platform/
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: wangqian_done
+    label_en: I have a 网签/备案 receipt — or a written plan with the agent to finish within the required
+      days.
+  primary_cta:
+    id: next_step
+    label_en: I did these taps
+  stuck_node: wangqian_fail
+  timer: null
+- id: address-for-pb02
+  title_en: Copy address fields for police registration (PB-02)
+  slot: required_check
+  why: After signing, temporary accommodation registration needs the exact address string and often the
+    房屋码.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls: []
+  prefill:
+    fields:
+    - field_en: Standard address from lease
+      field_zh: 标准地址
+      source: lease
+      note: Must match door 房屋码 / stay registration.
+    note: copy_only
+  required_checkboxes:
+  - id: address_copied
+    label_en: I copied the lease address exactly for PB-02 registration.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: fake_listing
+  timer: null
+- id: short-lease-traps
+  title_en: Short lease / pet / deposit traps — read before you wire money
+  slot: required_check
+  why: 'Guides: landlords often dislike <6 month leases; pet clauses (e.g. large dogs) are negotiation.
+    Deposit disputes are common — not legal advice.'
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: HiShenzhen renting pitfalls (指南)
+    url: https://hishenzhen.com/renting-apartment-shenzhen-foreigner-guide/
+    kind: guide
+  prefill: {}
+  required_checkboxes:
+  - id: ack-s6
+    label_en: I read this step
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: fake_listing
+  timer: null

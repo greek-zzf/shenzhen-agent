@@ -27,6 +27,11 @@ export const BROKEN_OPTIONS = [
   'no_cn_phone',
   'metro_qr',
   'hr_lease_6m',
+  'bank',
+  'housing',
+  'hospital',
+  'animal_bite',
+  'work_permit',
 ] as const;
 
 export const PAY_STATES = ['works', 'dead', 'unknown'] as const;

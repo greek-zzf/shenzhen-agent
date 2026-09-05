@@ -1,0 +1,285 @@
+# Converted from product-spec draft; runtime schema for pb-09.
+# last_verified stays null. status: draft. No invented street addresses.
+id: pb-09
+title_en: Work / residence permit — personal materials checklist
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: later
+public_slug: null
+summary_en: Employer submits. You prepare personal docs. Never guarantee approval. Never 挂靠. No visa-run
+  product steps.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+- when: broken_contains
+  value: work_permit
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+- label: Shenzhen foreigner service platform
+  url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+  kind: official
+- label: National foreigner work permit system
+  url: https://fwp.safea.gov.cn/lhgzweb/
+  kind: official
+- label: Official English — work permit materials
+  url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+  kind: official
+  fetched_at: '2026-09-04T16:45:30Z'
+- label: STIC FAQ
+  url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+  kind: official
+- label: sz.gov.cn — 两证一次办 related news
+  url: https://www.sz.gov.cn/cn/xxgk/zfxxgj/zwdt/content/post_12253319.html
+  kind: official
+- label: China Briefing (二级解读, 非法律)
+  url: https://www.china-briefing.com/news/work-permit-renewal-shenzhen-age-policy-update/
+  kind: guide
+conflicts:
+- id: c-age-policy-2026
+  title_en: 2026 age-related renewal chatter for some work-permit categories appears in secondary briefings.
+    Not legal advice — confirm on official notices / with HR.
+  resolution: verify_at_window
+  sources:
+  - label: China Briefing (二级解读, 非法律)
+    url: https://www.china-briefing.com/news/work-permit-renewal-shenzhen-age-policy-update/
+    kind: guide
+    claim_en: Secondary article on Shenzhen work-permit renewal age policy updates. Verify against official
+      STIC / municipal notices before acting.
+    as_of: secondary-2026
+  - label: STIC FAQ
+    url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+    kind: official
+    claim_en: Use official STIC / municipal FAQ notices for renewal rules. Secondary briefings are not
+      a substitute for the window.
+    as_of: official-faq
+- id: c-12345-english-hours
+  title_en: 12345 English service hours are comment-level unknowns. Do not hardcode a schedule.
+  resolution: verify_at_window
+  sources:
+  - label: spec §12.2 (未知)
+    url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+    kind: official
+    claim_en: Use official FAQ / hotline pages; Reddit hour claims are not authoritative.
+    as_of: unknown-live
+  - label: Shenzhen foreigner service platform
+    url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+    kind: official
+    claim_en: Prefer official platforms and exit-entry windows over comment-level hotline hour claims.
+      Hours remain verify-at-window.
+    as_of: platform
+failure_tree:
+  id: pb-09-stuck
+  title_en: I'm stuck
+  nodes:
+  - id: no_employer
+    question_en: I do not have an employer filing for me?
+    advice_en: This product does not sell work permits. Use licensed agencies only if you choose — we
+      do not file.
+    never:
+    - buy_a_work_permit_
+    next: missing_doc
+    vpn_off_only: false
+  - id: missing_doc
+    question_en: A required personal document is missing?
+    advice_en: Finish PB-02 stay registration if the slip is missing. Ask HR which exact item the live
+      materials list wants.
+    never: []
+    next: delayed
+    vpn_off_only: false
+  - id: delayed
+    question_en: It has been longer than HR expected?
+    advice_en: Ask HR to check the employer portal status; bring SMS screenshots.
+    never: []
+    next: cancelled
+    vpn_off_only: false
+  - id: cancelled
+    question_en: Permit cancelled after layoff?
+    advice_en: Go to the local exit-entry window HR names; keep all termination papers.
+    never:
+    - fly_out_and_re_enter_on_a_tourist_path_as_the_pr
+    next: null
+    vpn_off_only: false
+attached_playbooks:
+- pb-02
+- pb-10
+- pb-06
+steps:
+- id: employer-submits
+  title_en: Say this first — your employer submits; you prepare personal docs
+  slot: required_check
+  why: Personal checklists exist so the employee is not blind. Filing buttons live in employer systems
+    (SAFEA / Shenzhen foreigner platforms).
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: Shenzhen foreigner service platform
+    url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+    kind: official
+  - label: National foreigner work permit system
+    url: https://fwp.safea.gov.cn/lhgzweb/
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: employer_files
+    label_en: I understand the company/HR submits the application. This playbook only prepares my personal
+      materials.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: no_employer
+  timer: null
+- id: personal-materials
+  title_en: Personal materials state machine
+  slot: what_to_bring
+  why: 'Typical pack: no-crime record, degree authentication, medical exam, temporary accommodation registration,
+    visa photo. Exact list is on the official materials page — live-fetch.'
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring:
+  - id: passport-current-visa-stamp-pages
+    label_en: Passport + current visa/stamp pages
+    required: true
+  - id: no-crime-certificate-as-required-for-you
+    label_en: No-crime certificate (as required for your category)
+    required: true
+  - id: degree-diploma-authentication-pack
+    label_en: Degree / diploma authentication pack
+    required: true
+  - id: medical-examination-report-from-an-accep
+    label_en: Medical examination report from an accepted hospital
+    required: true
+  - id: slip
+    label_en: 临时住宿登记 slip
+    required: true
+  - id: visa-photo-per-current-spec
+    label_en: Visa photo per current spec
+    required: true
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: Official English — work permit materials
+    url: https://www.sz.gov.cn/en_szgov/news/infocus/SZCitywalk/Explore/Plan/content/post_11845338.html
+    kind: official
+    fetched_at: '2026-09-04T16:45:30Z'
+  - label: STIC FAQ
+    url: https://stic.sz.gov.cn/xxgk/ztzl/wzyw/wtjd/content/post_10419503.html
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: list_matched
+    label_en: I matched my folder against the live official materials list (not only this checklist).
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: missing_doc
+  timer: null
+- id: translation-stamps
+  title_en: Non-Chinese documents need employer-stamped translations
+  slot: required_check
+  why: HR usually stamps translations. We do not forge chops.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 这份材料是外文原件，请按单位要求提供盖章中文译文。
+    pinyin: Zhè fèn cáiliào shì wàiwén yuánjiàn, qǐng àn dānwèi yāoqiú tígōng gàizhāng Zhōngwén yìwén.
+    en: This document is a foreign-language original; please provide a company-stamped Chinese translation
+      as required.
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: translation_plan
+    label_en: I have a translation plan with HR for every non-Chinese document.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: no_employer
+  timer: null
+- id: parallel-timeline
+  title_en: After the window receives the file — ~7 working days is a guide, not a promise
+  slot: required_check
+  why: Municipal parallel processing is often described around a week after intake. Never promise your
+    case.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: sz.gov.cn — 两证一次办 related news
+    url: https://www.sz.gov.cn/cn/xxgk/zfxxgj/zwdt/content/post_12253319.html
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: ack-s4
+    label_en: I read this step
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: delayed
+  timer: null
+- id: progress-sms
+  title_en: Translate HR / SMS progress screenshots
+  slot: required_check
+  why: Paste opaque Chinese status lines into Ask-this-step later; this draft only reminds you to save
+    them.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: ack-s5
+    label_en: I read this step
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: no_employer
+  timer: null
+- id: layoff-official-only
+  title_en: Laid off / permit cancelled — official next steps only
+  slot: conflict
+  why: Do not productize visa runs. Point to local exit-entry and hotlines; 12345 English hours unknown.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 我的工作许可/居留许可状态有变更，请告知我下一步应去哪个窗口。
+    pinyin: Wǒ de gōngzuò xǔkě/jūliú xǔkě zhuàngtài yǒu biàngēng, qǐng gàozhī wǒ xià yī bù yīng qù nǎge
+      chuāngkǒu.
+    en: My work/residence permit status changed — please tell me which window I should visit next.
+  click_path: null
+  official_urls:
+  - label: Shenzhen foreigner service platform
+    url: https://wgfw.ga.sz.gov.cn/user/wgrfwpt
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: no_visa_run
+    label_en: I will follow official exit-entry / HR instructions — not an unofficial visa-run tip.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: cancelled
+  timer: null

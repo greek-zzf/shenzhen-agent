@@ -1,0 +1,270 @@
+# Converted from product-spec draft; runtime schema for pb-08.
+# last_verified stays null. status: draft. No invented street addresses.
+id: pb-08
+title_en: Hospital routing — rabies emergency and English care
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: 72h
+public_slug: null
+summary_en: 'Animal bite: nearest public hospital that can vaccinate TODAY — do not wait for an English
+  clinic. Never diagnose or prescribe. No WeChat RPA booking.'
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice. Rules change. Confirm
+  at the counter. Official sources linked below. For animal bites, go to a hospital now.
+attach_when:
+- when: broken_contains
+  value: hospital
+- when: broken_contains
+  value: animal_bite
+primary_cta:
+  id: i_am_at_window
+  label_en: Show this to the clerk
+official_urls:
+- label: HKU-Shenzhen Hospital IMC
+  url: https://www.hku-szh.org/en/imc/index.html
+  kind: official
+- label: HKU-SZH booking guidelines
+  url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+  kind: official
+- label: HKU-SZH foreign document / procedure notes
+  url: https://www.hku-szh.org/en/MakeanAppointment(HK-Macao-Residents)/PatientInfo/HospitalizationProcedures/content/post_1574914.html
+  kind: official
+- label: r/shenzhen 1vxlro8 (非法律来源)
+  url: https://www.reddit.com/r/shenzhen/comments/1vxlro8/in_search_of_english_speaking_medical_clinic_that/
+  kind: user_report
+- label: r/shenzhen 1tcu94o (非法律来源)
+  url: https://www.reddit.com/r/shenzhen/comments/1tcu94o/can_anyone_recommend_good_english_speaking/
+  kind: user_report
+conflicts:
+- id: c-english-clinic-vs-nearest-public
+  title_en: 'For rabies / serious bites: nearest public hospital that can vaccinate beats waiting for
+    an English clinic. Reddit is not medical advice.'
+  resolution: verify_at_window
+  sources:
+  - label: r/shenzhen 1vxlro8 (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1vxlro8/in_search_of_english_speaking_medical_clinic_that/
+    kind: user_report
+    claim_en: 'Commenters: you should have gone yesterday; next hospital + translation app; international
+      clinic called a waste of money for this case.'
+    as_of: thread-1vxlro8
+  - label: r/shenzhen 1tcu94o (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1tcu94o/can_anyone_recommend_good_english_speaking/
+    kind: user_report
+    claim_en: English-speaking hospital search threads; still not a substitute for emergency routing.
+    as_of: thread-1tcu94o
+- id: c-wechat-booking-passport
+  title_en: HKU-SZH and many hospital WeChat flows fail foreign passport verification. Use phone / counter
+    / 91160 paths.
+  resolution: verify_at_window
+  sources:
+  - label: HKU-SZH foreign documents / procedures (official English)
+    url: https://www.hku-szh.org/en/MakeanAppointment(HK-Macao-Residents)/PatientInfo/HospitalizationProcedures/content/post_1574914.html
+    kind: official
+    claim_en: Foreign document limitations appear on hospital English pages — confirm live. Product never
+      claims WeChat booking works for every passport.
+    as_of: official-page
+  - label: HKU-SZH booking guidelines
+    url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+    kind: official
+    claim_en: Booking paths change. Phone and counter remain first-class when WeChat passport verification
+      fails. Confirm on the live page.
+    as_of: official-page
+failure_tree:
+  id: pb-08-stuck
+  title_en: I'm stuck
+  nodes:
+  - id: dont_know_where
+    question_en: I do not know which hospital is nearest?
+    advice_en: Open Amap / ask a taxi for the nearest 公立医院急诊 that can treat animal bites — go now.
+    never:
+    - wait_overnight_for_an_english_clinic_appointment
+    next: passport_booking_fail
+    vpn_off_only: false
+  - id: passport_booking_fail
+    question_en: WeChat / mini-program rejected my passport?
+    advice_en: Call IMC / English hotline or use the hospital counter.
+    never:
+    - ask_a_friend_to_book_under_their_chinese_id_for_
+    next: null
+    vpn_off_only: false
+attached_playbooks:
+- pb-01
+steps:
+- id: bite-emergency-fork
+  title_en: Emergency fork — animal bite / scratch goes to the nearest public hospital NOW
+  slot: conflict
+  why: Rabies risk is time-sensitive. Do not wait for an English private clinic. This is routing, not
+    a diagnosis.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring:
+  - id: passport
+    label_en: Passport
+    required: true
+  - id: cash-working-alipay-or-wechat-pay-pb-01
+    label_en: Cash / working Alipay or WeChat Pay (PB-01)
+    required: true
+  - id: phone-with-translation-app-offline-pack
+    label_en: Phone with translation app offline pack
+    required: false
+  speech_card:
+    hanzi: 你好，我被动物抓伤/咬伤了，需要狂犬病疫苗和伤口处理。请帮我挂号急诊。
+    pinyin: Nǐ hǎo, wǒ bèi dòngwù zhuāshāng/yǎoshāng le, xūyào kuángquǎnbìng yìmiáo hé shāngkǒu chǔlǐ.
+      Qǐng bāng wǒ guàhào jízhěn.
+    en: Hello — I was scratched/bitten by an animal. I need rabies vaccination and wound care. Please
+      register me for emergency.
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: going_now
+    label_en: 'If this is a bite/scratch: I am going to a hospital now (or already there). I will not
+      wait for an English clinic.'
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: dont_know_where
+  timer: null
+- id: non-emergency-fork
+  title_en: Non-emergency — IMC / ordinary / fever clinic fork
+  slot: required_check
+  why: 'Non-urgent: international medical center vs ordinary outpatient vs fever clinic. Payment may be
+    full upfront vs insurance direct — confirm at desk.'
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring:
+  - id: passport-visa-residence
+    label_en: Passport + visa/residence
+    required: true
+  - id: insurance-card-policy-number-if-any
+    label_en: Insurance card / policy number (if any)
+    required: false
+  speech_card:
+    hanzi: 你好，我要挂国际门诊/普通门诊。我是外国护照。
+    pinyin: Nǐ hǎo, wǒ yào guà guójì ménzhěn/pǔtōng ménzhěn. Wǒ shì wàiguó hùzhào.
+    en: Hello — I need the international clinic / ordinary outpatient clinic. I hold a foreign passport.
+  click_path: null
+  official_urls:
+  - label: HKU-Shenzhen Hospital IMC
+    url: https://www.hku-szh.org/en/imc/index.html
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: ack-s2
+    label_en: I read this step
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: passport_booking_fail
+  timer: null
+- id: hku-passport-fail
+  title_en: HKU-SZH contacts — phone first if WeChat fails
+  slot: passport_fail
+  why: WeChat mini-programs often reject foreign documents. Phone and counter are first-class.
+  skippable: true
+  skip_if: null
+  passport_fail_warning:
+    title_en: Passport / login may fail
+    body_en: Do not assume hospital WeChat booking accepts your passport. Call IMC 0755-86913388 or English
+      hotline 0755-86913366, or go to the counter. We do not operate WeChat for you.
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: HKU-SZH booking guidelines
+    url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+    kind: official
+  - label: HKU-SZH foreign document / procedure notes
+    url: https://www.hku-szh.org/en/MakeanAppointment(HK-Macao-Residents)/PatientInfo/HospitalizationProcedures/content/post_1574914.html
+    kind: official
+  prefill: {}
+  required_checkboxes:
+  - id: phone_tried
+    label_en: I called or went to the counter instead of only fighting WeChat verification.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: passport_booking_fail
+  timer: null
+- id: chief-complaint
+  title_en: Chinese chief-complaint card for the triage desk
+  slot: speech
+  why: User fills symptoms; we only provide a template. Not a diagnosis.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 我的主要症状是：________。从________开始。我有/没有药物过敏。请帮我分诊。
+    pinyin: 'Wǒ de zhǔyào zhèngzhuàng shì: ________. Cóng ________ kāishǐ. Wǒ yǒu/méiyǒu yàowù guòmǐn.
+      Qǐng bāng wǒ fēnzhěn.'
+    en: 'My main symptoms are: ________. Started ________. I do / do not have drug allergies. Please triage
+      me.'
+  click_path: null
+  official_urls: []
+  prefill:
+    fields:
+    - field_en: Symptom blanks (user-written)
+      field_zh: 症状
+      source: user
+      note: User completes. We do not invent a diagnosis.
+    note: copy_only
+  required_checkboxes:
+  - id: not_diagnosis
+    label_en: I understand this card is for triage language, not a medical diagnosis.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: dont_know_where
+  timer: null
+- id: named-centers
+  title_en: Other named centers — alternatives, not a ranking
+  slot: required_check
+  why: 'Named alternatives (not a ranking): 北大深圳医院国际/VIP; 中山大学附属第八医院国际医疗中心 (opened 2026-01-27, Futian);
+    康宁 (mental health); Vista-SK; International SOS Shekou (needs clinic plan); 和睦家. Emergencies still
+    go to the nearest capable public hospital. No invented addresses.'
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: alts-not-ranking
+    label_en: I understand these names are alternatives, not a ranking
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: dont_know_where
+  timer: null
+- id: dose-reminder
+  title_en: Aftercare — dose reminders are a checklist, not a prescription
+  slot: required_check
+  why: If a clinician scheduled further rabies doses, track dates yourself. We do not prescribe intervals.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes:
+  - id: next_dose_written
+    label_en: I wrote the next dose/appointment date from the hospital paperwork (if any).
+  primary_cta:
+    id: i_am_at_window
+    label_en: I finished this at the counter
+  stuck_node: dont_know_where
+  timer: null

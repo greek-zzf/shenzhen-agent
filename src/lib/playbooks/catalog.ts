@@ -32,6 +32,10 @@ export const REQUIRED_PLAYBOOK_IDS = [
   'pb-03',
   'pb-04',
   'pb-05',
+  'pb-06',
+  'pb-07',
+  'pb-08',
+  'pb-09',
   'pb-10',
 ] as const;
 

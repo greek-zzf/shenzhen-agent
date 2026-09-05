@@ -18,4 +18,10 @@ export const STEP_CONFLICT_ID: Record<string, string> = {
   'transport-tab-conflict': 'c-transport-tab',
   'tap-to-ride-trial': 'c-tap-to-ride-trial',
   'sit-sources-side-by-side': 'official-vs-reddit-lease',
+  'branch-areas': 'c-friendly-branches-are-guides',
+  'airport-onestop-conflict': 'c-airport-open-account-sla',
+  'channel-fork-58': 'c-58-scam-trap',
+  'bite-emergency-fork': 'c-english-clinic-vs-nearest-public',
+  'hku-passport-fail': 'c-wechat-booking-passport',
+  'layoff-official-only': 'c-12345-english-hours',
 };
