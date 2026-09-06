@@ -6,7 +6,6 @@ import { PLAYBOOKS } from '@/lib/playbooks/catalog';
 import { cn } from '@/lib/utils';
 
 const LATER = [
-  { title: 'Open a mainland bank account', note: 'Post-v1 — not a walkthrough yet.' },
   { title: 'Drive in Shenzhen', note: 'Post-v1 — not a walkthrough yet.' },
   { title: 'School enrollment', note: 'Post-v1 — not a walkthrough yet.' },
 ] as const;

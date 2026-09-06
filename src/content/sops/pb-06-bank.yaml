@@ -1,0 +1,297 @@
+# Converted from product-spec draft; runtime schema for pb-06.
+# last_verified stays null. status: draft. No invented street addresses.
+id: pb-06
+title_en: Open a mainland bank account — materials and branch pick
+status: draft
+version: 1
+last_verified: null
+source_max_age_days: 30
+lifecycle: first_week
+public_slug: null
+summary_en: Predict L-visa refuse risk first. Bring passport, visa/residence, 住宿登记, and a mainland number.
+  Guide-consensus areas only — no invented street numbers. Never proxy open or underground remittance.
+disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
+attach_when:
+- when: broken_contains
+  value: bank
+primary_cta:
+  id: i_have_these
+  label_en: I have these
+official_urls:
+- label: HiShenzhen — open a bank account (指南, 非法律)
+  url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+  kind: guide
+- label: HeyShenzhen bank account (指南, 非法律)
+  url: https://heyshenzhen.com/bank-account
+  kind: guide
+- label: Official English — one-stop services
+  url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+  kind: official
+conflicts:
+- id: c-airport-open-account-sla
+  title_en: 'Airport T3 / Shenzhen Bay one-stop: official copy stresses payment / SIM / transit help.
+    Some guides write on-the-spot CMB/ICBC opening. Do not treat airport account opening as an SLA.'
+  resolution: verify_at_window
+  sources:
+  - label: szpsq English — airport / Shenzhen Bay one-stop
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+    kind: official
+    claim_en: Assists Weixin Pay / Alipay, SIM, transit cards, bilingual guides. No equal-weight promise
+      of an instant personal bank account.
+    as_of: '2026-09-04'
+  - label: HeyShenzhen bank (指南, 非法律)
+    url: https://heyshenzhen.com/bank-account
+    kind: guide
+    claim_en: Guide describes on-the-spot CMB/ICBC account opening at airport-style service points. Product
+      must not treat that as an SLA.
+    as_of: guide
+- id: c-friendly-branches-are-guides
+  title_en: Futian Coco Park / Shekou / Hi-Tech as 'foreigner-friendlier' is guide consensus, not an official
+    ranking. Residential tiny branches often refuse passports.
+  resolution: verify_at_window
+  sources:
+  - label: HiShenzhen open bank account (指南, 非法律)
+    url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+    kind: guide
+    claim_en: Guides steer foreigners toward larger / expat-visible branches and away from small residential
+      outlets. No official city ranking.
+    as_of: 2026-guide
+  - label: HeyShenzhen bank (指南, 非法律)
+    url: https://heyshenzhen.com/bank-account
+    kind: guide
+    claim_en: Same area folklore (Coco Park / Shekou / Hi-Tech). Confirm at the branch; do not invent
+      street numbers.
+    as_of: guide
+failure_tree:
+  id: pb-06-stuck
+  title_en: I'm stuck
+  nodes:
+  - id: visa_refused
+    question_en: Branch said your visa type cannot open a personal account?
+    advice_en: Ask what document would make it possible (residence permit, work permit). Use foreign-card
+      Alipay/WeChat for spend while you wait (PB-01).
+    never:
+    - borrow_a_friend_s_mainland_account_
+    next: missing_materials
+    vpn_off_only: false
+  - id: missing_materials
+    question_en: Missing stay slip or mainland number?
+    advice_en: Finish accommodation registration (PB-02). Get a mainland SIM (PB-04).
+    never: []
+    next: branch_refused
+    vpn_off_only: false
+  - id: branch_refused
+    question_en: This branch will not handle foreign passports today?
+    advice_en: Try another larger branch in Futian / Shekou / Hi-Tech — call first.
+    never:
+    - pay_someone_to_open_an_account_under_their_name_
+    next: form_language
+    vpn_off_only: false
+  - id: form_language
+    question_en: Form is Chinese-only and staff English is limited?
+    advice_en: Show the speech card and point at passport fields one by one.
+    never: []
+    next: app_bind_fail
+    vpn_off_only: false
+  - id: app_bind_fail
+    question_en: Bank app will not bind the new card?
+    advice_en: Return to the same counter with the phone and ask them to reset SMS / app KYC.
+    never: []
+    next: null
+    vpn_off_only: false
+attached_playbooks:
+- pb-02
+- pb-04
+- pb-01
+steps:
+- id: visa-fork
+  title_en: Visa fork — L / tourist often refused; Z / residence more workable
+  slot: required_check
+  why: 'Guides and field reports: personal accounts for short tourist / L stays are frequently refused.
+    Predict before the user queues. Not a joke.'
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: HiShenzhen — open a bank account (指南, 非法律)
+    url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+    kind: guide
+  prefill: {}
+  required_checkboxes:
+  - id: visa_checked
+    label_en: I know my visa/residence type, and I understand a tourist/L path may be refused at the counter.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: visa_refused
+  timer: null
+- id: materials-prereq
+  title_en: Prerequisites — stay slip + mainland number before you queue
+  slot: what_to_bring
+  why: Banks typically want passport, visa/residence, temporary accommodation registration, and a mainland
+    mobile number. Missing pieces waste a trip.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring:
+  - id: passport-original
+    label_en: Passport (original)
+    required: true
+  - id: visa-residence-permit-page
+    label_en: Visa / residence permit page
+    required: true
+  - id: hotel-or-police-stay-slip
+    label_en: 临时住宿登记 / hotel or police stay slip
+    required: true
+  - id: mainland-phone-number-that-receives-sms
+    label_en: Mainland phone number that receives SMS
+    required: true
+  - id: local-address-written-clearly-from-lease
+    label_en: Local address written clearly (from lease or stay slip)
+    required: true
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: HeyShenzhen bank account (指南, 非法律)
+    url: https://heyshenzhen.com/bank-account
+    kind: guide
+  prefill: {}
+  required_checkboxes:
+  - id: materials_ready
+    label_en: I have passport, visa/residence, stay slip, and a mainland number — or I will finish PB-02
+      / PB-04 first.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: missing_materials
+  timer: null
+- id: branch-areas
+  title_en: Pick a larger / expat-visible branch area — not a tiny residential outlet
+  slot: conflict
+  why: 'Guide consensus names Futian Coco Park, Shekou, and Hi-Tech areas. We do not invent street addresses.
+    Call ahead: passport foreigners OK today?'
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 你好，请问这里可以给外国护照开个人银行账户吗？我有签证和住宿登记。
+    pinyin: Nǐ hǎo, qǐngwèn zhèlǐ kěyǐ gěi wàiguó hùzhào kāi gèrén yínháng zhànghù ma? Wǒ yǒu qiānzhèng
+      hé zhùsù dēngjì.
+    en: Hello — can this branch open a personal account with a foreign passport? I have a visa and temporary
+      accommodation registration.
+  click_path: null
+  official_urls:
+  - label: HiShenzhen — branch folklore (指南)
+    url: https://hishenzhen.com/how-to-open-bank-account-shenzhen/
+    kind: guide
+  prefill: {}
+  required_checkboxes:
+  - id: called_ahead
+    label_en: I called or messaged the branch and they said passport walk-ins are possible today — or
+      I accept they may still refuse.
+  primary_cta:
+    id: i_have_these
+    label_en: I have these
+  stuck_node: branch_refused
+  timer: null
+- id: at-window-forms
+  title_en: At the window — forms are copy-only; you must be present
+  slot: speech
+  why: We prefill fields from your profile for you to copy. We never submit. Facial / in-person rules
+    are the bank's.
+  skippable: false
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card:
+    hanzi: 请给我开户申请表。我需要英文或双语指引。
+    pinyin: Qǐng gěi wǒ kāihù shēnqǐng biǎo. Wǒ xūyào Yīngwén huò shuāngyǔ zhǐyǐn.
+    en: Please give me the account-opening form. I need English or bilingual guidance.
+  click_path: null
+  official_urls: []
+  prefill:
+    fields:
+    - field_en: Full name (passport spelling)
+      field_zh: 姓名
+      source: passport
+      note: Copy only.
+    - field_en: Passport number
+      field_zh: 护照号码
+      source: passport
+      note: Copy only.
+    - field_en: Mainland mobile
+      field_zh: 手机号码
+      source: profile
+      note: Must receive SMS.
+    - field_en: Address from stay slip / lease
+      field_zh: 现住址
+      source: stay_slip
+      note: Match 住宿登记 characters.
+    note: copy_only
+  required_checkboxes:
+  - id: in_person
+    label_en: I am at the branch in person. Nobody is opening this account for me.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: form_language
+  timer: null
+- id: bank-app-bind
+  title_en: After opening — bank app is a walkthrough, not a ranking
+  slot: click_path
+  why: Guides often say CMB app English is friendlier, BOC for remittances, ICBC dense — that is folklore,
+    not an official ranking. Bind the app yourself.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path:
+    steps:
+    - n: 1
+      text_en: Bank app (whichever you opened) — Download / register — Use the card SMS code. Screenshot
+        missing in draft — follow staff instructions.
+      screenshot: null
+    - n: 2
+      text_en: Bank app — Bind debit card — Complete in-app KYC if prompted. We do not operate the app
+        for you.
+      screenshot: null
+  official_urls: []
+  prefill: {}
+  required_checkboxes: []
+  primary_cta:
+    id: next_step
+    label_en: I did these taps
+  stuck_node: app_bind_fail
+  timer: null
+- id: airport-onestop-conflict
+  title_en: Airport one-stop is payment help first — not a guaranteed account
+  slot: conflict
+  why: Keep this conflict visible if the user lands at T3 hoping for an instant account.
+  skippable: true
+  skip_if: null
+  passport_fail_warning: null
+  getting_there: null
+  what_to_bring: []
+  speech_card: null
+  click_path: null
+  official_urls:
+  - label: Official English — one-stop services
+    url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
+    kind: official
+  prefill: {}
+  required_checkboxes: []
+  primary_cta:
+    id: next_step
+    label_en: Try this instead
+  stuck_node: visa_refused
+  timer: null
