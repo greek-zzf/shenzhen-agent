@@ -201,11 +201,18 @@ export function ClickPathView({
           <div className="min-w-0 flex-1">
             <p className="text-sm leading-6">{item.text_en}</p>
             {item.screenshot ? (
-              <img
-                src={item.screenshot}
-                alt=""
-                className="mt-2 w-full rounded-md border border-border"
-              />
+              <figure className="mt-2">
+                <img
+                  src={item.screenshot}
+                  alt={item.note ?? item.text_en}
+                  className="w-full rounded-md border border-border"
+                />
+                {item.note ? (
+                  <figcaption className="mt-1 text-xs leading-5 text-muted-foreground">
+                    {item.note}
+                  </figcaption>
+                ) : null}
+              </figure>
             ) : (
               <div className="mt-2 flex h-24 items-center justify-center rounded-md border border-dashed border-border bg-muted/40 text-xs text-muted-foreground">
                 missing art

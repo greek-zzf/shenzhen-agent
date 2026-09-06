@@ -246,7 +246,7 @@ steps:
   - id: fee-user-report
     title_en: 130 RMB is a user report
     slot: conflict
-    why: Travelers reported about 130 RMB for SEZ port visa. NIA English Instructions (fetched 2026-09-04) say fees follow State standards and publish no 130 figure. We do not pick a winner. Bring extra cash and ask the window.
+    why: Travelers reported about 130 RMB for SEZ port visa. NIA English Instructions (fetched 2026-09-04) say fees follow State standards and publish no 130 figure. We do not pick a winner. Bring extra cash and ask the window. Fee-board frames are community/news stock, not founder-verified; the posted board may be expired.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -256,7 +256,16 @@ steps:
         label_en: RMB cash (amount is not confirmed here)
         required: true
     speech_card: null
-    click_path: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: SEZ 130 RMB board from a community post. Ask the window for today's fee. This is not a tariff.
+          screenshot: /copilot-stock/pb03-voa-fee-board-sez-130.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified; this SEZ 130 board may be expired (posted ~2024-02, validity ended 2024-12-31). Reciprocal nationality table is the next frame.
+        - n: 2
+          text_en: Reciprocal-fee table from the same community post. Nationality rates change. Confirm at the window.
+          screenshot: /copilot-stock/pb03-voa-fee-board-reciprocal-table.jpg
+          note: Stock photo — confirm at the window. Community/news stock, not founder-verified; board may be expired (same ~2024-02 post; validity ended 2024-12-31).
     official_urls: []
     prefill: {}
     required_checkboxes:

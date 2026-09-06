@@ -67,7 +67,9 @@ Step:                           # every key required; unused slots are null
   getting_there: { poi_en, copy_name_zh, metro_line, metro_exit, notes_en } | null
   what_to_bring: { id, label_en, required }[]
   speech_card: { hanzi, pinyin, en } | null
-  click_path: { steps: { n, text_en, screenshot }[] } | null   # screenshot null → missing-art placeholder
+  click_path: { steps: { n, text_en, screenshot, note? }[] } | null
+  # screenshot null → missing-art placeholder
+  # note → caption under a non-null screenshot (stock art: "Stock photo — confirm at the window")
   official_urls: OfficialUrl[]
   prefill: object
   required_checkboxes: { id, label_en }[]
