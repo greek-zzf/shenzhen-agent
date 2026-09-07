@@ -24,6 +24,23 @@ const STOCK_FILES = [
   'pb05-business-coach-tap-reader.jpg',
 ] as const;
 
+const CLICKPATH_DIR = join(STOCK_DIR, 'clickpath');
+
+const CLICKPATH_FILES = [
+  'alipay-metro-setup-guide-en.png',
+  'alipay-metro-app-steps.png',
+  'alipay-metro-city-selection.png',
+  'wechat-metro-steps-1-2-en.png',
+  'wechat-metro-activation-3-4-en.png',
+  'wechat-metro-qr-checkin-en.png',
+  'szpsb-wechat-follow-gov-services-2021.png',
+  'szpsb-wechat-exit-entry-menu-2021.png',
+  'szpsb-wechat-temp-stay-register-2021.png',
+  'szpsb-wechat-scan-house-qr-form-2021.png',
+  'alipay-bind-realname-steps-2026.jpg',
+  'alipay-bind-foreign-card-steps-2026.jpg',
+] as const;
+
 function loadYaml(name: string): Playbook {
   const path = join(SOP_DIR, name);
   return parsePlaybookYaml(readFileSync(path, 'utf8'), path);
@@ -57,6 +74,36 @@ describe('copilot stock photos', () => {
     assert.match(attribution, /NOT cleared/i);
     assert.match(attribution, /2024-12-31/);
     assert.match(attribution, /1as71uf/);
+  });
+
+  it('ships ClickPath UI stock plus honest attribution notes', () => {
+    for (const name of CLICKPATH_FILES) {
+      assert.equal(existsSync(join(CLICKPATH_DIR, name)), true, name);
+    }
+    const attribution = readFileSync(join(STOCK_DIR, 'ATTRIBUTION.md'), 'utf8');
+    assert.match(attribution, /Wuhan/i);
+    assert.match(attribution, /2021 Shenchuang/i);
+    assert.match(attribution, /PSB hall/);
+    assert.match(attribution, /VOA port/);
+    assert.match(attribution, /Tour Card wind-down/);
+    assert.match(attribution, /chinafortravelers/i);
+    assert.match(attribution, /NOT cleared/i);
+    assert.match(attribution, /`last_verified` stays null/);
+    const catalog = readFileSync(
+      join(ROOT, 'docs/field-research/clickpath-candidates-2026-09.md'),
+      'utf8'
+    );
+    assert.match(catalog, /alipay-metro-app-steps/);
+    assert.match(catalog, /Do not invent one/);
+    const xhs = readFileSync(
+      join(ROOT, 'docs/field-research/clickpath-xhs-2026-09.md'),
+      'utf8'
+    );
+    assert.match(xhs, /65bb660a00000000020117aa/);
+    assert.match(xhs, /No image recovered/);
+    assert.match(xhs, /\*\*not\*\* foreigner VOA/);
+    assert.match(attribution, /65bb660a00000000020117aa/);
+    assert.match(attribution, /error_code=300031/);
   });
 
   it('wires pb-03 fee frames without inventing a hours-door photo', () => {
@@ -100,21 +147,75 @@ describe('copilot stock photos', () => {
     const wechat = screenshotsOf(pb, 'wechat-click-path');
     assert.equal(
       wechat.click_path?.steps[0]?.screenshot,
-      '/copilot-stock/pb02-house-code-search-ui.jpg'
+      '/copilot-stock/clickpath/szpsb-wechat-follow-gov-services-2021.png'
     );
     assert.equal(
       wechat.click_path?.steps[1]?.screenshot,
-      '/copilot-stock/pb02-house-code-lookup-ui.jpg'
+      '/copilot-stock/clickpath/szpsb-wechat-exit-entry-menu-2021.png'
     );
-    assert.equal(wechat.click_path?.steps[2]?.screenshot, null);
+    assert.equal(
+      wechat.click_path?.steps[2]?.screenshot,
+      '/copilot-stock/clickpath/szpsb-wechat-temp-stay-register-2021.png'
+    );
+    assert.equal(
+      wechat.click_path?.steps[3]?.screenshot,
+      '/copilot-stock/clickpath/szpsb-wechat-scan-house-qr-form-2021.png'
+    );
+    for (const step of wechat.click_path?.steps ?? []) {
+      assert.match(step.note ?? '', new RegExp(STOCK_CAPTION));
+      assert.match(step.note ?? '', /2021/i);
+      assert.match(step.note ?? '', /VOA/i);
+    }
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /65bb660a/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /street office/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /Do not invent a 房屋码 success\/fail toast/);
   });
 
-  it('keeps Alipay Transport empty and labels Tap-to-Ride as gate backup', () => {
+  it('wires pb-01 foreign-card bind stock and labels Tour Card wind-down', () => {
+    const pb = loadYaml('pb-01-payments.yaml');
+    const kyc = screenshotsOf(pb, 'start-kyc');
+    assert.equal(kyc.click_path?.steps[0]?.screenshot, null);
+    assert.equal(kyc.click_path?.steps[1]?.screenshot, null);
+    assert.equal(
+      kyc.click_path?.steps[2]?.screenshot,
+      '/copilot-stock/clickpath/alipay-bind-realname-steps-2026.jpg'
+    );
+    assert.match(kyc.click_path?.steps[2]?.note ?? '', new RegExp(STOCK_CAPTION));
+    assert.match(kyc.click_path?.steps[2]?.note ?? '', /Tour Card wind-down/);
+
+    const bind = screenshotsOf(pb, 'bind-in-real-apps');
+    assert.equal(
+      bind.click_path?.steps[0]?.screenshot,
+      '/copilot-stock/clickpath/alipay-bind-foreign-card-steps-2026.jpg'
+    );
+    assert.match(bind.click_path?.steps[0]?.note ?? '', new RegExp(STOCK_CAPTION));
+    assert.match(bind.click_path?.steps[0]?.note ?? '', /Tour Card wind-down/);
+    assert.match(bind.click_path?.steps[0]?.note ?? '', /direct bind/i);
+    assert.equal(bind.click_path?.steps[1]?.screenshot, null);
+    assert.equal(bind.click_path?.steps[2]?.screenshot, null);
+  });
+
+  it('wires Alipay Transport stock and labels Tap-to-Ride as gate backup', () => {
     const pb = loadYaml('pb-05-metro.yaml');
     const transport = screenshotsOf(pb, 'alipay-transport');
+    assert.equal(
+      transport.click_path?.steps[0]?.screenshot,
+      '/copilot-stock/clickpath/alipay-metro-setup-guide-en.png'
+    );
+    assert.equal(
+      transport.click_path?.steps[1]?.screenshot,
+      '/copilot-stock/clickpath/alipay-metro-app-steps.png'
+    );
+    assert.equal(
+      transport.click_path?.steps[2]?.screenshot,
+      '/copilot-stock/clickpath/alipay-metro-city-selection.png'
+    );
     for (const step of transport.click_path?.steps ?? []) {
-      assert.equal(step.screenshot, null);
+      assert.match(step.note ?? '', new RegExp(STOCK_CAPTION));
     }
+    assert.match(transport.click_path?.steps[1]?.note ?? '', /WuHan|Wuhan/);
+    assert.match(transport.click_path?.steps[1]?.note ?? '', /ShenZhen/);
+    assert.match(transport.click_path?.steps[2]?.note ?? '', /Wuhan Metro Code/);
 
     const skip = screenshotsOf(pb, 'skip-miniprogram');
     for (const step of skip.click_path?.steps ?? []) {
@@ -157,5 +258,30 @@ describe('copilot stock photos', () => {
       '/copilot-stock/pb05-business-coach-tap-reader.jpg'
     );
     assert.match(trial.click_path?.steps[2]?.text_en ?? '', /secondary/i);
+  });
+
+  it('points every wired screenshot at a file on disk', () => {
+    const files = readdirSync(SOP_DIR).filter((name) =>
+      /^pb-\d{2}-.+\.yaml$/.test(name)
+    );
+    const wired: string[] = [];
+    for (const name of files) {
+      const playbook = loadYaml(name);
+      for (const step of playbook.steps) {
+        for (const item of step.click_path?.steps ?? []) {
+          if (!item.screenshot) continue;
+          wired.push(item.screenshot);
+          assert.match(item.screenshot, /^\/copilot-stock\//);
+          const rel = item.screenshot.replace(/^\//, 'public/');
+          assert.equal(existsSync(join(ROOT, rel)), true, item.screenshot);
+        }
+      }
+    }
+    assert.ok(wired.includes('/copilot-stock/clickpath/alipay-metro-app-steps.png'));
+    assert.equal(
+      wired.some((path) => path.includes('wechat-metro-')),
+      false,
+      'WeChat metro siblings stay stored, not wired onto a playbook'
+    );
   });
 });

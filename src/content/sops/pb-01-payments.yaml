@@ -132,7 +132,8 @@ steps:
           screenshot: null
         - n: 3
           text_en: Start real-name / KYC in both apps. We never submit this for you.
-          screenshot: null
+          screenshot: /copilot-stock/clickpath/alipay-bind-realname-steps-2026.jpg
+          note: Stock photo — confirm at the window. StartChinaTravel 2026-01 numbered KYC walkthrough (similar 2026 bind-adjacent art). Tour Card wind-down — this is passport real-name, not Tour Card top-up. chinafortravelers 2026 frames were not recovered (Cloudflare; no stable image URL). Rights not cleared. Not founder-verified.
     official_urls: []
     prefill: {}
     required_checkboxes: []
@@ -216,7 +217,8 @@ steps:
       steps:
         - n: 1
           text_en: Open Alipay → Me → Bank cards → Add card. Enter the card as your bank has it. We never submit this form.
-          screenshot: null
+          screenshot: /copilot-stock/clickpath/alipay-bind-foreign-card-steps-2026.jpg
+          note: Stock photo — confirm at the window. StartChinaTravel 2026-01 numbered foreign-card bind (Me → Bank Cards → Add Bank Card). Tour Card wind-down — this is direct bind, not Tour Card open/activate. chinafortravelers 2026 frames were not recovered (Cloudflare; no stable image URL). Rights not cleared. Not founder-verified.
         - n: 2
           text_en: Open WeChat → Me → Services → Wallet → Cards. Same rule — official app only.
           screenshot: null

@@ -137,7 +137,7 @@ steps:
   - id: alipay-transport
     title_en: Alipay app → Transport / 出行 → 乘车码
     slot: click_path
-    why: This is the numbered path. Screenshot art is missing — follow the text.
+    why: This is the numbered path. Public Alipay Transport stock is a 2026 traveler-guide composite (Beijing home, ShenZhen in the city list, Wuhan obtain-card). Confirm Shenzhen at the gate. Not founder-verified.
     skippable: false
     skip_if: null
     passport_fail_warning:
@@ -149,14 +149,17 @@ steps:
     click_path:
       steps:
         - n: 1
-          text_en: Open the Alipay app itself (home screen of the app, not a mini-program).
-          screenshot: null
+          text_en: Open the Alipay app itself (home screen of the app, not a mini-program). Tap Transport / 出行.
+          screenshot: /copilot-stock/clickpath/alipay-metro-setup-guide-en.png
+          note: Stock photo — confirm at the window. StartChinaTravel 2026-01 Alipay metro composite. Demo home city is Beijing, not a Shenzhen field shot. Rights not cleared. Not founder-verified.
         - n: 2
-          text_en: Tap Transport / 出行.
-          screenshot: null
+          text_en: Open the city dropdown and pick Shenzhen. ShenZhen is in the popular-city list; some demos then show Wuhan. Confirm the header matches your station before you activate.
+          screenshot: /copilot-stock/clickpath/alipay-metro-app-steps.png
+          note: Stock photo — confirm at the window. ShenZhen appears in the city list. The Get-now frame is Transport-WuHan — a Wuhan demo city, not a Shenzhen gate. Confirm at the gate. Rights not cleared. Not founder-verified.
         - n: 3
-          text_en: Open 乘车码 and scan the gate.
-          screenshot: null
+          text_en: Agree and obtain 乘车码, then scan the live QR at the gate. Do not treat a Wuhan obtain-card screen as Shenzhen chrome.
+          screenshot: /copilot-stock/clickpath/alipay-metro-city-selection.png
+          note: Stock photo — confirm at the window. Obtain-card copy is Wuhan Metro Code. Confirm Shenzhen at the gate. Rights not cleared. Not founder-verified.
     official_urls: []
     prefill: {}
     required_checkboxes: []
@@ -213,7 +216,7 @@ steps:
           screenshot: /copilot-stock/pb05-tap-to-ride-floor-gate.jpg
           note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Floor-gate art is Tap-to-Ride / physical entry, not the cash-token close-up and not Alipay Transport UI.
         - n: 4
-          text_en: Ordinary-gate card reader (stock). Keep using the Alipay Transport text path — no public Alipay UI was recovered.
+          text_en: Ordinary-gate card reader (stock). Physical entry art only — Alipay Transport UI lives on the alipay-transport step, not here.
           screenshot: /copilot-stock/pb05-tap-to-ride-card-reader.jpg
           note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Business-coach reader is a secondary reference only (not this ordinary gate).
         - n: 5
@@ -283,7 +286,7 @@ steps:
           screenshot: /copilot-stock/pb05-tap-to-ride-floor-gate.jpg
           note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Floor-gate art is Tap-to-Ride / physical entry, not Alipay Transport UI.
         - n: 2
-          text_en: Ordinary-gate card reader (stock). Keep the Alipay Transport click-path screenshots empty — no public Alipay UI was recovered.
+          text_en: Ordinary-gate card reader (stock). Physical entry art only — Alipay Transport UI lives on the alipay-transport step, not here.
           screenshot: /copilot-stock/pb05-tap-to-ride-card-reader.jpg
           note: Stock photo — confirm at the window. Community/news stock, not founder-verified. Business-coach reader is a secondary reference only (not this ordinary gate).
         - n: 3
