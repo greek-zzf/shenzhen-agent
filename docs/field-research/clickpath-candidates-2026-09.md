@@ -60,6 +60,8 @@ Schema (`src/lib/playbooks/schema.ts`) allows `click_path.steps[]` of
 - WeChat **Bank cards** bind UI — not recovered.
 - Founder-shot door / window / in-app photography — still required before any SOP
   can leave draft.
+- Xiaohongshu research-box notes (no binaries):
+  [`clickpath-xhs-2026-09.md`](./clickpath-xhs-2026-09.md).
 
 ## Honest labels
 

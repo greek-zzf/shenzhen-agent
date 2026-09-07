@@ -95,6 +95,15 @@ describe('copilot stock photos', () => {
     );
     assert.match(catalog, /alipay-metro-app-steps/);
     assert.match(catalog, /Do not invent one/);
+    const xhs = readFileSync(
+      join(ROOT, 'docs/field-research/clickpath-xhs-2026-09.md'),
+      'utf8'
+    );
+    assert.match(xhs, /65bb660a00000000020117aa/);
+    assert.match(xhs, /No image recovered/);
+    assert.match(xhs, /\*\*not\*\* foreigner VOA/);
+    assert.match(attribution, /65bb660a00000000020117aa/);
+    assert.match(attribution, /error_code=300031/);
   });
 
   it('wires pb-03 fee frames without inventing a hours-door photo', () => {
@@ -157,6 +166,9 @@ describe('copilot stock photos', () => {
       assert.match(step.note ?? '', /2021/i);
       assert.match(step.note ?? '', /VOA/i);
     }
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /65bb660a/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /street office/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /Do not invent a 房屋码 success\/fail toast/);
   });
 
   it('wires pb-01 foreign-card bind stock and labels Tour Card wind-down', () => {
