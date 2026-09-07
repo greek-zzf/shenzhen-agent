@@ -653,13 +653,18 @@ export const accommodationReminder = table(
       .references(() => user.id, { onDelete: 'cascade' })
       .unique(),
     arrivalAt: timestamp('arrival_at').notNull(),
+    dueAt: timestamp('due_at').notNull(),
+    stayType: text('stay_type').notNull().default(''),
     email: text('email').notNull(),
     optedIn: boolean('opted_in').notNull().default(false),
     sentAt: timestamp('sent_at'),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
-  (t) => [index('idx_accommodation_reminder_user').on(t.userId)]
+  (t) => [
+    index('idx_accommodation_reminder_user').on(t.userId),
+    index('idx_accommodation_reminder_due').on(t.dueAt),
+  ]
 );
 
 export type AccommodationReminder = typeof accommodationReminder.$inferSelect;

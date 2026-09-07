@@ -10,6 +10,12 @@
   "observability": {
     "enabled": true
   },
+  // Hourly tick for 24h accommodation-registration emails (PB-02).
+  // The Worker scheduled() handler in src/server.ts calls processDueReminders
+  // directly. See docs/cron-accommodation-reminders.md.
+  "triggers": {
+    "crons": ["0 * * * *"]
+  },
   "vars": {
     "DATABASE_PROVIDER": "d1",
     // Server-side runtime fallbacks for the build-time VITE_* values — keep in

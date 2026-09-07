@@ -98,6 +98,18 @@ All admin pages include:
 | `pnpm rbac:init` | Create roles + permissions + optional admin user |
 | `pnpm rbac:assign` | Assign role to user |
 
+## 24-hour accommodation reminder cron
+
+Opt-in is off by default. Checking the box stores `due_at` (arrival + 24h, or a
+user-set time) and does **not** send mail. Hotel stays are never emailed.
+
+- Cloudflare Workers: copy `triggers.crons` from `wrangler.example.jsonc` and
+  redeploy. `scheduled()` in `src/server.ts` processes due rows.
+- Any host: set `CRON_SECRET` and POST `/api/cron/accommodation-reminders`
+  with `Authorization: Bearer $CRON_SECRET`.
+
+Full steps: `docs/cron-accommodation-reminders.md`.
+
 ## Claude Code Skills
 
 | Skill | What it does |

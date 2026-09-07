@@ -1,14 +1,19 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { apiGet, apiPost } from '@/lib/api-client';
+import { formatOfficialFetchedAt } from '@/lib/playbooks/freshness';
 
 import { ArrivalTimer } from './slots';
 
 export type ReminderView = {
   userId: string;
   arrivalAt: string;
+  dueAt: string;
+  stayType: string;
   email: string;
   optedIn: boolean;
   sentAt: string | null;
@@ -18,8 +23,15 @@ export type ReminderResponse = {
   emailConfigured: boolean;
   email: string;
   reminder: ReminderView | null;
-  send?: { sent: boolean; configured: boolean; error?: string };
+  scheduled?: boolean;
 };
+
+function parseDueInput(value: string): string | undefined {
+  if (!value.trim()) return undefined;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return undefined;
+  return date.toISOString();
+}
 
 export function AccommodationReminderOptIn({
   arrivalAt,
@@ -32,6 +44,7 @@ export function AccommodationReminderOptIn({
 }) {
   const queryClient = useQueryClient();
   const hotel = stayType === 'hotel';
+  const [dueAtInput, setDueAtInput] = useState('');
 
   const query = useQuery({
     queryKey: ['accommodation-reminder'],
@@ -44,15 +57,21 @@ export function AccommodationReminderOptIn({
         optedIn,
         arrivalAt,
         stayType,
+        dueAt: parseDueInput(dueAtInput),
       }),
     onSuccess: (data) => {
       queryClient.setQueryData(['accommodation-reminder'], data);
-      if (data.reminder?.optedIn && data.send?.sent) {
-        toast.success('Clock-started email sent.');
-      } else if (data.reminder?.optedIn && !data.emailConfigured) {
-        toast.success('Opted in. Email is not configured — the timer still runs here.');
-      } else if (data.reminder?.optedIn && data.send && !data.send.sent) {
-        toast.success('Opted in. Email could not be sent; the timer still runs here.');
+      if (data.reminder?.optedIn) {
+        const due = data.reminder.dueAt
+          ? formatOfficialFetchedAt(data.reminder.dueAt)
+          : 'arrival + 24 hours';
+        if (!data.emailConfigured) {
+          toast.success(
+            `Reminder scheduled for ${due}. Email is not configured — the timer still runs here.`
+          );
+        } else {
+          toast.success(`Reminder scheduled for ${due}. Nothing is sent until then.`);
+        }
       } else {
         toast.success('Email reminder turned off.');
       }
@@ -86,7 +105,8 @@ export function AccommodationReminderOptIn({
           className="mt-0.5"
         />
         <span className="text-sm leading-6">
-          Email me before the 24h registration deadline.
+          Email me at the 24-hour mark (arrival + 24h, or a time I set). Off by
+          default.
         </span>
       </label>
 
@@ -102,17 +122,33 @@ export function AccommodationReminderOptIn({
         </p>
       ) : null}
 
+      {!hotel && arrivalAt ? (
+        <label className="block space-y-1">
+          <span className="text-xs text-muted-foreground">
+            Remind at (optional — default is arrival + 24 hours)
+          </span>
+          <Input
+            type="datetime-local"
+            value={dueAtInput}
+            disabled={disableToggle}
+            onChange={(e) => setDueAtInput(e.target.value)}
+          />
+        </label>
+      ) : null}
+
       {query.data && emailConfigured === false && !hotel ? (
         <p className="text-xs text-muted-foreground">
           Email is not configured. The 24-hour timer and opt-in state still work
-          here.
+          here. Cron will not send until Resend is set.
         </p>
       ) : null}
 
-      {shownChecked && query.data?.reminder?.sentAt ? (
+      {shownChecked && query.data?.reminder?.dueAt ? (
         <p className="text-xs text-muted-foreground">
-          Clock-started email sent to {query.data.email}. The in-app timer still
-          counts down.
+          Scheduled for {formatOfficialFetchedAt(query.data.reminder.dueAt)}
+          {query.data.reminder.sentAt
+            ? `. Sent once to ${query.data.email}.`
+            : '. Not sent yet.'}
         </p>
       ) : null}
     </section>

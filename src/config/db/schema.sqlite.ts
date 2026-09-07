@@ -709,6 +709,8 @@ export const accommodationReminder = table(
       .references(() => user.id, { onDelete: 'cascade' })
       .unique(),
     arrivalAt: integer('arrival_at', { mode: 'timestamp' }).notNull(),
+    dueAt: integer('due_at', { mode: 'timestamp' }).notNull(),
+    stayType: text('stay_type').notNull().default(''),
     email: text('email').notNull(),
     optedIn: integer('opted_in', { mode: 'boolean' }).notNull().default(false),
     sentAt: integer('sent_at', { mode: 'timestamp' }),
@@ -719,7 +721,10 @@ export const accommodationReminder = table(
       .notNull()
       .$defaultFn(() => new Date()),
   },
-  (t) => [index('idx_accommodation_reminder_user').on(t.userId)]
+  (t) => [
+    index('idx_accommodation_reminder_user').on(t.userId),
+    index('idx_accommodation_reminder_due').on(t.dueAt),
+  ]
 );
 
 export type AccommodationReminder = typeof accommodationReminder.$inferSelect;

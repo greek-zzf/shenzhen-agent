@@ -9,7 +9,7 @@ export const GUIDANCE_MAX_MESSAGE_CHARS = 400;
 export const GUIDANCE_MAX_ANSWER_CHARS = 520;
 
 export const GUIDANCE_EMPTY_STATE =
-  "Ask about this step. I'll only use this playbook and the official links on it — not a travel writer.";
+  'The playbook is the deliverable. Ask is only about this step — not a sitewide chatbot.';
 
 export const GUIDANCE_UNAVAILABLE_NOTE =
   'Live assist is off — Gemini is not configured.';
