@@ -67,20 +67,37 @@ App-UI substitutes live in [`clickpath/`](./clickpath/). Rights are **NOT cleare
 - **Tour Card wind-down.** Bind frames are **direct foreign-card bind**, not Tour Card open/activate. [chinafortravelers 2026 numbered bind](https://chinafortravelers.com/guides/alipay-for-foreigners/) was not downloaded — origin returned Cloudflare 403 here; no stable image URL recovered.
 - Guessed sibling filenames under `/2026/01/` that 404’d were not kept.
 
-## Xiaohongshu notes (retrieved 2026-09-07 — no binaries)
+## Xiaohongshu ClickPath stock (retrieved 2026-09-07)
 
-Xiaohongshu `/explore/` URLs redirected to `error_code=300031` (note temporarily
-unviewable) from this environment. **No image files** were saved. Rights are
-**NOT cleared.** `last_verified` stays null. Catalog:
+Binaries below were saved from public Xiaohongshu CDN image URLs rendered by
+the notes (session research on the box). Rights are **NOT cleared.**
+`last_verified` stays null. Playbooks stay `draft`. Catalog:
 [`docs/field-research/clickpath-xhs-2026-09.md`](../../docs/field-research/clickpath-xhs-2026-09.md).
+
+| File | What it is | Source page | Image / post date | Rights |
+| --- | --- | --- | --- | --- |
+| `clickpath/xhs-szga-foreigner-temp-registration-bilingual.jpg` | Bilingual 境外人员临时住宿登记 form (ID Number, Cell Phone, Security Code, E-mail, Household…) | [explore/65bb660a00000000020117aa](https://www.xiaohongshu.com/explore/65bb660a00000000020117aa) 深圳外国人临时登记 | 2024-02-02 | **Not cleared** |
+| `clickpath/xhs-alipay-foreigners-guide-01.webp` | Alipay Guide for Foreigners p1 | [explore/67aca60e000000001800a1f3](https://www.xiaohongshu.com/explore/67aca60e000000001800a1f3) | 2025-02-12 | **Not cleared** |
+| `clickpath/xhs-alipay-foreigners-guide-02.webp` | Alipay Guide for Foreigners p2 | Same note | 2025-02-12 | **Not cleared** |
+| `clickpath/xhs-alipay-foreigners-guide-03.webp` | Alipay Guide for Foreigners p3 | Same note | 2025-02-12 | **Not cleared** |
+| `clickpath/xhs-alipay-foreigners-guide-04.webp` | Alipay Guide for Foreigners p4 | Same note | 2025-02-12 | **Not cleared** |
+| `clickpath/xhs-alipay-foreigners-guide-05.webp` | Alipay Guide for Foreigners p5 | Same note | 2025-02-12 | **Not cleared** |
+
+### XHS notes catalogued without binaries in this PR
 
 | Note | What the scrape recorded | Date | Rights | Wired? |
 | --- | --- | --- | --- | --- |
-| [65bb660a00000000020117aa](https://www.xiaohongshu.com/explore/65bb660a00000000020117aa) 深圳外国人临时登记 | Bilingual temporary lodging form (ID Number, Cell Phone, Security Code, E-mail, Household…). Author: QR stuck / manual entry unavailable → street office. | 2024-02-02 | **Not cleared** | URL only — pb-02 `wechat-click-path` n=4 note. No screenshot. |
-| [69097cfa000000000302df24](https://www.xiaohongshu.com/explore/69097cfa000000000302df24) | Alipay Transport entry (Foshan demo city) | — | **Not cleared** | No |
-| [6a167ee100000000070254b7](https://www.xiaohongshu.com/explore/6a167ee100000000070254b7) | Shenzhen transport guide graphics 2026 | — | **Not cleared** | No |
-| [68ff81e00000000005038ada](https://www.xiaohongshu.com/explore/68ff81e00000000005038ada) | General China metro QR explainer | — | **Not cleared** | No |
-| [69d777530000000021005a92](https://www.xiaohongshu.com/explore/69d777530000000021005a92) | Residence registration discovery (not clearly foreign passport) | — | **Not cleared** | No |
-| [661e405b0000000001032c38](https://www.xiaohongshu.com/explore/661e405b0000000001032c38) | Luohu PSB hall booths/queue — Chinese passport / 出入境, **not** foreigner VOA | — | **Not cleared** | No. Not a VOA port. No hours door. |
-| [6687b051000000000a02714c](https://www.xiaohongshu.com/explore/6687b051000000000a02714c) | TourCard guide | — | **Not cleared** | No |
-| [67aca60e000000001800a1f3](https://www.xiaohongshu.com/explore/67aca60e000000001800a1f3) | Alipay Guide for Foreigners (2025-02) | 2025-02 | **Not cleared** | No |
+| [65bb660a…](https://www.xiaohongshu.com/explore/65bb660a00000000020117aa) | Bilingual lodging form; author QR stuck / manual entry unavailable → street office | 2024-02-02 | **Not cleared** | Yes — pb-02 `wechat-click-path` n=4 screenshot (substitute only; 2024 UI may be stale) |
+| [67aca60e…](https://www.xiaohongshu.com/explore/67aca60e000000001800a1f3) | Alipay Guide for Foreigners (5 pages) | 2025-02-12 | **Not cleared** | Stock only — not wired onto a playbook step |
+| [69097cfa…](https://www.xiaohongshu.com/explore/69097cfa000000000302df24) | Alipay Transport entry (Foshan demo) | — | **Not cleared** | No binary in repo |
+| [6a167ee1…](https://www.xiaohongshu.com/explore/6a167ee100000000070254b7) | Shenzhen transport guide graphics 2026 | — | **Not cleared** | No binary in repo |
+| [68ff81e0…](https://www.xiaohongshu.com/explore/68ff81e00000000005038ada) | General China metro QR explainer | — | **Not cleared** | No binary in repo |
+| [69d77753…](https://www.xiaohongshu.com/explore/69d777530000000021005a92) | Residence registration discovery (not clearly foreign passport) | — | **Not cleared** | No |
+| [661e405b…](https://www.xiaohongshu.com/explore/661e405b0000000001032c38) | Luohu PSB hall — Chinese passport / 出入境, **NOT** foreigner VOA | 2024-04-16 | **Not cleared** | **Not uploaded.** Not a VOA port. No hours door. |
+| [6687b051…](https://www.xiaohongshu.com/explore/6687b051000000000a02714c) | TourCard guide | — | **Not cleared** | No binary in this PR |
+
+### Honest labels (XHS)
+
+- **65bb660a bilingual form** is a 2024-02 UI substitute for pb-02 only. Author reported QR/manual failure → street office. Do not invent 房屋码 success/fail toasts. Do not set `last_verified`.
+- **Alipay Guide for Foreigners** pages are stock only; verify current Alipay UI before production wiring.
+- **Luohu 661e405b** hall shots are Chinese-passport 出入境 service — **never** claim 5-day SEZ VOA. Not uploaded in this PR.
