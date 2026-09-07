@@ -10,6 +10,11 @@ Files live in [`public/copilot-stock/`](../../public/copilot-stock/). Attributio
 CDN dates, and the “must not set last_verified” rule are in
 [`public/copilot-stock/ATTRIBUTION.md`](../../public/copilot-stock/ATTRIBUTION.md).
 
+App-UI ClickPath frames recovered **2026-09-07** are catalogued separately in
+[`clickpath-candidates-2026-09.md`](./clickpath-candidates-2026-09.md) (Alipay
+Transport composites, 2021 深圳公安 menus, 2026 bind steps). This file is the
+2026-09-04 door / gate / fee-board set.
+
 Renderer: a non-null `click_path[].screenshot` still shows the step `note` as a
 caption. Stock frames use **Stock photo — confirm at the window**. `screenshot:
 null` still renders the missing-art placeholder.
