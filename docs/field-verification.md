@@ -32,3 +32,22 @@ Remote research batch of 2026-09-04 / 2026-09-05. Conflicts were expanded, not d
 - [ ] Do not mix residence-permit window hours (Xiaohongshu / 居留) with port VOA hours.
 
 Until those live checks land, every playbook stays `last_verified: null`.
+
+## 2026-09-07 XHS ClickPath stock (substitute only)
+
+Xiaohongshu bilingual 境外人员临时住宿登记 form is now in
+`public/copilot-stock/clickpath/xhs-szga-foreigner-temp-registration-bilingual.jpg`
+(wired onto pb-02 `wechat-click-path` n=4 as a **substitute only**). Alipay Guide
+for Foreigners pages `xhs-alipay-foreigners-guide-0{1..5}.webp` are stocked but
+not playbook-wired. Rights **NOT cleared.** `last_verified` stays null.
+
+### Still empty / still required (do not invent)
+
+| Gap | Status |
+| --- | --- |
+| Luohu VOA **door hours** photo | Still empty. Call +86 755 82324022; photograph the visa-office board. Do **not** treat Luohu PSB / 出入境 hall (Chinese passport) shots as 5-day SEZ VOA. |
+| 房屋码 **success / fail toasts** | Still empty. XHS bilingual form is not a toast. |
+| Rights clearance | Still **NOT cleared** for all XHS / community / news stock. |
+| Foreign volunteer (live field) | Still required before any playbook leaves `draft` / before setting `last_verified`. |
+| Nationality lists / fee figures / hours | Do not invent. |
+
