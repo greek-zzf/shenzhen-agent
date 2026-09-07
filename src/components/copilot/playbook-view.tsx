@@ -5,10 +5,12 @@ import { Link, useRouter } from '@/core/i18n/navigation';
 import { shouldSkipStep } from '@/lib/playbooks/attach';
 import { freshnessByUrl, type PlaybookFreshness } from '@/lib/playbooks/freshness';
 import { STEP_CONFLICT_ID } from '@/lib/playbooks/labels';
+import type { NiaEligibility } from '@/lib/playbooks/nia-eligibility';
 import type { CopilotProfile } from '@/lib/playbooks/profile';
 import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
 
 import { AccommodationReminderOptIn } from './accommodation-reminder';
+import { NiaEligibilityCard } from './nia-eligibility';
 import { PlaybookHelp, PlaybookHelpTrigger } from './playbook-help';
 import { SourceStaleBadge } from './source-stale-badge';
 import {
@@ -41,6 +43,7 @@ export function PlaybookView({
   loginNext,
   freshness,
   assistAvailable = false,
+  niaEligibility = null,
 }: {
   playbook: Playbook;
   profile: CopilotProfile;
@@ -49,6 +52,7 @@ export function PlaybookView({
   loginNext?: string;
   freshness?: PlaybookFreshness | null;
   assistAvailable?: boolean;
+  niaEligibility?: NiaEligibility | null;
 }) {
   const router = useRouter();
   const [stuckOpen, setStuckOpen] = useState(false);
@@ -116,6 +120,11 @@ export function PlaybookView({
         </div>
         <h1 className="text-2xl font-semibold tracking-tight">{playbook.title_en}</h1>
         <p className="text-sm leading-6 text-muted-foreground">{playbook.summary_en}</p>
+        {mode === 'run' ? (
+          <p className="text-sm leading-6 text-muted-foreground">
+            This playbook is the deliverable. Ask is only about this step.
+          </p>
+        ) : null}
       </header>
 
       {mode === 'public' ? (
@@ -211,6 +220,10 @@ export function PlaybookView({
             ) : null}
 
             {step.click_path ? <ClickPathView path={step.click_path} /> : null}
+
+            {step.id === 'nia-list' && niaEligibility ? (
+              <NiaEligibilityCard eligibility={niaEligibility} />
+            ) : null}
 
             {step.slot === 'conflict' ? (
               <ConflictCallout conflict={conflictForStep(playbook, step)} />

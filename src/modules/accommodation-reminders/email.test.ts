@@ -3,13 +3,13 @@ import { describe, it } from 'node:test';
 
 import {
   buildReminderEmail,
+  computeDueAt,
   isEmailConfigured,
   isHotelStay,
   parseArrivalAt,
   reminderLinks,
-  shouldSendClockStarted,
-  shouldSendDeadlineNudge,
-  TWELVE_HOURS_MS,
+  selectDueReminders,
+  shouldSendDueReminder,
   TWENTY_FOUR_HOURS_MS,
 } from './email';
 
@@ -41,97 +41,66 @@ describe('accommodation reminder rules', () => {
     assert.equal(parseArrivalAt(123), null);
   });
 
-  it('sends T+0 clock-started only when opted in, not hotel, not sent, email on', () => {
+  it('defaults due_at to arrival + 24h and accepts a user-set time', () => {
+    const arrival = new Date('2026-09-02T00:00:00.000Z');
     assert.equal(
-      shouldSendClockStarted({
-        optedIn: true,
-        stayType: 'apartment',
-        sentAt: null,
-        emailConfigured: true,
-      }),
-      true
+      computeDueAt(arrival).toISOString(),
+      '2026-09-03T00:00:00.000Z'
     );
+    const custom = new Date('2026-09-02T12:00:00.000Z');
+    assert.equal(computeDueAt(arrival, custom).toISOString(), custom.toISOString());
+  });
+});
+
+describe('scheduled send: not yet due / hotel skip / due send once', () => {
+  const arrival = new Date('2026-09-02T00:00:00.000Z');
+  const dueAt = computeDueAt(arrival);
+
+  const base = {
+    optedIn: true,
+    stayType: 'apartment',
+    sentAt: null as Date | null,
+    dueAt,
+    arrivalAt: arrival,
+  };
+
+  it('does not send before due_at', () => {
     assert.equal(
-      shouldSendClockStarted({
-        optedIn: true,
-        stayType: 'hotel',
-        sentAt: null,
-        emailConfigured: true,
-      }),
-      false
-    );
-    assert.equal(
-      shouldSendClockStarted({
-        optedIn: false,
-        stayType: 'apartment',
-        sentAt: null,
-        emailConfigured: true,
-      }),
-      false
-    );
-    assert.equal(
-      shouldSendClockStarted({
-        optedIn: true,
-        stayType: 'apartment',
-        sentAt: new Date(),
-        emailConfigured: true,
-      }),
-      false
-    );
-    assert.equal(
-      shouldSendClockStarted({
-        optedIn: true,
-        stayType: 'apartment',
-        sentAt: null,
-        emailConfigured: false,
-      }),
+      shouldSendDueReminder(base, new Date(dueAt.getTime() - 1)),
       false
     );
   });
 
-  it('T+12h nudge window is [start+12h, start+24h)', () => {
-    const arrival = new Date('2026-09-02T00:00:00.000Z');
-    const base = {
-      optedIn: true,
-      stayType: 'apartment' as const,
-      sentAt: null as Date | null,
-      arrivalAt: arrival,
-    };
+  it('skips hotel even when due', () => {
     assert.equal(
-      shouldSendDeadlineNudge({
-        ...base,
-        now: new Date(arrival.getTime() + TWELVE_HOURS_MS - 1),
-      }),
+      shouldSendDueReminder(
+        { ...base, stayType: 'hotel' },
+        new Date(dueAt.getTime() + 1)
+      ),
       false
     );
+  });
+
+  it('sends once when due, then skips after sentAt', () => {
+    const now = new Date(dueAt.getTime());
+    assert.equal(shouldSendDueReminder(base, now), true);
     assert.equal(
-      shouldSendDeadlineNudge({
-        ...base,
-        now: new Date(arrival.getTime() + TWELVE_HOURS_MS),
-      }),
-      true
-    );
-    assert.equal(
-      shouldSendDeadlineNudge({
-        ...base,
-        now: new Date(arrival.getTime() + TWENTY_FOUR_HOURS_MS - 1),
-      }),
-      true
-    );
-    assert.equal(
-      shouldSendDeadlineNudge({
-        ...base,
-        now: new Date(arrival.getTime() + TWENTY_FOUR_HOURS_MS),
-      }),
+      shouldSendDueReminder({ ...base, sentAt: now }, now),
       false
     );
-    assert.equal(
-      shouldSendDeadlineNudge({
-        ...base,
-        stayType: 'hotel',
-        now: new Date(arrival.getTime() + TWELVE_HOURS_MS + 1),
-      }),
-      false
+  });
+
+  it('selectDueReminders keeps only the first due apartment row', () => {
+    const now = new Date(dueAt.getTime() + 60_000);
+    const rows = [
+      { id: 'early', ...base, dueAt: new Date(dueAt.getTime() + TWENTY_FOUR_HOURS_MS) },
+      { id: 'hotel', ...base, stayType: 'hotel' },
+      { id: 'sent', ...base, sentAt: now },
+      { id: 'due', ...base },
+    ];
+    assert.deepEqual(
+      selectDueReminders(rows, now).map((row) => row.id),
+      ['due']
     );
   });
 });
@@ -141,17 +110,16 @@ describe('accommodation reminder email copy', () => {
 
   it('is English, calm, and links the two copilot pages', () => {
     const { subject, text, html } = buildReminderEmail({
-      kind: 'clock_started',
       appUrl: 'https://example.com/',
       arrivalAt: arrival,
+      dueAt: computeDueAt(arrival),
     });
     const { guideUrl, runUrl } = reminderLinks('https://example.com/');
 
     assert.equal(guideUrl, 'https://example.com/p/accommodation-registration');
     assert.equal(runUrl, 'https://example.com/run/pb-02');
     assert.match(subject, /24-hour accommodation registration/i);
-    assert.match(text, /12-hour/);
-    assert.match(text, /24 hours/);
+    assert.match(text, /24-hour/);
     assert.match(text, /hotel may have filed/i);
     assert.match(text, /房屋码/);
     assert.match(text, /verify at the window/i);
@@ -163,15 +131,12 @@ describe('accommodation reminder email copy', () => {
   });
 
   it('never includes passport scans or marketing', () => {
-    for (const kind of ['clock_started', 'deadline_nudge'] as const) {
-      const { subject, text, html } = buildReminderEmail({
-        kind,
-        appUrl: 'https://example.com',
-        arrivalAt: arrival,
-      });
-      const blob = `${subject}\n${text}\n${html}`.toLowerCase();
-      assert.doesNotMatch(blob, /passport scan|unsubscribe|newsletter|promo|discount|sms/);
-      assert.doesNotMatch(blob, /data:image|cid:/);
-    }
+    const { subject, text, html } = buildReminderEmail({
+      appUrl: 'https://example.com',
+      arrivalAt: arrival,
+    });
+    const blob = `${subject}\n${text}\n${html}`.toLowerCase();
+    assert.doesNotMatch(blob, /passport scan|unsubscribe|newsletter|promo|discount|sms/);
+    assert.doesNotMatch(blob, /data:image|cid:/);
   });
 });

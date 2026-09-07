@@ -129,8 +129,8 @@ function HelpBody({
       <div className="mt-3 min-h-0 flex-1 space-y-3 overflow-y-auto">
         {items.length === 0 && !assistOff ? (
           <p className="text-xs leading-5 text-muted-foreground">
-            Checklist stays primary. I only explain this YAML — I do not tap WeChat
-            or rewrite steps.
+            The checklist is the product. I only explain this step — I do not tap
+            WeChat or rewrite the playbook.
           </p>
         ) : null}
         {items.map((item, index) => (

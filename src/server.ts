@@ -23,11 +23,27 @@ function ensureCloudflareEnv(): Promise<void> {
   return cfEnvPromise;
 }
 
+async function runAccommodationReminderCron(): Promise<void> {
+  await ensureCloudflareEnv();
+  const { getAllConfigs } = await import('./modules/config/service');
+  const { processDueReminders } = await import(
+    './modules/accommodation-reminders/service'
+  );
+  const result = await processDueReminders(new Date(), {
+    configs: await getAllConfigs(),
+  });
+  console.info('[cron] accommodation-reminders', result);
+}
+
 // Custom server entry — wraps every request in Paraglide's middleware so
 // getLocale() resolves per-request (AsyncLocalStorage) during SSR.
+// `scheduled` is the Cloudflare Cron trigger (wrangler triggers.crons).
 export default {
   async fetch(req: Request): Promise<Response> {
     await ensureCloudflareEnv();
     return paraglideMiddleware(req, () => handler.fetch(req));
+  },
+  async scheduled(): Promise<void> {
+    await runAccommodationReminderCron();
   },
 };

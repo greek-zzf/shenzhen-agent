@@ -5,13 +5,11 @@ import { respData, respErr } from '@/lib/resp';
 import { enforceMinIntervalRateLimit } from '@/lib/rate-limit';
 import { getAllConfigs } from '@/modules/config/service';
 import {
+  computeDueAt,
   getByUserId,
   isEmailConfigured,
   isHotelStay,
-  markSent,
   parseArrivalAt,
-  sendReminderEmail,
-  shouldSendClockStarted,
   toReminderView,
   upsertOptIn,
 } from '@/modules/accommodation-reminders/service';
@@ -51,6 +49,7 @@ async function POST({ request }: { request: Request }) {
     const body = (await request.json().catch(() => ({}))) as {
       optedIn?: unknown;
       arrivalAt?: unknown;
+      dueAt?: unknown;
       stayType?: unknown;
     };
 
@@ -62,6 +61,7 @@ async function POST({ request }: { request: Request }) {
       );
     }
     const arrivalAt = parseArrivalAt(body.arrivalAt);
+    const userDueAt = parseArrivalAt(body.dueAt);
     const existing = await getByUserId(session.user.id);
     const resolvedArrival = arrivalAt ?? existing?.arrivalAt ?? null;
 
@@ -69,44 +69,26 @@ async function POST({ request }: { request: Request }) {
       return respErr('Set your arrival time first.');
     }
 
+    const resolvedDue = resolvedArrival
+      ? computeDueAt(resolvedArrival, userDueAt)
+      : existing?.dueAt ?? new Date();
+
     const configs = await getAllConfigs();
     const row = await upsertOptIn({
       userId: session.user.id,
       email: session.user.email,
       arrivalAt: resolvedArrival ?? new Date(),
+      dueAt: resolvedDue,
+      stayType,
       optedIn,
     });
-
-    let send: { sent: boolean; configured: boolean; error?: string } = {
-      sent: false,
-      configured: isEmailConfigured(configs),
-    };
-
-    if (
-      shouldSendClockStarted({
-        optedIn,
-        stayType,
-        sentAt: row.sentAt,
-        emailConfigured: send.configured,
-      })
-    ) {
-      send = await sendReminderEmail({
-        to: session.user.email,
-        kind: 'clock_started',
-        arrivalAt: row.arrivalAt,
-        configs,
-      });
-      if (send.sent) {
-        await markSent(row.id, new Date());
-      }
-    }
 
     const latest = await getByUserId(session.user.id);
     return respData({
       emailConfigured: isEmailConfigured(configs),
       email: session.user.email,
-      reminder: latest ? toReminderView(latest) : null,
-      send,
+      reminder: latest ? toReminderView(latest) : toReminderView(row),
+      scheduled: optedIn,
     });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : 'Internal error';

@@ -76,4 +76,7 @@ export const envConfigs: Record<string, string> = {
 
   // Locale (public)
   locale: publicEnv('VITE_DEFAULT_LOCALE') ?? 'en',
+
+  // Cron (server-only) — Bearer token for /api/cron/accommodation-reminders
+  cron_secret: procEnv.CRON_SECRET ?? '',
 };
