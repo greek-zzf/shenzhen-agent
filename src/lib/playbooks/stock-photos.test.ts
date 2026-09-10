@@ -37,6 +37,7 @@ const CLICKPATH_FILES = [
   'szpsb-wechat-exit-entry-menu-2021.png',
   'szpsb-wechat-temp-stay-register-2021.png',
   'szpsb-wechat-scan-house-qr-form-2021.png',
+  'xhs-szga-foreigner-temp-registration-bilingual.jpg',
   'alipay-bind-realname-steps-2026.jpg',
   'alipay-bind-foreign-card-steps-2026.jpg',
 ] as const;
@@ -100,10 +101,10 @@ describe('copilot stock photos', () => {
       'utf8'
     );
     assert.match(xhs, /65bb660a00000000020117aa/);
-    assert.match(xhs, /No image recovered/);
-    assert.match(xhs, /\*\*not\*\* foreigner VOA/);
+    assert.match(xhs, /substitute only/i);
+    assert.match(xhs, /\*\*NOT\*\* foreigner VOA/i);
     assert.match(attribution, /65bb660a00000000020117aa/);
-    assert.match(attribution, /error_code=300031/);
+    assert.match(attribution, /Do not set `last_verified`/);
   });
 
   it('wires pb-03 fee frames without inventing a hours-door photo', () => {
@@ -159,16 +160,19 @@ describe('copilot stock photos', () => {
     );
     assert.equal(
       wechat.click_path?.steps[3]?.screenshot,
-      '/copilot-stock/clickpath/szpsb-wechat-scan-house-qr-form-2021.png'
+      '/copilot-stock/clickpath/xhs-szga-foreigner-temp-registration-bilingual.jpg'
     );
-    for (const step of wechat.click_path?.steps ?? []) {
+    for (const [index, step] of (wechat.click_path?.steps ?? []).entries()) {
       assert.match(step.note ?? '', new RegExp(STOCK_CAPTION));
-      assert.match(step.note ?? '', /2021/i);
       assert.match(step.note ?? '', /VOA/i);
+      if (index < 3) {
+        assert.match(step.note ?? '', /2021/i);
+      }
     }
     assert.match(wechat.click_path?.steps[3]?.note ?? '', /65bb660a/);
     assert.match(wechat.click_path?.steps[3]?.note ?? '', /street office/);
-    assert.match(wechat.click_path?.steps[3]?.note ?? '', /Do not invent a 房屋码 success\/fail toast/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /success\/fail toast/);
+    assert.match(wechat.click_path?.steps[3]?.note ?? '', /last_verified stays null/);
   });
 
   it('wires pb-01 foreign-card bind stock and labels Tour Card wind-down', () => {

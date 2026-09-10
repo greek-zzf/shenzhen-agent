@@ -65,7 +65,25 @@ export function attachPlaybooks(
   );
 }
 
-export function primaryAttachedId(attached: Playbook[]): string | null {
+/** Clear diagnosis for the 24-hour registration sample path — not a new playbook. */
+export function isAccommodationSituation(profile: CopilotProfile): boolean {
+  return (
+    profile.broken.includes('need_24h') || profile.stay_type === 'apartment'
+  );
+}
+
+/**
+ * One recommended run target. When accommodation registration is the
+ * diagnosis, prefer pb-02 even if payments / VOA / SIM also matched.
+ */
+export function primaryAttachedId(
+  attached: Playbook[],
+  profile?: CopilotProfile
+): string | null {
+  if (profile && isAccommodationSituation(profile)) {
+    const registration = attached.find((pb) => pb.id === 'pb-02');
+    if (registration) return registration.id;
+  }
   return attached[0]?.id ?? null;
 }
 

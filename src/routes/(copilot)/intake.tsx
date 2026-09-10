@@ -120,7 +120,8 @@ function IntakePage() {
     () => attachPlaybooks(profile, PLAYBOOKS),
     [profile]
   );
-  const primaryId = primaryAttachedId(attached);
+  const primaryId = primaryAttachedId(attached, profile);
+  const primary = attached.find((pb) => pb.id === primaryId) ?? null;
   const others = attached.filter((pb) => pb.id !== primaryId);
 
   function commit(next: CopilotProfile) {
@@ -423,24 +424,25 @@ function IntakePage() {
         />
       </section>
 
-      {attached.length ? (
-        <div className="space-y-1 text-sm text-muted-foreground">
-          <p>
-            Will attach:{' '}
-            {primaryId ? (
-              <Link href={`/run/${primaryId}`} className="underline underline-offset-4">
-                {primaryId}
-              </Link>
-            ) : null}
+      {primary ? (
+        <div className="space-y-2 rounded-2xl border border-border bg-white/80 px-4 py-3">
+          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            Recommended path
+          </p>
+          <p className="text-sm font-semibold">{primary.title_en}</p>
+          <p className="text-sm leading-6 text-muted-foreground">
+            {primary.id === 'pb-02'
+              ? 'Accommodation registration is the diagnosis. One playbook — not a menu of equal choices.'
+              : 'One recommended playbook from your chips. Open it and follow the current step.'}
           </p>
           {others.length ? (
-            <p>
-              Also:{' '}
+            <p className="text-xs leading-5 text-muted-foreground">
+              Later, not this pass:{' '}
               {others.map((pb, i) => (
                 <span key={pb.id}>
                   {i > 0 ? ', ' : ''}
                   <Link href={`/run/${pb.id}`} className="underline underline-offset-4">
-                    {pb.id}
+                    {pb.title_en}
                   </Link>
                 </span>
               ))}
@@ -461,7 +463,11 @@ function IntakePage() {
         disabled={!canStartPlaybook(profile)}
         onClick={diagnose}
       >
-        Diagnose and open playbook
+        {primary?.id === 'pb-02'
+          ? 'Start 24-hour registration'
+          : primary
+            ? `Start ${primary.title_en}`
+            : 'Diagnose and open playbook'}
       </Button>
     </div>
   );

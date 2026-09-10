@@ -317,11 +317,29 @@ export function RequiredChecks({
   items,
   checked,
   onToggle,
+  interactive = true,
 }: {
   items: { id: string; label_en: string }[];
   checked: Record<string, boolean>;
   onToggle: (id: string, value: boolean) => void;
+  interactive?: boolean;
 }) {
+  if (!interactive) {
+    return (
+      <div className="rounded-lg border border-dashed border-border px-3 py-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Acknowledge — optional
+        </p>
+        <ul className="mt-2 list-disc space-y-1 pl-4">
+          {items.map((item) => (
+            <li key={item.id} className="text-sm leading-6">
+              {item.label_en}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
   return (
     <ul className="space-y-2">
       {items.map((item) => (
@@ -344,11 +362,32 @@ export function WhatToBring({
   items,
   checked,
   onToggle,
+  interactive = true,
 }: {
   items: { id: string; label_en: string; required: boolean }[];
   checked: Record<string, boolean>;
   onToggle: (id: string, value: boolean) => void;
+  interactive?: boolean;
 }) {
+  if (!interactive) {
+    return (
+      <div className="rounded-lg border border-border px-3 py-2">
+        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          Bring
+        </p>
+        <ul className="mt-2 list-disc space-y-1 pl-4">
+          {items.map((item) => (
+            <li key={item.id} className="text-sm leading-6">
+              {item.label_en}
+              {item.required ? (
+                <span className="ml-1 text-xs text-destructive">required</span>
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
   return (
     <ul className="space-y-2">
       {items.map((item) => (
