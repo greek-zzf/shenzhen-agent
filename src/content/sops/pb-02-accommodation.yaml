@@ -190,7 +190,7 @@ steps:
         - n: 4
           text_en: On the form, scan 房屋码. Do not type a street address. We never submit. If QR/manual entry fails, go to the street-office / window with your passport.
           screenshot: /copilot-stock/clickpath/xhs-szga-foreigner-temp-registration-bilingual.jpg
-          note: Stock photo — confirm at the window. Xiaohongshu explore/65bb660a (2024-02-02) bilingual 境外人员临时住宿登记 form (ID Number, Cell Phone, Security Code, E-mail, Household…). Author: QR stuck / manual entry unavailable → street office. 2024 UI may be stale. Substitute only — not a 房屋码 success/fail toast (still empty). PSB hall / WeChat ≠ Luohu VOA port. Rights not cleared. Not founder-verified. last_verified stays null.
+          note: "Stock photo — confirm at the window. Xiaohongshu explore/65bb660a (2024-02-02) bilingual 境外人员临时住宿登记 form (ID Number, Cell Phone, Security Code, E-mail, Household…). Author: QR stuck / manual entry unavailable → street office. 2024 UI may be stale. Substitute only — not a 房屋码 success/fail toast (still empty). PSB hall / WeChat ≠ Luohu VOA port. Rights not cleared. Not founder-verified. last_verified stays null."
     official_urls: []
     prefill: {}
     required_checkboxes: []

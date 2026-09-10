@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { HelpCircle } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -129,8 +129,8 @@ function HelpBody({
       <div className="mt-3 min-h-0 flex-1 space-y-3 overflow-y-auto">
         {items.length === 0 && !assistOff ? (
           <p className="text-xs leading-5 text-muted-foreground">
-            The checklist is the product. I only explain this step — I do not tap
-            WeChat or rewrite the playbook.
+            The playbook is the product — not this box. I only explain this step
+            from the SOP. I do not tap WeChat, invent hours, or rewrite steps.
           </p>
         ) : null}
         {items.map((item, index) => (
@@ -223,6 +223,12 @@ export function PlaybookHelp({
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [assistOff, setAssistOff] = useState(!available);
+
+  useEffect(() => {
+    setItems([]);
+    setDraft('');
+    setError('');
+  }, [currentStepId]);
 
   async function send() {
     const message = draft.trim();

@@ -8,11 +8,20 @@ export {
 } from './catalog';
 export {
   attachPlaybooks,
+  isAccommodationSituation,
   isNeverPlaybook,
   primaryAttachedId,
   shouldSkipStep,
   ATTACH_PRIORITY,
 } from './attach';
+export {
+  RUN_FRAMING,
+  focusedClickPath,
+  nextStepId,
+  resolveActiveStepId,
+  stepProgress,
+  visiblePlaybookSteps,
+} from './run-focus';
 export {
   applyIntakeFill,
   parseIntakeFill,
