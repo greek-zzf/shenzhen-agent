@@ -42,7 +42,18 @@ async function POST({ request }: { request: Request }) {
     }
 
     const message = sanitizeAgentMessage(parsed.data.message);
-    const corpus = getViteCorpus();
+    let corpus = getViteCorpus();
+    if (!corpus.chunks.some((chunk) => chunk.kind === 'docs')) {
+      try {
+        const { loadCorpusFilesFromDisk } = await import(
+          '@/lib/agent-corpus/load-disk'
+        );
+        const { buildCorpus } = await import('@/lib/agent-corpus/build');
+        corpus = buildCorpus(loadCorpusFilesFromDisk());
+      } catch {
+        // Workers have no fs — playbook chunks from the Vite catalog still answer.
+      }
+    }
 
     const apiKey = await geminiKey();
     if (!apiKey) {

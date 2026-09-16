@@ -210,6 +210,7 @@ function docsFileSource(path: string, title: string): AgentSource {
 }
 
 function chunksFromMarkdown(file: CorpusFile): AgentChunk[] {
+  if (typeof file.text !== 'string') return [];
   const titleFromPath =
     file.path.split('/').pop()?.replace(/\.md$/i, '') ?? file.path;
   const fileSource = docsFileSource(file.path, titleFromPath);
@@ -267,9 +268,18 @@ function chunksFromCsv(file: CorpusFile): AgentChunk[] {
   ];
 }
 
-export function buildCorpus(files: CorpusFile[]): AgentCorpus {
+export function buildCorpus(
+  files: CorpusFile[],
+  playbooks: Playbook[] = []
+): AgentCorpus {
   const chunks: AgentChunk[] = [];
+  for (const playbook of playbooks) {
+    chunks.push(
+      ...chunksFromPlaybook(playbook, `src/content/sops/${playbook.id}.yaml`)
+    );
+  }
   for (const file of files) {
+    if (typeof file.text !== 'string' || !file.text) continue;
     const path = file.path.replace(/\\/g, '/');
     if (/\/pb-\d{2}[^/]*\.ya?ml$/i.test(path)) {
       const playbook = parsePlaybookYaml(file.text, path);
