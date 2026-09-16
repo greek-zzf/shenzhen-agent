@@ -104,6 +104,7 @@ function toProfile(raw: z.infer<typeof profileInputSchema>): CopilotProfile {
 /**
  * Grounded help for the current playbook step. YAML and freshness load on the
  * server — the client only sends the question, profile chips, and step id.
+ * Site-wide chat at `/agent` uses `src/lib/agent-corpus/` (same citation kinds).
  */
 export const askPlaybookGuidanceFn = createServerFn({ method: 'POST' })
   .inputValidator((raw: unknown) => askInputSchema.parse(raw))

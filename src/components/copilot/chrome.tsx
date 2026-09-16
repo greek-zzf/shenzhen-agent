@@ -34,6 +34,13 @@ export function CopilotChrome({
           </Link>
           <div className="ml-auto flex items-center gap-5">
             <Link
+              href="/agent"
+              className="lawn-nav-link"
+              data-active={pathname.startsWith('/agent') ? 'true' : undefined}
+            >
+              Agent
+            </Link>
+            <Link
               href="/library"
               className="lawn-nav-link"
               data-active={pathname.startsWith('/library') ? 'true' : undefined}
