@@ -9,12 +9,14 @@ export function sourceKindLabel(kind: UrlKind): string {
 export const STEP_CONFLICT_ID: Record<string, string> = {
   'choose-stack': 'alipay-vs-wechat',
   'tourcard-conflict': 'tourcard-vs-direct',
+  'wechat-annual-limit': 'wechat-annual-limit',
   'national-pilot-conflict': 'national-2026-pilot',
   'registration-form-vs-lease': 'c-registration-form-vs-lease',
   'hours-conflict': 'voa-hours',
   'west-kowloon-note': 'west-kowloon-outbound',
   'fee-user-report': 'c-fee-130',
   'octopus-post': 'octopus-note',
+  'qr-vs-foreign-card': 'c-qr-vs-foreign-card',
   'transport-tab-conflict': 'c-transport-tab',
   'tap-to-ride-trial': 'c-tap-to-ride-trial',
   'sit-sources-side-by-side': 'official-vs-reddit-lease',
@@ -23,5 +25,6 @@ export const STEP_CONFLICT_ID: Record<string, string> = {
   'channel-fork-58': 'c-58-scam-trap',
   'bite-emergency-fork': 'c-english-clinic-vs-nearest-public',
   'hku-passport-fail': 'c-wechat-booking-passport',
+  'kiosk-id-trap': 'c-kiosk-chinese-id',
   'layoff-official-only': 'c-12345-english-hours',
 };

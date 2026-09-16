@@ -42,6 +42,21 @@ Use the [volunteer kit](./field-verification-volunteer-kit.md) for capture rules
 
 Until those live checks land, every playbook stays `last_verified: null`.
 
+## 2026-09-16 r/shenzhen 1t9yeli — unverified community backlog
+
+Thread: [I live in Shenzhen — here's what actually works for foreign visitors](https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/). Author scene matrix + comments. **非法律来源.** Rights are a community report. **Do not set `last_verified`.** Wired into draft SOP stuck trees and ConflictCallouts on `pb-01`, `pb-05`, `pb-08` — not as a city-guide page. Volunteer checks still required:
+
+| Claim (community, side-by-side) | Live check | Who |
+|---|---|---|
+| Tour Pass / Tour Card gone vs still offered vs direct foreign-card bind | In-app: new Tour Card open/activate still offered, grey, or gone? Direct bind success/fail code. | Volunteer kit §D. Already on the live list. |
+| Alipay easier vs WeChat easier (US Alipay month-long verify) | Which wallet completed KYC on this passport? Do not pick a product winner. | Volunteer — note both outcomes. |
+| Octopus since 2023 vs **China T-Union only** vs “metro takes neither Octopus nor Visa at the gate” | Named gate: regular HK Octopus / T-Union / foreign Visa tap. Confirm at the gate. | Volunteer kit §C. |
+| WeChat yearly spend cap on large expenses | Only if a large bill fails after everyday QR still works. Do not invent a figure. | Volunteer if it happens. Then Alipay / bank/counter. |
+| Hospital kiosk demands Chinese ID even with Alipay | Leave kiosk; counter + cash. Registration complexity — what the clerk actually asks. No invented hours/fees. | Volunteer at a real window (expansion kit PB-08). |
+| VPN on the same phone as Alipay/WeChat forces re-auth | Risk note only. **Do not teach VPN setup.** | Neither. Product ban. |
+
+Deliberately omitted from playbooks: park / attraction lifestyle SOP (one-line cash-at-gate tip only); restaurant / street-food playbook (if_fail node only); NIA lists; hours; fees.
+
 ## 2026-09-07 XHS ClickPath stock (substitute only)
 
 Xiaohongshu bilingual 境外人员临时住宿登记 form is now in

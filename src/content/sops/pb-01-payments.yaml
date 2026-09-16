@@ -1,12 +1,12 @@
 id: pb-01
 title_en: Get something paid
 status: draft
-version: 2
+version: 3
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
 public_slug: alipay-metro
-summary_en: Start KYC before you fly, pick a stack without assuming a winner, keep cash as backup, and use Alipay Transport for metro — not a friend-bound WeChat identity.
+summary_en: Start both wallets before you fly, bind a foreign card and test a small purchase, keep cash as the parachute, and treat scene failures as stuck trees — not a city guide.
 disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
 attach_when:
   - when: broken_contains
@@ -31,6 +31,9 @@ official_urls:
     url: https://www.szpsq.gov.cn/English/SERVICES/Checkpoints/content/post_12325911.html
     kind: official
     fetched_at: "2026-09-04T16:45:30Z"
+  - label: r/shenzhen 1t9yeli — scene matrix (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+    kind: user_report
 conflicts:
   - id: alipay-vs-wechat
     title_en: Alipay vs WeChat Pay — do not assume one is easier
@@ -46,6 +49,16 @@ conflicts:
         kind: guide
         claim_en: WeChat Pay is a useful backup and is less reliable for some foreign numbers. Start both KYC flows if you can; keep cash.
         as_of: "2026-01"
+      - label: r/shenzhen 1t9yeli author — Alipay easier (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author — Alipay is the easier foreign-card wallet; WeChat is harder but worth it as backup (some shops WeChat-only). Community report, not a winner.
+        as_of: "2026-09-16"
+      - label: r/shenzhen 1t9yeli comment — WeChat easier (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Comment — WeChat was easy; Alipay US verify ran a month. Opposite of the author. Install both. Switch when one fails. We do not pick a winner.
+        as_of: "2026-09-16"
   - id: tourcard-vs-direct
     title_en: TourCard top-up vs binding a foreign card directly
     resolution: verify_at_window
@@ -70,6 +83,30 @@ conflicts:
         kind: guide
         claim_en: A 2026-05 guide says Alipay stopped new Tour Card open/activate. Verify in-app the day you try. This is not a verdict that Tour Card is dead or still required.
         as_of: "2026-05"
+      - label: r/shenzhen 1t9yeli author — Tour Pass (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author still frames Alipay as Tour Pass. Executable path in this playbook is still direct bind + KYC. Tour Card/Tour Pass stays a wind-down conflict, not a deleted product.
+        as_of: "2026-09-16"
+      - label: r/shenzhen 1t9yeli comments — Tour Pass gone / direct bind (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Comments — Tour Pass has been gone for years; binding a foreign card directly works. Same thread as the author. We do not pick a winner. Verify in-app.
+        as_of: "2026-09-16"
+  - id: wechat-annual-limit
+    title_en: WeChat yearly spend cap vs Alipay / counter — large expenses only
+    resolution: verify_at_window
+    sources:
+      - label: r/shenzhen 1t9yeli comment — WeChat yearly cap (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Comment — a visitor buying large-expense items hit a WeChat yearly spend limit. Commenter said the cap is high and only bites big spend. Not a fee table. We do not invent a number.
+        as_of: "2026-09-16"
+      - label: r/shenzhen 1t9yeli author matrix — WeChat still listed (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author still lists WeChat Pay as a working column for everyday scenes. That is not a denial of a yearly cap. If WeChat dies on a large bill, try Alipay or a bank/counter. We do not pick a winner.
+        as_of: "2026-09-16"
   - id: t3-onestop-not-bank
     title_en: Airport T3 one-stop helps payments and SIM — not a bank SLA
     resolution: verify_at_window
@@ -90,32 +127,89 @@ failure_tree:
   nodes:
     - id: wechat-dead
       question_en: WeChat Pay will not open or will not accept your foreign number?
-      advice_en: Switch to Alipay and finish KYC there. Do not ask a friend to bind WeChat Pay to their identity for you.
+      advice_en: Switch to Alipay and finish KYC there. Comments on the same thread say the opposite wallet can fail. Install both. Do not ask a friend to bind WeChat Pay to their identity for you.
+      never:
+        - friend_bind
+      next: alipay-dead
+      vpn_off_only: false
+    - id: alipay-dead
+      question_en: Alipay KYC is pending, rejected, or the bound card will not pay?
+      advice_en: Switch to WeChat and finish KYC there. One commenter waited a month on US Alipay verify. Do not wait at the counter for a winner. Keep cash.
+      never:
+        - friend_bind
+      next: wechat-spend-limit
+      vpn_off_only: false
+    - id: wechat-spend-limit
+      question_en: WeChat Pay dies on a large bill after everyday QR still worked?
+      advice_en: Community report of a yearly WeChat spend cap on large expenses — not a published fee. Try Alipay on the same bill, or pay at a bank/counter with cash or a working card. We do not invent a limit figure.
+      never:
+        - friend_bind
+      next: dual-wallet-midtrip
+      vpn_off_only: false
+    - id: dual-wallet-midtrip
+      question_en: One wallet worked yesterday and fails today?
+      advice_en: Foreign visitors in that thread often lose one app mid-trip. Open the other official app. Do not friend-bind. Cash is the parachute.
       never:
         - friend_bind
       next: metro-miniprogram
       vpn_off_only: false
     - id: metro-miniprogram
       question_en: A Shenzhen Metro mini-program will not load or will not issue a ride code?
-      advice_en: Leave the mini-program. Open the Alipay app itself → Transport / 出行 → 乘车码. That is the first hotspot, not the metro mini-program.
+      advice_en: Leave the mini-program. Open the Alipay app itself → Transport / 出行 → 乘车码. Author also lists WeChat QR. Foreign cards at machines are inconsistent — cash token if both QRs fail (pb-05).
+      never:
+        - friend_bind
+      next: scene-taxi
+      vpn_off_only: false
+    - id: scene-taxi
+      question_en: Taxi or DiDi — driver has no POS, or in-app card will not settle with the driver?
+      advice_en: Cash works. Driver POS is rare. Pay the driver's Alipay/WeChat QR. No Octopus. Do not hand the phone to a stranger to 'fix' the wallet.
+      never:
+        - friend_bind
+      next: scene-local-merchant
+      vpn_off_only: false
+    - id: scene-local-merchant
+      question_en: A shop or restaurant will not take your foreign card?
+      advice_en: Convenience / chains — QR plus cash; foreign card only at larger chains (unverified). Local restaurant / street food — cash; some WeChat-only. Switch wallet or cash. Not a restaurant playbook.
+      never:
+        - friend_bind
+      next: scene-hospital
+      vpn_off_only: false
+    - id: scene-hospital
+      question_en: Hospital kiosk demands a Chinese ID even with Alipay loaded?
+      advice_en: Leave the kiosk. Go to the human counter with cash and passport. Registration is reported as complex — that is a counter job, not a mini-program. See pb-08.
+      never:
+        - friend_bind
+      next: scene-park-cash
+      vpn_off_only: false
+    - id: scene-park-cash
+      question_en: A park or attraction mini-program will not sell you a ticket?
+      advice_en: Pay cash at the gate. Do not start a park playbook. One-line stuck tip only.
       never:
         - friend_bind
       next: vpn-off
       vpn_off_only: false
     - id: vpn-off
       question_en: The wallet or Transport tab errors after you land?
-      advice_en: Turn the VPN off and retry in the official app. VPN-off is the only network step we recommend. Never friend-bind identity.
+      advice_en: Community report — a VPN on the same phone as Alipay/WeChat can force repeated re-auth. Risk note only. We do not teach, sell, or set up a VPN. Retry in the official app. Then cash.
+      never:
+        - friend_bind
+      next: cash-parachute
+      vpn_off_only: true
+    - id: cash-parachute
+      question_en: Both wallets fail and the merchant will not take a foreign card?
+      advice_en: Use ¥10/¥20 notes (author also recommends about ¥500 in small bills). Ask 可以收现金吗. Author claims merchants must take cash — community report, not a statute. Confirm at the window.
       never:
         - friend_bind
       next: null
-      vpn_off_only: true
+      vpn_off_only: false
 attached_playbooks:
   - pb-05
+  - pb-08
 steps:
   - id: start-kyc
     title_en: Start KYC before you fly
     slot: click_path
-    why: Passport photo and face checks often stall on hotel Wi-Fi. Starting both wallets at home gives you a path if one side rejects the card.
+    why: Passport photo and face checks often stall on hotel Wi-Fi. Author and comments both say set up Alipay and WeChat before you fly, then switch when one fails. Apple Pay / Google Pay with a foreign card is reported as decoration. Octopus is an HK-loop note only.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -125,10 +219,10 @@ steps:
     click_path:
       steps:
         - n: 1
-          text_en: Install Alipay and WeChat from your home app store. Do not use a third-party APK.
+          text_en: Install Alipay and WeChat from your home app store before you fly. Do not use a third-party APK. We never pick a winner — comments disagree which is easier.
           screenshot: null
         - n: 2
-          text_en: Sign up with your existing foreign number. Photograph the passport bio page when asked.
+          text_en: Sign up with your existing foreign number. In Alipay, link a foreign card and try a small test purchase at home if the app lets you. Photograph the passport bio page when asked.
           screenshot: null
         - n: 3
           text_en: Start real-name / KYC in both apps. We never submit this for you.
@@ -145,7 +239,7 @@ steps:
   - id: choose-stack
     title_en: Choose a stack — do not assume a winner
     slot: conflict
-    why: Guides disagree on which wallet is smoother. US Alipay KYC may take more than a month. Keep both attempts and cash.
+    why: Author says Alipay is easier; a commenter says WeChat was easy and Alipay US verify took a month. Install both. Switch when one fails. We do not pick a winner.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -169,7 +263,7 @@ steps:
     skip_if: null
     passport_fail_warning:
       title_en: Passport / KYC may stall before any mini-program
-      body_en: If Alipay KYC is still pending, do not tap merchant mini-programs that demand a mainland wallet. Use the other stack, TourCard only if you accept its fees, or cash ¥10/¥20. Never ask a friend to bind their identity to your WeChat.
+      body_en: If Alipay KYC is still pending, do not tap merchant mini-programs that demand a mainland wallet. Use the other stack, or cash ¥10/¥20. Apple Pay / Google Pay with a foreign card is reported as decoration in that thread. Never ask a friend to bind their identity to your WeChat.
     getting_there: null
     what_to_bring: []
     speech_card: null
@@ -185,7 +279,7 @@ steps:
   - id: tourcard-conflict
     title_en: TourCard vs binding a foreign card directly
     slot: conflict
-    why: TourCard is a prepaid top-up product. Direct foreign-card bind is a different path. A 2026-05 guide says new Tour Card open/activate stopped — verify in-app. We do not pick one.
+    why: Author still says Tour Pass. Comments say Tour Pass has been gone for years and direct foreign-card bind works. Keep Tour Card wind-down. Executable path is direct bind + KYC. We do not pick a winner. Verify in-app.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -236,7 +330,7 @@ steps:
   - id: cash-backup
     title_en: Keep ¥10 and ¥20 notes as backup
     slot: speech
-    why: Some windows and small shops still take cash when a foreign wallet fails. Ask first. Do not assume cards work.
+    why: Author calls cash the parachute — about ¥500 in ¥10/¥20. Machines and taxis are reported to take cash. Ask first. Author claims merchants must take cash; that is a community report, not a statute.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -247,6 +341,9 @@ steps:
         required: false
       - id: cash-20
         label_en: A few ¥20 notes
+        required: false
+      - id: cash-500
+        label_en: About ¥500 in ¥10/¥20 notes (community recommend — not a fee)
         required: false
     speech_card:
       hanzi: 请问可以收现金吗？我只有十块和二十的。
@@ -259,7 +356,58 @@ steps:
     primary_cta:
       id: next_step
       label_en: I have cash backup
-    stuck_node: wechat-dead
+    stuck_node: cash-parachute
+    timer: null
+  - id: scene-if-fail
+    title_en: If this scene fails — do this, then cash
+    slot: click_path
+    why: Community scene reports, not a city guide. Each line is an if_fail jump. Park is one line only — no park playbook.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path:
+      steps:
+        - n: 1
+          text_en: Metro / bus — cash at the machine or exact change. Foreign cards are inconsistent. Alipay or WeChat QR if the wallet is live. See pb-05. Octopus is a conflict, not a plan.
+          screenshot: null
+        - n: 2
+          text_en: Taxi / DiDi — cash or the driver's Alipay/WeChat QR. Driver POS is rare. No Octopus. Shop / street food — QR plus cash; some WeChat-only. HSR SZ↔HK — cash or foreign card at the counter (unverified).
+          screenshot: null
+        - n: 3
+          text_en: Hospital kiosk wants a Chinese ID — leave it. Human counter + cash (pb-08). Park / attraction mini-program hell — cash at the gate. Do not start a park playbook.
+          screenshot: null
+    official_urls:
+      - label: r/shenzhen 1t9yeli (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will use the stuck path
+    stuck_node: cash-parachute
+    timer: null
+  - id: wechat-annual-limit
+    title_en: Large bill — WeChat yearly cap vs Alipay / counter
+    slot: conflict
+    why: One commenter hit a WeChat yearly spend limit on large expenses. Author still lists WeChat as a working column. We do not invent a figure. Try Alipay or a bank/counter.
+    skippable: true
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will try the other path
+    stuck_node: wechat-spend-limit
     timer: null
   - id: metro-transport-tab
     title_en: Metro ride code — Alipay Transport tab
@@ -371,6 +519,8 @@ steps:
         label_en: I will not ask a friend to bind WeChat or Alipay to their identity for me
       - id: later-bank
         label_en: I understand a mainland bank account is a separate later step, not this playbook
+      - id: dual-wallet
+        label_en: I installed both wallets and will switch if one dies mid-trip (community report — not a winner)
     primary_cta:
       id: next_step
       label_en: Continue

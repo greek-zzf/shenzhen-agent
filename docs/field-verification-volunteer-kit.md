@@ -41,6 +41,8 @@ Alipay app (not a metro mini-program): **出行 / Transport** → **乘车码**.
 | --- | --- |
 | City = **深圳 / Shenzhen** (header + picker) | Stock in-repo is **武汉 / Beijing** demo. A Wuhan obtain screen is a miss. |
 | Live QR at a named Shenzhen gate | Station + line + gate type. Grey / error code if it fails. Cash-token machine only if the QR fails. |
+| Foreign Visa/MC at a **marked** machine or gate | Works / fails / no signage. Do not treat Tap-to-Ride news as every gate. |
+| Octopus tap (if you have one) | Regular HK vs **China T-Union**. Confirm at the gate. Community conflict — do not pick a winner. |
 
 ### D) Foreign-card Alipay bind / Tour Card — `pb-01`
 

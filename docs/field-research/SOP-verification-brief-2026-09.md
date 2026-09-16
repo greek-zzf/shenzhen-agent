@@ -34,12 +34,14 @@ Remote research only. **Do not set `last_verified`.** All six playbooks stay `st
 ### PB-01 Payments
 
 - Tour Card vs direct bind still a conflict. [Reddit 1dhkk9w](https://www.reddit.com/r/shenzhen/comments/1dhkk9w/firsttime_us_citizen_going_to_shenzhen/) foreign-card direct. [Tour Card wind-down guide](https://chinaguidelines.com/zh/posts/tour-card) (~2026-05 Alipay new open/activate stop — **verify in-app**). HiShenzhen kept.
+- [Reddit 1t9yeli](https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/) (2026-09-16 ingest, 非法律): author Tour Pass + Alipay-easier vs comments Tour Pass gone / WeChat-easier / WeChat yearly cap / VPN re-auth risk. Wired as stuck trees + ConflictCallout. **Do not set `last_verified`.**
 - Airport English one-stop page reachable as of 2026-09-04.
 
 ### PB-05 Metro
 
 - Transport-tab conflict: Reddit [1htndt5](https://www.reddit.com/r/shenzhen/comments/1htndt5/) and [18xi3iv](https://www.reddit.com/r/shenzhen/comments/18xi3iv/). Alipay Transport path stays.
 - New `c-tap-to-ride-trial`: [2026-06-30 trial news](https://www.gba.net.cn/news/2026/25310.html) + [official 2024 notice](https://jtys.sz.gov.cn/jtzx/wycx/dtcx/cxtx/content/post_11264753.html). Confirm at the gate.
+- [Reddit 1t9yeli](https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/) (2026-09-16 ingest): cash-at-machine fallback; QR vs foreign-card inconsistency; Octopus author-vs-T-Union-vs-denied. Confirm at the gate. **Do not set `last_verified`.**
 
 ### PB-04 SIM
 
