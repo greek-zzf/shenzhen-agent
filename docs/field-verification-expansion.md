@@ -23,6 +23,7 @@ Slugs (content ids, not yet public SEO pages): `bank`, `housing-lease`, `hospita
 - [ ] Confirm a named public hospital ER can give rabies vaccine the same day (district-dependent). No invented addresses.
 - [ ] HKU-SZH IMC phones: 0755-86913388 / English 0755-86913366 — still printed?
 - [ ] Confirm WeChat mini-program passport failure + counter bypass.
+- [ ] Kiosk Chinese-ID trap ([r/shenzhen 1t9yeli](https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/), 非法律): even with Alipay loaded, does the machine demand a Chinese ID? Counter + cash path. **Do not set `last_verified`.**
 - [ ] Never diagnose, prescribe, or RPA-book WeChat.
 
 ## PB-09 Work / residence personal checklist

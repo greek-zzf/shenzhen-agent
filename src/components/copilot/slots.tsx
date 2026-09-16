@@ -235,7 +235,7 @@ export function ConflictCallout({ conflict }: { conflict: Conflict }) {
       <div className="mt-3 grid gap-3 sm:grid-cols-2">
         {conflict.sources.map((source) => (
           <a
-            key={source.url}
+            key={`${source.label}|${source.url}`}
             href={source.url}
             target="_blank"
             rel="noopener noreferrer"

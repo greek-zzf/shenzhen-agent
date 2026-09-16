@@ -1,12 +1,12 @@
 id: pb-05
 title_en: Ride the metro
 status: draft
-version: 2
+version: 3
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
 public_slug: null
-summary_en: Skip the metro mini-program. First hotspot is Alipay → Transport / 出行 → 乘车码. Cash machine is the backup. Short playbook — payments matrix lives in pb-01.
+summary_en: Skip the metro mini-program. First hotspot is Alipay → Transport / 出行 → 乘车码. Cash machine is the backup when QR or a foreign card fails. Octopus / Visa-at-gate stay conflicts — confirm at the gate.
 disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
 attach_when:
   - when: broken_contains
@@ -29,6 +29,12 @@ official_urls:
     url: https://jtys.sz.gov.cn/jtzx/wycx/dtcx/cxtx/content/post_11264753.html
     kind: official
     fetched_at: "2026-09-04T16:46:00Z"
+  - label: r/shenzhen 1t9yeli — transport matrix (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+    kind: user_report
+  - label: Octopus — China T-Union product page
+    url: https://www.octopus.com.hk/en/consumer/octopus-cards/products/cross-border/china-t-union.html
+    kind: official
 conflicts:
   - id: octopus-note
     title_en: Octopus-since-2023 is a payment-post note, not law
@@ -44,6 +50,45 @@ conflicts:
         kind: guide
         claim_en: Some posts mention Hong Kong Octopus acceptance on Shenzhen metro after 2023. Treat that as a payment-post note. Confirm at the gate; it is not written here as law.
         as_of: "2026-01"
+      - label: r/shenzhen 1t9yeli author — Octopus since 2023 (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author — Shenzhen Metro accepts Octopus since 2023; some buses too. Community report. Confirm at the gate. Not law.
+        as_of: "2026-09-16"
+      - label: r/shenzhen 1t9yeli comment — China T-Union only (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Comment — you need the China T-Union Octopus. A regular Hong Kong Octopus does not work there. Product page is not a Shenzhen gate promise.
+        as_of: "2026-09-16"
+      - label: r/shenzhen 1t9yeli comment — no Octopus or Visa at gates (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Another comment — metro does not take Octopus or Visa/Mastercard on the gates or machines. Same thread. Confirm at the gate. We do not pick a winner.
+        as_of: "2026-09-16"
+      - label: Octopus — China T-Union product page
+        url: https://www.octopus.com.hk/en/consumer/octopus-cards/products/cross-border/china-t-union.html
+        kind: official
+        claim_en: Octopus sells a China T-Union card. This is a product page, not a Shenzhen metro acceptance notice. Confirm at the gate.
+        as_of: "product-page"
+  - id: c-qr-vs-foreign-card
+    title_en: QR vs foreign card at machines and gates — confirm at the gate
+    resolution: verify_at_window
+    sources:
+      - label: r/shenzhen 1t9yeli author — cash / QR / some machines (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author — cash at ticket machines; foreign Visa/MC on some machines only; gates mostly no; Alipay/WeChat QR works. No clear signage. Cash is the safe play.
+        as_of: "2026-09-16"
+      - label: GBA news — tap-to-ride trial 2026-06-30
+        url: https://www.gba.net.cn/news/2026/25310.html
+        kind: official
+        claim_en: A 2026-06-30 trial item describes tap-to-ride. That is not a promise every gate takes a foreign card today. Confirm at the gate.
+        as_of: "2026-06-30"
+      - label: r/shenzhen 1t9yeli comment — no Visa on gates or machines (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Comment — metro does not take Visa/Mastercard on gates or machines. Opposite of 'some machines'. Confirm at the gate. We do not pick a winner.
+        as_of: "2026-09-16"
   - id: c-transport-tab
     title_en: Alipay Transport tab — guides vs field threads
     resolution: verify_at_window
@@ -82,25 +127,51 @@ conflicts:
         kind: official
         claim_en: Official 2024 metro-ride notice. It does not delete the Alipay Transport / 乘车码 path in this playbook. Confirm at the gate which method the reader will accept.
         as_of: "2024"
+      - label: r/shenzhen 1t9yeli author — gates mostly no (非法律来源)
+        url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+        kind: user_report
+        claim_en: Author — foreign Visa/MC at gates is mostly no; some ticket machines only. Keep tap-to-ride as a trial to confirm at the gate. We do not pick a winner.
+        as_of: "2026-09-16"
 failure_tree:
   id: metro-stuck
   title_en: I'm stuck
   nodes:
     - id: miniprogram-fail
       question_en: The Shenzhen Metro mini-program will not issue a code?
-      advice_en: Leave it. Open the Alipay app itself → Transport / 出行 → 乘车码. The mini-program is not the first hotspot.
+      advice_en: Leave it. Open the Alipay app itself → Transport / 出行 → 乘车码. Author also lists WeChat QR. The mini-program is not the first hotspot.
       never: []
+      next: foreign-card-inconsistent
+      vpn_off_only: false
+    - id: foreign-card-inconsistent
+      question_en: A ticket machine or gate will not take your foreign Visa/Mastercard?
+      advice_en: Author — some machines yes, gates mostly no. A comment — no Visa on gates or machines. Do not stand there retrying. Cash token, or a live Alipay/WeChat QR. Confirm at the gate.
+      never:
+        - friend_bind
+      next: octopus-unverified
+      vpn_off_only: false
+    - id: octopus-unverified
+      question_en: You want to tap Octopus?
+      advice_en: Author says it works since 2023. A comment says only China T-Union Octopus (regular HK no). Another comment says metro takes neither Octopus nor Visa at the gate. Confirm at the gate. If it fails, cash token.
+      never:
+        - friend_bind
       next: vpn-off
       vpn_off_only: false
     - id: vpn-off
       question_en: Transport tab errors or the QR is grey?
-      advice_en: Turn the VPN off and retry. VPN-off is the only network step. Then use the cash ticket machine.
+      advice_en: Community report — a VPN on the same phone as the wallet can force re-auth. Risk note only. We do not teach VPN setup. Retry in the official app. Then cash.
       never: []
       next: cash-machine
       vpn_off_only: true
     - id: cash-machine
-      question_en: Still no QR?
-      advice_en: Use the station ticket machine. English button → destination → cash. Token in, token out. Do not friend-bind a ride code.
+      question_en: Still no QR, and the card reader will not take your foreign card?
+      advice_en: Use the station ticket machine. English button → destination → cash. Token in, token out. Cash is the safe play when signage is unclear. Do not friend-bind a ride code.
+      never:
+        - friend_bind
+      next: bus-exact-change
+      vpn_off_only: false
+    - id: bus-exact-change
+      question_en: Bus, not metro?
+      advice_en: Author — exact-change cash; no foreign card; Alipay/WeChat QR; Octopus only on some cross-border routes (unverified). Do not start a bus playbook. If the QR fails, exact cash.
       never:
         - friend_bind
       next: null
@@ -193,7 +264,7 @@ steps:
   - id: cash-token
     title_en: Cash ticket machine backup
     slot: click_path
-    why: Every station still sells a single-journey token. English button exists on most machines.
+    why: Author — cash at the machine is the safe play. Foreign cards work on some machines only; gates mostly no. A comment denies Visa on machines too. Confirm at the gate. English button exists on most machines.
     skippable: false
     skip_if: null
     passport_fail_warning: null
@@ -206,7 +277,7 @@ steps:
     click_path:
       steps:
         - n: 1
-          text_en: At the machine, tap English → destination on the map → pay with cash (or a working Alipay).
+          text_en: At the machine, tap English → destination on the map → pay with cash. A foreign card may fail with no signage. A working Alipay/WeChat is a second try, not the backup plan.
           screenshot: null
         - n: 2
           text_en: Tap the token to enter. Insert the token to exit.
@@ -234,7 +305,7 @@ steps:
   - id: octopus-post
     title_en: Octopus-since-2023 is a note, not law
     slot: conflict
-    why: A payment post is not a regulation. Confirm at the gate if you want to try Octopus.
+    why: Author says Octopus works since 2023. A comment says only China T-Union (regular HK no). Another comment says metro takes neither Octopus nor Visa at the gate. Confirm at the gate. Not law.
     skippable: true
     skip_if: null
     passport_fail_warning: null
@@ -248,7 +319,26 @@ steps:
     primary_cta:
       id: next_step
       label_en: I will not treat Octopus as law
-    stuck_node: vpn-off
+    stuck_node: octopus-unverified
+    timer: null
+  - id: qr-vs-foreign-card
+    title_en: QR vs foreign card — confirm at the gate
+    slot: conflict
+    why: Author — cash at machines; foreign card some machines only; gates mostly no; Alipay/WeChat QR. Comment — no Visa on gates or machines. Tap-to-ride stays a trial. We do not pick a winner.
+    skippable: false
+    skip_if: null
+    passport_fail_warning: null
+    getting_there: null
+    what_to_bring: []
+    speech_card: null
+    click_path: null
+    official_urls: []
+    prefill: {}
+    required_checkboxes: []
+    primary_cta:
+      id: next_step
+      label_en: I will confirm at the gate
+    stuck_node: foreign-card-inconsistent
     timer: null
   - id: transport-tab-conflict
     title_en: Transport tab — guides vs field threads
@@ -272,7 +362,7 @@ steps:
   - id: tap-to-ride-trial
     title_en: Tap-to-ride is a trial — not a replacement path
     slot: conflict
-    why: A 2026-06-30 news item describes a tap-to-ride trial. A 2024 official metro notice exists. Neither deletes Alipay → Transport / 出行 → 乘车码. Confirm at the gate.
+    why: A 2026-06-30 news item describes a tap-to-ride trial. Author of 1t9yeli says gates mostly reject foreign Visa/MC. Neither deletes Alipay → Transport / 出行 → 乘车码. Confirm at the gate.
     skippable: true
     skip_if: null
     passport_fail_warning: null

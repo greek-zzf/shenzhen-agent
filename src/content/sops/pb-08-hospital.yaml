@@ -3,13 +3,13 @@
 id: pb-08
 title_en: Hospital routing — rabies emergency and English care
 status: draft
-version: 1
+version: 2
 last_verified: null
 source_max_age_days: 30
 lifecycle: 72h
 public_slug: null
 summary_en: 'Animal bite: nearest public hospital that can vaccinate TODAY — do not wait for an English
-  clinic. Never diagnose or prescribe. No WeChat RPA booking.'
+  clinic. Kiosk may demand a Chinese ID even with Alipay — human counter + cash. Never diagnose or prescribe. No WeChat RPA booking.'
 disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice. Rules change. Confirm
   at the counter. Official sources linked below. For animal bites, go to a hospital now.
 attach_when:
@@ -35,6 +35,9 @@ official_urls:
   kind: user_report
 - label: r/shenzhen 1tcu94o (非法律来源)
   url: https://www.reddit.com/r/shenzhen/comments/1tcu94o/can_anyone_recommend_good_english_speaking/
+  kind: user_report
+- label: r/shenzhen 1t9yeli — hospital kiosk / counter (非法律来源)
+  url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
   kind: user_report
 conflicts:
 - id: c-english-clinic-vs-nearest-public
@@ -70,6 +73,23 @@ conflicts:
     claim_en: Booking paths change. Phone and counter remain first-class when WeChat passport verification
       fails. Confirm on the live page.
     as_of: official-page
+- id: c-kiosk-chinese-id
+  title_en: Hospital kiosk may demand a Chinese ID even with Alipay — counter + cash
+  resolution: verify_at_window
+  sources:
+  - label: r/shenzhen 1t9yeli author — kiosk Chinese-ID trap (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+    kind: user_report
+    claim_en: 'Author — hospital kiosks may demand a Chinese ID card even with Alipay loaded. Go to the
+      human counter with cash. Registration is reported as complex. Community report, not a hospital
+      SLA. Confirm at the counter.'
+    as_of: "2026-09-16"
+  - label: HKU-SZH booking guidelines
+    url: https://www.hku-szh.org/en/PatientInfo/BookingService/BookingGuidelines/content/post_818462.html
+    kind: official
+    claim_en: Official booking paths change. Phone and counter remain first-class when a machine or WeChat
+      flow rejects a foreign document. This page does not list kiosk ID rules. Confirm at the counter.
+    as_of: official-page
 failure_tree:
   id: pb-08-stuck
   title_en: I'm stuck
@@ -84,6 +104,14 @@ failure_tree:
   - id: passport_booking_fail
     question_en: WeChat / mini-program rejected my passport?
     advice_en: Call IMC / English hotline or use the hospital counter.
+    never:
+    - ask_a_friend_to_book_under_their_chinese_id_for_
+    next: kiosk_chinese_id
+    vpn_off_only: false
+  - id: kiosk_chinese_id
+    question_en: The self-service kiosk wants a Chinese ID even though Alipay is loaded?
+    advice_en: Leave the kiosk. Go to the human counter with passport and cash. Author says registration
+      is complex — do not fight the machine. Do not ask a friend to book under their Chinese ID.
     never:
     - ask_a_friend_to_book_under_their_chinese_id_for_
     next: null
@@ -191,6 +219,40 @@ steps:
     id: i_have_these
     label_en: I have these
   stuck_node: passport_booking_fail
+  timer: null
+- id: kiosk-id-trap
+  title_en: Kiosk wants a Chinese ID — leave it, pay at the counter
+  slot: conflict
+  why: Community report — even with Alipay loaded, hospital kiosks may demand a Chinese ID. Registration
+    is reported as complex. That is a counter job. We do not invent hours or fees.
+  skippable: false
+  skip_if: null
+  passport_fail_warning:
+    title_en: Kiosk may reject a foreign passport
+    body_en: Do not keep retrying the machine. Walk to the human counter with cash and passport. We do
+      not operate the kiosk or WeChat for you.
+  getting_there: null
+  what_to_bring:
+  - id: passport-cash
+    label_en: Passport + cash (¥10/¥20)
+    required: true
+  speech_card:
+    hanzi: 机器要身份证。请帮我在人工柜台挂号，我付现金。
+    pinyin: Jīqì yào shēnfènzhèng. Qǐng bāng wǒ zài réngōng guìtái guàhào, wǒ fù xiànjīn.
+    en: The machine wants a Chinese ID. Please register me at the human counter. I will pay cash.
+  click_path: null
+  official_urls:
+  - label: r/shenzhen 1t9yeli (非法律来源)
+    url: https://www.reddit.com/r/shenzhen/comments/1t9yeli/i_live_in_shenzhen_heres_what_actually_works_for/
+    kind: user_report
+  prefill: {}
+  required_checkboxes:
+  - id: left_kiosk
+    label_en: If the kiosk wants a Chinese ID, I will leave it and go to the human counter with cash.
+  primary_cta:
+    id: i_am_at_window
+    label_en: Show this to the clerk
+  stuck_node: kiosk_chinese_id
   timer: null
 - id: chief-complaint
   title_en: Chinese chief-complaint card for the triage desk
