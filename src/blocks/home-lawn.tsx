@@ -45,6 +45,9 @@ export function HomeLawn() {
             Shenzhen Copilot
           </Link>
           <div className="ml-auto flex items-center gap-5">
+            <Link href="/agent" className="shrink-0 whitespace-nowrap text-[15px] font-medium tracking-tight">
+              Agent
+            </Link>
             <Link href="/library" className="shrink-0 whitespace-nowrap text-[15px] font-medium tracking-tight">
               Library
             </Link>
@@ -87,6 +90,10 @@ export function HomeLawn() {
             Start with my passport →
           </Link>
           <p className="text-[13px] font-medium text-[color:color-mix(in_oklab,var(--lawn-ink)_70%,var(--lawn-cream))]">
+            <Link href="/agent" className="underline-offset-4 hover:underline">
+              Ask the agent
+            </Link>
+            {' · '}
             <Link href="/disclaimer" className="underline-offset-4 hover:underline">
               Disclaimer
             </Link>
