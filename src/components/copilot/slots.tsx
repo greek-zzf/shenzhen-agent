@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Copy, Maximize2 } from 'lucide-react';
+import { ChevronRight, Copy, Maximize2 } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -16,9 +16,9 @@ import {
   type UrlFreshness,
 } from '@/lib/playbooks/freshness';
 import { sourceKindLabel } from '@/lib/playbooks/labels';
+import { isoToLocalInput, localInputToIso } from '@/lib/playbooks/run-state';
 import type {
   Conflict,
-  FailureNode,
   FailureTree,
   GettingThere,
   OfficialUrl,
@@ -46,7 +46,7 @@ function SourceFetchStatus({ status }: { status?: UrlFreshness }) {
   if (status.status === 'fail') {
     return (
       <p className="mt-1 text-[11px] font-medium text-amber-700 dark:text-amber-400">
-        could not refresh official source
+        Couldn&apos;t refresh this page today — open it to check
       </p>
     );
   }
@@ -214,9 +214,9 @@ export function ClickPathView({
                 ) : null}
               </figure>
             ) : (
-              <div className="mt-2 flex h-24 items-center justify-center rounded-md border border-dashed border-border bg-muted/40 text-xs text-muted-foreground">
-                missing art
-              </div>
+              <p className="mt-1.5 inline-flex rounded-full border border-dashed border-border px-2.5 py-0.5 text-[11px] text-muted-foreground">
+                Screenshot not added yet
+              </p>
             )}
           </div>
         </li>
@@ -256,13 +256,38 @@ export function ConflictCallout({ conflict }: { conflict: Conflict }) {
   );
 }
 
+function ArrivalInput({
+  arrivalAt,
+  onChange,
+}: {
+  arrivalAt: string | null;
+  onChange: (iso: string | null) => void;
+}) {
+  return (
+    <label className="mt-3 block">
+      <span className="text-xs font-medium text-muted-foreground">
+        When did you arrive?
+      </span>
+      <input
+        type="datetime-local"
+        className="mt-1 h-11 w-full rounded-full border border-input bg-white px-4 text-sm"
+        value={isoToLocalInput(arrivalAt)}
+        onChange={(e) => onChange(localInputToIso(e.target.value))}
+      />
+    </label>
+  );
+}
+
 export function ArrivalTimer({
   arrivalAt,
   label,
+  onArrivalChange,
 }: {
   arrivalAt: string | null;
   label: string;
+  onArrivalChange?: (iso: string | null) => void;
 }) {
+  const [editing, setEditing] = useState(false);
   const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
@@ -275,8 +300,13 @@ export function ArrivalTimer({
       <div className="rounded-lg border border-border px-3 py-3 text-sm">
         <p className="font-medium">{label}</p>
         <p className="mt-1 text-muted-foreground">
-          Set your arrival time on the profile card to start the 24-hour countdown.
+          {onArrivalChange
+            ? 'Add your arrival time to start the 24-hour countdown.'
+            : 'Add your arrival time in intake to start the 24-hour countdown.'}
         </p>
+        {onArrivalChange ? (
+          <ArrivalInput arrivalAt={arrivalAt} onChange={onArrivalChange} />
+        ) : null}
       </div>
     );
   }
@@ -307,8 +337,29 @@ export function ArrivalTimer({
       <p className="mt-1 text-sm text-muted-foreground">
         {expired
           ? 'Past 24 hours from the arrival you set. Register at the window.'
-          : 'Remaining from the arrival time on your profile.'}
+          : 'Remaining from the arrival time you set.'}
+        {onArrivalChange && !editing ? (
+          <>
+            {' '}
+            <button
+              type="button"
+              className="font-medium text-foreground underline underline-offset-4"
+              onClick={() => setEditing(true)}
+            >
+              Change
+            </button>
+          </>
+        ) : null}
       </p>
+      {onArrivalChange && editing ? (
+        <ArrivalInput
+          arrivalAt={arrivalAt}
+          onChange={(iso) => {
+            onArrivalChange(iso);
+            setEditing(false);
+          }}
+        />
+      ) : null}
     </div>
   );
 }
@@ -341,20 +392,25 @@ export function RequiredChecks({
     );
   }
   return (
+    <div className="space-y-2">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        Check before you move on
+      </p>
     <ul className="space-y-2">
       {items.map((item) => (
         <li key={item.id}>
-          <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border px-3 py-2">
+          <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left">
             <Checkbox
               checked={Boolean(checked[item.id])}
               onCheckedChange={(value) => onToggle(item.id, value === true)}
-              className="mt-0.5"
+              className="mt-1 size-5 border-foreground/45 bg-white"
             />
             <span className="text-sm leading-6">{item.label_en}</span>
           </label>
         </li>
       ))}
     </ul>
+    </div>
   );
 }
 
@@ -389,14 +445,18 @@ export function WhatToBring({
     );
   }
   return (
+    <div className="space-y-2">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        Bring
+      </p>
     <ul className="space-y-2">
       {items.map((item) => (
         <li key={item.id}>
-          <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-border px-3 py-2">
+          <label className="flex min-h-11 cursor-pointer items-start gap-3 rounded-lg border border-border bg-white px-3 py-2.5 text-left">
             <Checkbox
               checked={Boolean(checked[item.id])}
               onCheckedChange={(value) => onToggle(item.id, value === true)}
-              className="mt-0.5"
+              className="mt-1 size-5 border-foreground/45 bg-white"
             />
             <span className="text-sm leading-6">
               {item.label_en}
@@ -408,6 +468,7 @@ export function WhatToBring({
         </li>
       ))}
     </ul>
+    </div>
   );
 }
 
@@ -422,59 +483,71 @@ export function FailureTreeOverlay({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const start = tree.nodes.find((n) => n.id === startNodeId) ?? tree.nodes[0];
-  const [current, setCurrent] = useState<FailureNode>(start);
+  const [currentId, setCurrentId] = useState<string | null>(startNodeId ?? null);
 
   useEffect(() => {
-    if (open) {
-      setCurrent(tree.nodes.find((n) => n.id === startNodeId) ?? tree.nodes[0]);
-    }
-  }, [open, startNodeId, tree.nodes]);
+    if (open) setCurrentId(startNodeId ?? null);
+  }, [open, startNodeId]);
 
-  const next = current.next
-    ? tree.nodes.find((n) => n.id === current.next)
-    : null;
+  const current = tree.nodes.find((n) => n.id === currentId) ?? null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{tree.title_en}</DialogTitle>
+          <DialogTitle>What went wrong?</DialogTitle>
         </DialogHeader>
-        <div className="space-y-3">
-          <p className="text-sm font-medium">{current.question_en}</p>
-          <p className="text-sm leading-6">{current.advice_en}</p>
-          {current.vpn_off_only ? (
-            <p className="rounded-md border border-border bg-muted px-3 py-2 text-sm">
-              Network step: turn the VPN off and retry. That is the only network advice.
-            </p>
-          ) : null}
-          {current.never.length ? (
-            <p className="text-sm font-medium text-destructive">
-              Never: {current.never.join(', ').replaceAll('_', ' ')}
-            </p>
-          ) : null}
-          <div className="flex flex-wrap gap-2">
-            {next ? (
-              <Button type="button" onClick={() => setCurrent(next)}>
-                Next
-              </Button>
-            ) : (
-              <Button type="button" onClick={() => onOpenChange(false)}>
-                Close
-              </Button>
-            )}
-            {current.id !== start.id ? (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setCurrent(start)}
-              >
-                Start over
-              </Button>
-            ) : null}
-          </div>
-        </div>
+        <ul className="space-y-2">
+          {tree.nodes.map((node) => {
+            const active = node.id === current?.id;
+            return (
+              <li key={node.id}>
+                <button
+                  type="button"
+                  aria-expanded={active}
+                  onClick={() => setCurrentId(active ? null : node.id)}
+                  className={cn(
+                    'flex min-h-11 w-full items-start gap-2 rounded-xl border px-3 py-2.5 text-left text-sm font-medium',
+                    active
+                      ? 'border-foreground bg-white'
+                      : 'border-border hover:bg-muted'
+                  )}
+                >
+                  <ChevronRight
+                    className={cn(
+                      'mt-0.5 size-4 shrink-0 transition-transform duration-200',
+                      active && 'rotate-90'
+                    )}
+                  />
+                  <span>{node.question_en}</span>
+                </button>
+                {active ? (
+                  <div className="space-y-3 px-3 pb-1 pt-3">
+                    <p className="text-sm leading-6">{node.advice_en}</p>
+                    {node.vpn_off_only ? (
+                      <p className="rounded-md border border-border bg-muted px-3 py-2 text-sm">
+                        Network step: turn the VPN off and retry. That is the only
+                        network advice.
+                      </p>
+                    ) : null}
+                    {node.never.length ? (
+                      <p className="text-sm font-medium text-destructive">
+                        Don&apos;t: {node.never.join(', ').replaceAll('_', ' ')}
+                      </p>
+                    ) : null}
+                  </div>
+                ) : null}
+              </li>
+            );
+          })}
+        </ul>
+        <p className="text-xs leading-5 text-muted-foreground">
+          None of these? Show the clerk the Chinese card on this step and ask at
+          the window.
+        </p>
+        <Button type="button" className="h-11 rounded-full" onClick={() => onOpenChange(false)}>
+          Back to the step
+        </Button>
       </DialogContent>
     </Dialog>
   );
@@ -493,10 +566,10 @@ export function CitationFooter({
     <footer className="space-y-3 border-t border-border pt-4">
       <div className="flex items-center justify-between gap-2">
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-          Official URLs
+          Sources
         </p>
         <span className="text-xs text-muted-foreground">
-          last_verified: {lastVerified ?? 'null'}
+          {lastVerified ? `Checked in person ${lastVerified}` : 'Not yet checked in person'}
         </span>
       </div>
       <OfficialUrlList urls={urls} freshnessByUrl={freshnessByUrl} />

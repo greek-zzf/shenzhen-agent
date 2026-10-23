@@ -102,7 +102,7 @@ export function AccommodationReminderOptIn({
           checked={shownChecked}
           disabled={disableToggle}
           onCheckedChange={(value) => mutation.mutate(value === true)}
-          className="mt-0.5"
+          className="mt-0.5 size-5 border-foreground/45 bg-white"
         />
         <span className="text-sm leading-6">
           Email me at the 24-hour mark (arrival + 24h, or a time I set). Off by
@@ -113,12 +113,6 @@ export function AccommodationReminderOptIn({
       {hotel ? (
         <p className="text-sm text-muted-foreground">
           Hotels usually file at check-in. No email reminder for a hotel stay.
-        </p>
-      ) : null}
-
-      {!hotel && !arrivalAt ? (
-        <p className="text-sm text-muted-foreground">
-          Set your arrival time on intake to start the 24-hour clock.
         </p>
       ) : null}
 
@@ -138,8 +132,8 @@ export function AccommodationReminderOptIn({
 
       {query.data && emailConfigured === false && !hotel ? (
         <p className="text-xs text-muted-foreground">
-          Email is not configured. The 24-hour timer and opt-in state still work
-          here. Cron will not send until Resend is set.
+          Email reminders aren&apos;t switched on yet, so nothing will be sent.
+          The countdown above still works.
         </p>
       ) : null}
 

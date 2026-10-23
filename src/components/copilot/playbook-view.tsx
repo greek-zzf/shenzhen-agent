@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { ArrowLeft, Check, LifeBuoy } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Link, useRouter } from '@/core/i18n/navigation';
+import { getPlaybook } from '@/lib/playbooks/catalog';
 import { freshnessByUrl, type PlaybookFreshness } from '@/lib/playbooks/freshness';
 import { STEP_CONFLICT_ID } from '@/lib/playbooks/labels';
 import type { NiaEligibility } from '@/lib/playbooks/nia-eligibility';
 import type { CopilotProfile } from '@/lib/playbooks/profile';
 import {
-  RUN_FRAMING,
   focusedClickPath,
   isSpecialRunCta,
   nextStepId,
@@ -15,6 +16,12 @@ import {
   stepProgress,
   visiblePlaybookSteps,
 } from '@/lib/playbooks/run-focus';
+import {
+  clearRunState,
+  hasProgress,
+  loadRunState,
+  saveRunState,
+} from '@/lib/playbooks/run-state';
 import type { Playbook, PlaybookStep } from '@/lib/playbooks/schema';
 import { cn } from '@/lib/utils';
 
@@ -43,6 +50,10 @@ function conflictForStep(playbook: Playbook, step: PlaybookStep) {
   );
 }
 
+function playbookTitle(id: string): string {
+  return getPlaybook(id)?.title_en ?? id;
+}
+
 function StepSlots({
   playbook,
   step,
@@ -51,6 +62,7 @@ function StepSlots({
   checked,
   onToggle,
   niaEligibility,
+  onArrivalChange,
 }: {
   playbook: Playbook;
   step: PlaybookStep;
@@ -59,6 +71,7 @@ function StepSlots({
   checked: Record<string, boolean>;
   onToggle: (id: string, value: boolean) => void;
   niaEligibility: NiaEligibility | null;
+  onArrivalChange?: (iso: string | null) => void;
 }) {
   const clickPath =
     mode === 'run' ? focusedClickPath(step.click_path) : (step.click_path ?? null);
@@ -76,12 +89,7 @@ function StepSlots({
       ) : null}
 
       {step.what_to_bring.length ? (
-        <WhatToBring
-          items={step.what_to_bring}
-          checked={checked}
-          onToggle={onToggle}
-          interactive={mode === 'public'}
-        />
+        <WhatToBring items={step.what_to_bring} checked={checked} onToggle={onToggle} />
       ) : null}
 
       {step.speech_card ? <SpeechCardView card={step.speech_card} /> : null}
@@ -90,7 +98,7 @@ function StepSlots({
         <div className="space-y-2">
           {mode === 'run' ? (
             <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Click path
+              Tap in this order
             </p>
           ) : null}
           <ClickPathView path={clickPath} />
@@ -106,7 +114,11 @@ function StepSlots({
       ) : null}
 
       {step.timer ? (
-        <ArrivalTimer arrivalAt={profile.arrival_at} label={step.timer.label_en} />
+        <ArrivalTimer
+          arrivalAt={profile.arrival_at}
+          label={step.timer.label_en}
+          onArrivalChange={onArrivalChange}
+        />
       ) : null}
 
       {mode === 'run' && step.id === 'email-nudge' ? (
@@ -121,7 +133,6 @@ function StepSlots({
           items={step.required_checkboxes}
           checked={checked}
           onToggle={onToggle}
-          interactive={mode === 'public'}
         />
       ) : null}
     </>
@@ -144,16 +155,21 @@ function RunProgress({
   onSelect: (id: string) => void;
 }) {
   const progress = stepProgress(steps, activeStepId);
-  const percent =
-    progress.total === 0 ? 0 : Math.round(((progress.index + 1) / progress.total) * 100);
+  const doneCount = steps.filter((step) => done[step.id]).length;
+  const percent = progress.total === 0 ? 0 : Math.round((doneCount / progress.total) * 100);
 
   return (
-    <section className="rounded-2xl border border-border bg-white/80 px-4 py-3">
+    <section className="rounded-2xl bg-white/80 px-4 py-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold tabular-nums">{progress.label}</p>
+        <p className="text-sm font-semibold tabular-nums">
+          {progress.label}
+          <span className="ml-2 font-normal text-muted-foreground">
+            {doneCount} done
+          </span>
+        </p>
         <button
           type="button"
-          className="text-xs text-muted-foreground underline-offset-4 hover:underline"
+          className="-my-2 min-h-11 px-1 text-sm text-muted-foreground underline-offset-4 hover:underline"
           aria-expanded={expanded}
           onClick={onToggleExpanded}
         >
@@ -161,15 +177,15 @@ function RunProgress({
         </button>
       </div>
       <div
-        className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted"
+        className="mt-2 h-1.5 overflow-hidden rounded-full bg-[var(--lawn-cream)]"
         role="progressbar"
-        aria-valuemin={1}
+        aria-valuemin={0}
         aria-valuemax={progress.total || 1}
-        aria-valuenow={progress.index + 1}
-        aria-label={progress.label}
+        aria-valuenow={doneCount}
+        aria-label={`${doneCount} of ${progress.total} steps done`}
       >
         <div
-          className="h-full rounded-full bg-primary transition-[width]"
+          className="h-full rounded-full bg-primary transition-[width] duration-500 ease-out"
           style={{ width: `${percent}%` }}
         />
       </div>
@@ -182,7 +198,7 @@ function RunProgress({
                 <button
                   type="button"
                   className={cn(
-                    'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm',
+                    'flex min-h-11 w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm',
                     current ? 'bg-muted font-medium' : 'text-muted-foreground hover:bg-muted/60'
                   )}
                   onClick={() => onSelect(step.id)}
@@ -190,7 +206,7 @@ function RunProgress({
                   <span className="w-6 tabular-nums text-xs">{index + 1}</span>
                   <span className="min-w-0 flex-1 truncate">{step.title_en}</span>
                   {done[step.id] ? (
-                    <span className="text-[11px] text-muted-foreground">done</span>
+                    <Check className="size-4 text-foreground" aria-label="done" />
                   ) : current ? (
                     <span className="text-[11px] text-muted-foreground">now</span>
                   ) : null}
@@ -204,6 +220,37 @@ function RunProgress({
   );
 }
 
+function RelatedPlaybooks({
+  ids,
+  mode,
+  heading,
+}: {
+  ids: string[];
+  mode: 'public' | 'run';
+  heading: string;
+}) {
+  if (!ids.length) return null;
+  return (
+    <section className="space-y-2">
+      <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+        {heading}
+      </p>
+      <ul className="flex flex-wrap gap-2">
+        {ids.map((id) => (
+          <li key={id}>
+            <Link
+              href={mode === 'public' ? `/login?next=/run/${id}` : `/run/${id}`}
+              className="inline-flex min-h-11 items-center rounded-full bg-white px-4 text-sm font-medium shadow-[0_4px_12px_rgba(47,49,48,0.06)]"
+            >
+              {playbookTitle(id)}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
 export function PlaybookView({
   playbook,
   profile,
@@ -212,6 +259,7 @@ export function PlaybookView({
   loginNext,
   freshness,
   niaEligibility = null,
+  onProfileChange,
 }: {
   playbook: Playbook;
   profile: CopilotProfile;
@@ -220,18 +268,21 @@ export function PlaybookView({
   loginNext?: string;
   freshness?: PlaybookFreshness | null;
   niaEligibility?: NiaEligibility | null;
+  onProfileChange?: (next: CopilotProfile) => void;
 }) {
   const router = useRouter();
   const [stuckOpen, setStuckOpen] = useState(false);
-  const [stuckNode, setStuckNode] = useState<string | undefined>(
-    playbook.failure_tree.nodes[0]?.id
-  );
+  const [stuckNode, setStuckNode] = useState<string | undefined>(undefined);
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [done, setDone] = useState<Record<string, boolean>>({});
   const [stepsExpanded, setStepsExpanded] = useState(false);
   const [currentStepId, setCurrentStepId] = useState(
     playbook.steps[0]?.id ?? playbook.id
   );
+  const [resumed, setResumed] = useState(false);
+  const [restored, setRestored] = useState(false);
+  const scrollOnChangeRef = useRef(false);
+  const stepRef = useRef<HTMLElement>(null);
 
   const visibleSteps = useMemo(
     () => visiblePlaybookSteps(playbook, profile, mode),
@@ -244,10 +295,54 @@ export function PlaybookView({
   );
   const activeStep =
     visibleSteps.find((step) => step.id === activeStepId) ?? visibleSteps[0];
+  const activeIndex = activeStep
+    ? visibleSteps.findIndex((step) => step.id === activeStep.id)
+    : -1;
   const nextId = activeStep ? nextStepId(visibleSteps, activeStep.id) : null;
   const finished = Boolean(activeStep && done[activeStep.id] && !nextId);
 
   const others = attachedIds.filter((id) => id !== playbook.id);
+  const related = [
+    ...others,
+    ...playbook.attached_playbooks.filter(
+      (id) => id !== playbook.id && !others.includes(id)
+    ),
+  ];
+
+  // Restore progress after mount (localStorage is client-only).
+  useEffect(() => {
+    if (mode !== 'run') return;
+    const saved = loadRunState(playbook.id);
+    if (saved.currentStepId) setCurrentStepId(saved.currentStepId);
+    setDone(saved.done);
+    setChecked(saved.checked);
+    setResumed(hasProgress(saved));
+    setRestored(true);
+  }, [mode, playbook.id]);
+
+  // Only write once the restored values have rendered, so a save can never
+  // overwrite stored progress with the initial empty state.
+  useEffect(() => {
+    if (mode !== 'run' || !restored) return;
+    saveRunState(playbook.id, {
+      currentStepId,
+      done,
+      checked,
+      updatedAt: null,
+    });
+  }, [mode, restored, playbook.id, currentStepId, done, checked]);
+
+  // Bring the new step's title into view after Next / Back / jump.
+  useEffect(() => {
+    if (!scrollOnChangeRef.current) return;
+    scrollOnChangeRef.current = false;
+    stepRef.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  }, [activeStepId]);
+
+  function goTo(id: string) {
+    scrollOnChangeRef.current = true;
+    setCurrentStepId(id);
+  }
 
   function toggleCheck(id: string, value: boolean) {
     setChecked((prev) => ({ ...prev, [id]: value }));
@@ -271,114 +366,117 @@ export function PlaybookView({
     }
     setDone((prev) => ({ ...prev, [step.id]: true }));
     const upcoming = nextStepId(visibleSteps, step.id);
-    if (upcoming) setCurrentStepId(upcoming);
+    if (upcoming) goTo(upcoming);
+  }
+
+  function goBack() {
+    const prev = visibleSteps[activeIndex - 1];
+    if (prev) goTo(prev.id);
+  }
+
+  function startOver() {
+    clearRunState(playbook.id);
+    setDone({});
+    setChecked({});
+    setResumed(false);
+    goTo(visibleSteps[0]?.id ?? playbook.id);
   }
 
   function openStuck(step?: PlaybookStep) {
-    setStuckNode(step?.stuck_node ?? playbook.failure_tree.nodes[0]?.id);
+    setStuckNode(step?.stuck_node ?? undefined);
     setStuckOpen(true);
+  }
+
+  function setArrival(iso: string | null) {
+    onProfileChange?.({ ...profile, arrival_at: iso });
   }
 
   const header = (
     <header className="space-y-2">
-      <div className="flex flex-wrap items-center gap-2">
-        <SourceStaleBadge lastVerified={playbook.last_verified} />
-        <span className="text-xs text-muted-foreground">{playbook.id}</span>
-      </div>
-      <h1 className="text-2xl font-semibold tracking-tight">{playbook.title_en}</h1>
+      <SourceStaleBadge lastVerified={playbook.last_verified} />
+      <h1 className="text-2xl font-semibold tracking-tight [text-wrap:balance]">
+        {playbook.title_en}
+      </h1>
       <p className="text-sm leading-6 text-muted-foreground">{playbook.summary_en}</p>
-      {mode === 'run' ? (
-        <p className="rounded-lg border border-border bg-muted/60 px-3 py-2 text-sm leading-6">
-          {RUN_FRAMING}
-        </p>
-      ) : null}
     </header>
   );
 
-  const linked = (
+  const footer = (
     <>
-      {mode === 'run' && others.length ? (
-        <p className="text-sm text-muted-foreground">
-          Also attached:{' '}
-          {others.map((id, i) => (
-            <span key={id}>
-              {i > 0 ? ', ' : ''}
-              <Link href={`/run/${id}`} className="underline underline-offset-4">
-                {id}
-              </Link>
-            </span>
-          ))}
-        </p>
-      ) : null}
-
-      {playbook.attached_playbooks.length ? (
-        <p className="text-sm">
-          Linked playbook:{' '}
-          {playbook.attached_playbooks.map((id) => (
-            <Link
-              key={id}
-              href={mode === 'public' ? `/login?next=/run/${id}` : `/run/${id}`}
-              className="underline underline-offset-4"
-            >
-              {id}
-            </Link>
-          ))}
-        </p>
-      ) : null}
-    </>
-  );
-
-  const publicBody = (
-    <article className="space-y-6">
       <DisclaimerBanner text={playbook.disclaimer_en} />
-      {header}
-      <Link
-        href={`/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`}
-        className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
-      >
-        Run this with my passport
-      </Link>
-      {linked}
-      <ol className="space-y-8">
-        {visibleSteps.map((step, index) => (
-          <li key={step.id} id={step.id} className="space-y-3">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xs font-medium text-muted-foreground">
-                {index + 1}/{visibleSteps.length}
-              </span>
-              <h2 className="text-lg font-semibold">{step.title_en}</h2>
-            </div>
-            <StepSlots
-              playbook={playbook}
-              step={step}
-              profile={profile}
-              mode="public"
-              checked={checked}
-              onToggle={toggleCheck}
-              niaEligibility={niaEligibility}
-            />
-          </li>
-        ))}
-      </ol>
-      <Link
-        href={`/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`}
-        className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
-      >
-        Run this with my passport
-      </Link>
       <CitationFooter
         urls={playbook.official_urls}
         lastVerified={playbook.last_verified}
         freshnessByUrl={freshnessByUrl(freshness)}
       />
-    </article>
+    </>
   );
 
-  const runBody = activeStep ? (
-    <article className="space-y-6">
-      <DisclaimerBanner text={playbook.disclaimer_en} />
+  const loginHref = `/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`;
+
+  if (mode !== 'run') {
+    return (
+      <article className="space-y-6">
+        {header}
+        <Link
+          href={loginHref}
+          className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
+        >
+          Run this step by step
+        </Link>
+        <ol className="space-y-8">
+          {visibleSteps.map((step, index) => (
+            <li key={step.id} id={step.id} className="space-y-3">
+              <div className="flex items-baseline gap-2">
+                <span className="text-xs font-medium tabular-nums text-muted-foreground">
+                  {index + 1}/{visibleSteps.length}
+                </span>
+                <h2 className="text-lg font-semibold">{step.title_en}</h2>
+              </div>
+              <StepSlots
+                playbook={playbook}
+                step={step}
+                profile={profile}
+                mode="public"
+                checked={checked}
+                onToggle={toggleCheck}
+                niaEligibility={niaEligibility}
+              />
+            </li>
+          ))}
+        </ol>
+        <Link
+          href={loginHref}
+          className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
+        >
+          Run this step by step
+        </Link>
+        <RelatedPlaybooks ids={related} mode="public" heading="Related" />
+        {footer}
+      </article>
+    );
+  }
+
+  if (!activeStep) return null;
+
+  const nextPlaybookId = others[0] ?? playbook.attached_playbooks[0] ?? null;
+
+  return (
+    <article className="space-y-5">
       {header}
-      {linked}
+
+      {resumed ? (
+        <p className="flex flex-wrap items-center gap-x-2 text-sm text-muted-foreground">
+          Picked up where you left off.
+          <button
+            type="button"
+            className="min-h-11 font-medium text-foreground underline underline-offset-4"
+            onClick={startOver}
+          >
+            Start over
+          </button>
+        </p>
+      ) : null}
 
       <RunProgress
         steps={visibleSteps}
@@ -387,16 +485,18 @@ export function PlaybookView({
         expanded={stepsExpanded}
         onToggleExpanded={() => setStepsExpanded((open) => !open)}
         onSelect={(id) => {
-          setCurrentStepId(id);
           setStepsExpanded(false);
+          goTo(id);
         }}
       />
 
       <section
+        ref={stepRef}
         id={activeStep.id}
-        className="space-y-4 rounded-2xl border border-border bg-white px-4 py-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)]"
+        aria-live="polite"
+        className="scroll-mt-4 space-y-4 rounded-2xl bg-white px-4 pt-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)]"
       >
-        <h2 className="text-lg font-semibold">{activeStep.title_en}</h2>
+        <h2 className="text-lg font-semibold [text-wrap:balance]">{activeStep.title_en}</h2>
         <StepSlots
           playbook={playbook}
           step={activeStep}
@@ -405,41 +505,80 @@ export function PlaybookView({
           checked={checked}
           onToggle={toggleCheck}
           niaEligibility={niaEligibility}
+          onArrivalChange={onProfileChange ? setArrival : undefined}
         />
 
         {finished ? (
-          <p className="rounded-lg bg-muted/60 px-3 py-2 text-sm leading-6">
-            Last step on this playbook. Confirm at the window — this SOP is still
-            draft.
-          </p>
+          <div className="space-y-1 rounded-xl bg-[var(--lawn-cream)] px-4 py-3">
+            <p className="text-sm font-semibold">That was the last step.</p>
+            <p className="text-sm leading-6 text-muted-foreground">
+              This guide is still a draft — if the window says otherwise, follow
+              the window.
+            </p>
+            {nextPlaybookId ? (
+              <p className="pt-1 text-sm">
+                Next up for you:{' '}
+                <span className="font-semibold">{playbookTitle(nextPlaybookId)}</span>
+              </p>
+            ) : null}
+          </div>
         ) : null}
 
-        <div className="flex flex-col gap-2">
-          <Button
-            type="button"
-            size="lg"
-            className="h-12 w-full rounded-full"
-            disabled={finished}
-            onClick={() => goNext(activeStep)}
-          >
-            {finished ? 'Done' : nextId ? 'Next' : 'Finish'}
-          </Button>
+        <div className="sticky bottom-0 z-10 -mx-4 flex items-center gap-2 rounded-b-2xl bg-white/95 px-4 pb-4 pt-3 backdrop-blur-sm [padding-bottom:max(1rem,env(safe-area-inset-bottom))]">
           <Button
             type="button"
             variant="outline"
-            className="h-12 w-full rounded-full"
+            className="size-12 shrink-0 rounded-full"
+            disabled={activeIndex <= 0}
+            aria-label="Previous step"
+            onClick={goBack}
+          >
+            <ArrowLeft className="size-5" />
+          </Button>
+          {finished ? (
+            nextPlaybookId ? (
+              <Link
+                href={`/run/${nextPlaybookId}`}
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'h-12 min-w-0 flex-1 rounded-full'
+                )}
+              >
+                Next guide
+              </Link>
+            ) : (
+              <Link
+                href="/library"
+                className={cn(buttonVariants({ size: 'lg' }), 'h-12 flex-1 rounded-full')}
+              >
+                Back to library
+              </Link>
+            )
+          ) : (
+            <Button
+              type="button"
+              size="lg"
+              className="h-12 flex-1 rounded-full"
+              onClick={() => goNext(activeStep)}
+            >
+              {nextId ? 'Done, next step' : 'Finish'}
+            </Button>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 shrink-0 rounded-full px-4"
             onClick={() => openStuck(activeStep)}
           >
+            <LifeBuoy className="size-4" />
             I&apos;m stuck
           </Button>
         </div>
       </section>
 
-      <CitationFooter
-        urls={playbook.official_urls}
-        lastVerified={playbook.last_verified}
-        freshnessByUrl={freshnessByUrl(freshness)}
-      />
+      <RelatedPlaybooks ids={related} mode="run" heading="Also for your situation" />
+
+      {footer}
 
       <FailureTreeOverlay
         tree={playbook.failure_tree}
@@ -448,9 +587,5 @@ export function PlaybookView({
         onOpenChange={setStuckOpen}
       />
     </article>
-  ) : null;
-
-  if (mode !== 'run') return publicBody;
-
-  return runBody;
+  );
 }

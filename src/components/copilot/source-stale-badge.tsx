@@ -13,9 +13,9 @@ export function SourceStaleBadge({ lastVerified }: { lastVerified: string | null
     <Badge
       variant="destructive"
       className="rounded-md font-medium"
-      title="Draft SOP. Never pretend this is field-verified."
+      title="A draft guide. Nobody has walked these steps in person yet — confirm at the counter."
     >
-      Draft SOP — not field-verified
+      Draft — not checked in person
     </Badge>
   );
 }

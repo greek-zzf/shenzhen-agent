@@ -6,8 +6,8 @@ import { PLAYBOOKS } from '@/lib/playbooks/catalog';
 import { cn } from '@/lib/utils';
 
 const LATER = [
-  { title: 'Drive in Shenzhen', note: 'Post-v1 — not a walkthrough yet.' },
-  { title: 'School enrollment', note: 'Post-v1 — not a walkthrough yet.' },
+  { title: 'Drive in Shenzhen', note: 'Coming later' },
+  { title: 'School enrollment', note: 'Coming later' },
 ] as const;
 
 function LibraryPage() {
@@ -18,12 +18,16 @@ function LibraryPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Library</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          YAML playbooks. Grey cards are later — visible, not fake walkthroughs.
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">
+          Step-by-step guides for your first days in Shenzhen. Every one is still a
+          draft — confirm at the counter.{' '}
+          <Link href="/intake" className="font-medium text-foreground underline underline-offset-4">
+            Not sure where to start?
+          </Link>
         </p>
       </div>
 
-      <Group title="72 hours">
+      <Group title="First 72 hours">
         {first72.map((pb) => (
           <PlaybookCard
             key={pb.id}
@@ -100,7 +104,6 @@ function PlaybookCard({
     >
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-sm font-medium">{title}</p>
-        <span className="text-[11px] text-muted-foreground">{id}</span>
         <SourceStaleBadge lastVerified={null} />
       </div>
       <p className="mt-1 text-sm leading-6 text-muted-foreground">{summary}</p>

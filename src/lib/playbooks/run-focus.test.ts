@@ -169,4 +169,27 @@ describe('intake recommends one accommodation path', () => {
     assert.equal(primaryAttachedId(attached, voa), 'pb-03');
     assert.equal(primaryAttachedId(attached), 'pb-03');
   });
+
+  it('leads with what is broken once the user is already in Shenzhen on a VOA', () => {
+    const inCity: CopilotProfile = {
+      ...EMPTY_PROFILE,
+      visa_type: 'VOA',
+      location: 'already_in_shenzhen',
+      stay_type: 'hotel',
+      broken: ['payments'],
+    };
+    // Mirrors pb-03-voa.yaml, which also attaches on visa_type_in VOA.
+    const catalog = [
+      stubPlaybook('pb-01', 'Get something paid', [
+        { when: 'broken_contains', value: 'payments' },
+      ]),
+      stubPlaybook('pb-03', '5-day visa on arrival', [
+        { when: 'visa_type_in', value: 'VOA' },
+        { when: 'location_is', value: 'hk_no_visa' },
+      ]),
+    ];
+    const attached = attachPlaybooks(inCity, catalog);
+    assert.deepEqual(attached.map((pb) => pb.id), ['pb-03', 'pb-01']);
+    assert.equal(primaryAttachedId(attached, inCity), 'pb-01');
+  });
 });
