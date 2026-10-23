@@ -84,6 +84,18 @@ export function primaryAttachedId(
     const registration = attached.find((pb) => pb.id === 'pb-02');
     if (registration) return registration.id;
   }
+  // Already through the border: the VOA playbook is about getting the visa,
+  // so what the user said is broken should lead instead.
+  if (profile?.location === 'already_in_shenzhen' && profile.broken.length) {
+    const named = attached.find((pb) =>
+      pb.attach_when.some(
+        (rule) =>
+          rule.when === 'broken_contains' &&
+          profile.broken.includes(rule.value as CopilotProfile['broken'][number])
+      )
+    );
+    if (named) return named.id;
+  }
   return attached[0]?.id ?? null;
 }
 

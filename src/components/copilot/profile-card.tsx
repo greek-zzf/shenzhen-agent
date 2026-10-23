@@ -17,6 +17,8 @@ function display(value: string | null | undefined): string {
   if (value === 'no') return 'No';
   if (value === 'hotel') return 'Hotel';
   if (value === 'apartment') return 'Apartment';
+  if (value === 'baoan') return "Bao'an";
+  if (/^[a-z]+$/.test(value)) return value.charAt(0).toUpperCase() + value.slice(1);
   return value;
 }
 

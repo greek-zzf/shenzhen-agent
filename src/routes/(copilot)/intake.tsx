@@ -1,10 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
+import { ChevronDown } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
-import { ProfileCard } from '@/components/copilot/profile-card';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Link, useRouter } from '@/core/i18n/navigation';
-import { attachPlaybooks, primaryAttachedId } from '@/lib/playbooks/attach';
+import {
+  attachPlaybooks,
+  isAccommodationSituation,
+  primaryAttachedId,
+} from '@/lib/playbooks/attach';
 import { PLAYBOOKS } from '@/lib/playbooks/catalog';
 import { syncDerivedBroken } from '@/lib/playbooks/intake-fill';
 import {
@@ -12,6 +16,7 @@ import {
   COUNTRY_CHIPS,
   canStartPlaybook,
   DISTRICTS,
+  filledIntakeCount,
   PAY_STATES,
   type BrokenFlag,
   type CopilotProfile,
@@ -26,6 +31,8 @@ import {
   VISA_TYPES,
   YES_NO_UNKNOWN,
 } from '@/lib/playbooks/profile';
+import { isoToLocalInput, localInputToIso } from '@/lib/playbooks/run-state';
+import type { Playbook } from '@/lib/playbooks/schema';
 import { cn } from '@/lib/utils';
 
 const VISA_LABEL: Record<VisaType, string> = {
@@ -77,6 +84,8 @@ const YES_NO_LABEL: Record<YesNoUnknown, string> = {
   unknown: "I don't know",
 };
 
+const NEEDED = 3;
+
 function Chip({
   active,
   onClick,
@@ -89,12 +98,13 @@ function Chip({
   return (
     <button
       type="button"
+      aria-pressed={active}
       onClick={onClick}
       className={cn(
-        'rounded-full border px-3 py-1.5 text-sm',
+        'min-h-11 rounded-full border px-4 py-2 text-sm transition-colors duration-150',
         active
           ? 'border-foreground bg-primary text-primary-foreground'
-          : 'border-border bg-background hover:bg-muted'
+          : 'border-border bg-white hover:border-foreground/40'
       )}
     >
       {children}
@@ -102,309 +112,290 @@ function Chip({
   );
 }
 
+function Question({
+  n,
+  title,
+  hint,
+  children,
+}: {
+  n: number;
+  title: string;
+  hint?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="space-y-3">
+      <div>
+        <h2 className="text-base font-semibold">
+          <span className="mr-2 tabular-nums text-muted-foreground">{n}</span>
+          {title}
+        </h2>
+        {hint ? <p className="mt-0.5 text-sm text-muted-foreground">{hint}</p> : null}
+      </div>
+      {children}
+    </section>
+  );
+}
+
+function SubLabel({ children }: { children: React.ReactNode }) {
+  return <p className="text-xs font-medium text-muted-foreground">{children}</p>;
+}
+
+/** Plain-language reason the recommended playbook leads, built from the user's own answers. */
+function recommendReason(primary: Playbook, profile: CopilotProfile): string {
+  if (primary.id === 'pb-02' && isAccommodationSituation(profile)) {
+    const paysToo = profile.broken.filter((f) => f !== 'need_24h').length > 0;
+    const lead =
+      profile.stay_type === 'apartment'
+        ? "You're not in a hotel, so you have to register within 24 hours of arriving. That's a legal deadline, so it goes first."
+        : 'The 24-hour registration has a legal deadline, so it goes first.';
+    return paysToo ? `${lead} Your other problems are right after it.` : lead;
+  }
+  const reasons: string[] = [];
+  for (const rule of primary.attach_when) {
+    if (rule.when === 'broken_contains' && profile.broken.includes(rule.value as BrokenFlag)) {
+      reasons.push(`you said "${BROKEN_LABEL[rule.value as BrokenFlag]}"`);
+    } else if (rule.when === 'visa_type_in' && profile.visa_type === rule.value) {
+      reasons.push('you picked the 5-day VOA');
+    } else if (rule.when === 'location_is' && profile.location === rule.value) {
+      reasons.push("you're in Hong Kong without a visa");
+    }
+  }
+  return reasons.length
+    ? `Because ${reasons.slice(0, 2).join(' and ')}.`
+    : 'This matches the answers above.';
+}
+
 function IntakePage() {
   const router = useRouter();
   const [profile, setProfile] = useState<CopilotProfile>(() => loadProfile());
-  const [error, setError] = useState('');
 
-  const attached = useMemo(
-    () => attachPlaybooks(profile, PLAYBOOKS),
-    [profile]
-  );
+  const attached = useMemo(() => attachPlaybooks(profile, PLAYBOOKS), [profile]);
   const primaryId = primaryAttachedId(attached, profile);
   const primary = attached.find((pb) => pb.id === primaryId) ?? null;
-  const others = attached.filter((pb) => pb.id !== primaryId);
-
-  function commit(next: CopilotProfile) {
-    const synced = syncDerivedBroken(next);
-    saveProfile(synced);
-    setProfile(synced);
-    setError('');
-  }
+  const others = attached.filter((pb) => pb.id !== primaryId).slice(0, 3);
+  const filled = filledIntakeCount(profile);
+  const ready = canStartPlaybook(profile);
 
   function update(patch: Partial<CopilotProfile>) {
-    commit({ ...profile, ...patch });
+    const synced = syncDerivedBroken({ ...profile, ...patch });
+    saveProfile(synced);
+    setProfile(synced);
   }
 
-  function diagnose() {
-    if (!canStartPlaybook(profile)) {
-      setError('Fill any three fields to start a playbook.');
-      return;
-    }
+  function toggle<K extends keyof CopilotProfile>(key: K, value: CopilotProfile[K]) {
+    update({ [key]: profile[key] === value ? '' : value } as Partial<CopilotProfile>);
+  }
+
+  function start() {
+    if (!ready) return;
     router.push(primaryId ? `/run/${primaryId}` : '/library');
   }
 
+  const optionalCount = [
+    profile.district,
+    profile.wechat_pay,
+    profile.alipay,
+    profile.has_cn_phone,
+    profile.has_cn_bank,
+    profile.arrival_at,
+  ].filter(Boolean).length;
+
   return (
-    <div className="space-y-6">
+    <div className="mx-auto max-w-2xl space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Intake</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">What&apos;s going on?</h1>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-          Tap the chips that match your passport and what is stuck. One playbook
-          is attached from those rules — this is not a chat.
+          Three quick answers and we&apos;ll open the right guide. Your answers stay
+          on this phone.
         </p>
       </div>
 
-      <ProfileCard profile={profile} />
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Passport country</h2>
-        <div className="flex flex-wrap gap-2">
-          {COUNTRY_CHIPS.map((c) => (
-            <Chip
-              key={c}
-              active={profile.passport_country === c}
-              onClick={() =>
-                update({
-                  passport_country: profile.passport_country === c ? '' : c,
-                })
-              }
-            >
-              {c === 'unknown' ? "I don't know" : c}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Visa</h2>
-        <div className="flex flex-wrap gap-2">
-          {VISA_TYPES.map((v) => (
-            <Chip
-              key={v}
-              active={profile.visa_type === v}
-              onClick={() =>
-                update({ visa_type: profile.visa_type === v ? '' : v })
-              }
-            >
-              {VISA_LABEL[v]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Where are you now?</h2>
-        <div className="flex flex-wrap gap-2">
-          <Chip
-            active={profile.location === 'hk_no_visa'}
-            onClick={() =>
-              update({
-                location:
-                  profile.location === 'hk_no_visa' ? '' : 'hk_no_visa',
-              })
-            }
-          >
-            In HK without a visa
-          </Chip>
-          <Chip
-            active={profile.location === 'already_in_shenzhen'}
-            onClick={() =>
-              update({
-                location:
-                  profile.location === 'already_in_shenzhen'
-                    ? ''
-                    : 'already_in_shenzhen',
-              })
-            }
-          >
-            Already in Shenzhen
-          </Chip>
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Stay</h2>
-        <div className="flex flex-wrap gap-2">
-          {STAY_TYPES.map((s) => (
-            <Chip
-              key={s}
-              active={profile.stay_type === s}
-              onClick={() =>
-                update({ stay_type: profile.stay_type === s ? '' : s })
-              }
-            >
-              {STAY_LABEL[s]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">District</h2>
-        <div className="flex flex-wrap gap-2">
-          {DISTRICTS.map((d) => (
-            <Chip
-              key={d}
-              active={profile.district === d}
-              onClick={() =>
-                update({ district: profile.district === d ? '' : d })
-              }
-            >
-              {DISTRICT_LABEL[d]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">WeChat Pay</h2>
-        <div className="flex flex-wrap gap-2">
-          {PAY_STATES.map((state) => (
-            <Chip
-              key={state}
-              active={profile.wechat_pay === state}
-              onClick={() =>
-                update({
-                  wechat_pay: profile.wechat_pay === state ? '' : state,
-                })
-              }
-            >
-              {PAY_LABEL[state]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Alipay</h2>
-        <div className="flex flex-wrap gap-2">
-          {PAY_STATES.map((state) => (
-            <Chip
-              key={state}
-              active={profile.alipay === state}
-              onClick={() =>
-                update({ alipay: profile.alipay === state ? '' : state })
-              }
-            >
-              {PAY_LABEL[state]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Mainland phone</h2>
-        <div className="flex flex-wrap gap-2">
-          {YES_NO_UNKNOWN.map((state) => (
-            <Chip
-              key={state}
-              active={profile.has_cn_phone === state}
-              onClick={() =>
-                update({
-                  has_cn_phone: profile.has_cn_phone === state ? '' : state,
-                })
-              }
-            >
-              {YES_NO_LABEL[state]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Mainland bank</h2>
-        <div className="flex flex-wrap gap-2">
-          {YES_NO_UNKNOWN.map((state) => (
-            <Chip
-              key={state}
-              active={profile.has_cn_bank === state}
-              onClick={() =>
-                update({
-                  has_cn_bank: profile.has_cn_bank === state ? '' : state,
-                })
-              }
-            >
-              {YES_NO_LABEL[state]}
-            </Chip>
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">What&apos;s broken</h2>
+      <Question n={1} title="What's stuck right now?" hint="Pick everything that applies.">
         <div className="flex flex-wrap gap-2">
           {BROKEN_OPTIONS.map((flag) => (
             <Chip
               key={flag}
               active={profile.broken.includes(flag)}
-              onClick={() => {
-                const next = profile.broken.includes(flag)
-                  ? profile.broken.filter((x) => x !== flag)
-                  : [...profile.broken, flag];
-                update({ broken: next });
-              }}
+              onClick={() =>
+                update({
+                  broken: profile.broken.includes(flag)
+                    ? profile.broken.filter((x) => x !== flag)
+                    : [...profile.broken, flag],
+                })
+              }
             >
               {BROKEN_LABEL[flag]}
             </Chip>
           ))}
         </div>
-      </section>
+      </Question>
 
-      <section className="space-y-2">
-        <h2 className="text-sm font-medium">Arrival (optional, for the 24h clock)</h2>
-        <input
-          type="datetime-local"
-          className="h-11 w-full rounded-full border border-input bg-white px-4 text-sm"
-          value={
-            profile.arrival_at
-              ? profile.arrival_at.slice(0, 16)
-              : ''
-          }
-          onChange={(e) =>
-            update({
-              arrival_at: e.target.value
-                ? new Date(e.target.value).toISOString()
-                : null,
-            })
-          }
-        />
-      </section>
+      <Question n={2} title="Where are you, and where are you sleeping?">
+        <div className="space-y-2">
+          <SubLabel>Right now</SubLabel>
+          <div className="flex flex-wrap gap-2">
+            <Chip
+              active={profile.location === 'hk_no_visa'}
+              onClick={() => toggle('location', 'hk_no_visa')}
+            >
+              In HK without a visa
+            </Chip>
+            <Chip
+              active={profile.location === 'already_in_shenzhen'}
+              onClick={() => toggle('location', 'already_in_shenzhen')}
+            >
+              Already in Shenzhen
+            </Chip>
+          </div>
+        </div>
+        <div className="space-y-2">
+          <SubLabel>Sleeping at</SubLabel>
+          <div className="flex flex-wrap gap-2">
+            {STAY_TYPES.map((s) => (
+              <Chip key={s} active={profile.stay_type === s} onClick={() => toggle('stay_type', s)}>
+                {STAY_LABEL[s]}
+              </Chip>
+            ))}
+          </div>
+        </div>
+      </Question>
 
-      {primary ? (
-        <div className="space-y-2 rounded-2xl border border-border bg-white/80 px-4 py-3">
-          <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Recommended path
-          </p>
-          <p className="text-sm font-semibold">{primary.title_en}</p>
-          <p className="text-sm leading-6 text-muted-foreground">
-            {primary.id === 'pb-02'
-              ? 'Accommodation registration is the diagnosis. One playbook — not a menu of equal choices.'
-              : 'One recommended playbook from your chips. Open it and follow the current step.'}
-          </p>
+      <Question n={3} title="Passport and visa">
+        <div className="space-y-2">
+          <SubLabel>Passport</SubLabel>
+          <div className="flex flex-wrap gap-2">
+            {COUNTRY_CHIPS.map((c) => (
+              <Chip
+                key={c}
+                active={profile.passport_country === c}
+                onClick={() => toggle('passport_country', c)}
+              >
+                {c === 'unknown' ? 'Other' : c}
+              </Chip>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-2">
+          <SubLabel>Visa</SubLabel>
+          <div className="flex flex-wrap gap-2">
+            {VISA_TYPES.map((v) => (
+              <Chip key={v} active={profile.visa_type === v} onClick={() => toggle('visa_type', v)}>
+                {VISA_LABEL[v]}
+              </Chip>
+            ))}
+          </div>
+        </div>
+      </Question>
+
+      <details className="group rounded-2xl bg-white/70 px-4">
+        <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium [&::-webkit-details-marker]:hidden">
+          <span>
+            More details{' '}
+            <span className="font-normal text-muted-foreground">
+              — optional{optionalCount ? ` · ${optionalCount} added` : ''}
+            </span>
+          </span>
+          <ChevronDown className="size-4 transition-transform duration-200 group-open:rotate-180" />
+        </summary>
+        <div className="space-y-5 pb-5 pt-1">
+          <label className="block space-y-2">
+            <SubLabel>Arrival time (starts the 24-hour clock)</SubLabel>
+            <input
+              type="datetime-local"
+              className="h-11 w-full rounded-full border border-input bg-white px-4 text-sm"
+              value={isoToLocalInput(profile.arrival_at)}
+              onChange={(e) => update({ arrival_at: localInputToIso(e.target.value) })}
+            />
+          </label>
+          <div className="space-y-2">
+            <SubLabel>District</SubLabel>
+            <div className="flex flex-wrap gap-2">
+              {DISTRICTS.map((d) => (
+                <Chip key={d} active={profile.district === d} onClick={() => toggle('district', d)}>
+                  {DISTRICT_LABEL[d]}
+                </Chip>
+              ))}
+            </div>
+          </div>
+          {(
+            [
+              ['wechat_pay', 'WeChat Pay', PAY_STATES, PAY_LABEL],
+              ['alipay', 'Alipay', PAY_STATES, PAY_LABEL],
+              ['has_cn_phone', 'Mainland phone number', YES_NO_UNKNOWN, YES_NO_LABEL],
+              ['has_cn_bank', 'Mainland bank account', YES_NO_UNKNOWN, YES_NO_LABEL],
+            ] as const
+          ).map(([key, label, values, labels]) => (
+            <div key={key} className="space-y-2">
+              <SubLabel>{label}</SubLabel>
+              <div className="flex flex-wrap gap-2">
+                {values.map((value) => (
+                  <Chip
+                    key={value}
+                    active={profile[key] === value}
+                    onClick={() => toggle(key, value)}
+                  >
+                    {(labels as Record<string, string>)[value]}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </details>
+
+      {ready && primary ? (
+        <section className="space-y-3 rounded-[1.75rem] bg-white px-5 py-4 shadow-[0_8px_24px_rgba(47,49,48,0.06)]">
+          <div>
+            <p className="text-sm text-muted-foreground">Start with</p>
+            <p className="text-lg font-semibold">{primary.title_en}</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              {recommendReason(primary, profile)}
+            </p>
+          </div>
           {others.length ? (
-            <p className="text-xs leading-5 text-muted-foreground">
-              Later, not this pass:{' '}
-              {others.map((pb, i) => (
-                <span key={pb.id}>
-                  {i > 0 ? ', ' : ''}
-                  <Link href={`/run/${pb.id}`} className="underline underline-offset-4">
+            <div className="space-y-2 border-t border-border pt-3">
+              <p className="text-sm text-muted-foreground">Or start with</p>
+              <div className="flex flex-wrap gap-2">
+                {others.map((pb) => (
+                  <Link
+                    key={pb.id}
+                    href={`/run/${pb.id}`}
+                    className={cn(
+                      buttonVariants({ variant: 'outline' }),
+                      'h-11 rounded-full px-4'
+                    )}
+                  >
                     {pb.title_en}
                   </Link>
-                </span>
-              ))}
-            </p>
+                ))}
+              </div>
+            </div>
           ) : null}
-        </div>
-      ) : (
+        </section>
+      ) : ready ? (
         <p className="text-sm text-muted-foreground">
-          No rule matched yet — you can still open the library.
+          Nothing matched those answers yet.{' '}
+          <Link href="/library" className="font-medium text-foreground underline underline-offset-4">
+            Browse all guides
+          </Link>
         </p>
-      )}
+      ) : null}
 
-      {error ? <p className="text-sm text-destructive">{error}</p> : null}
-
-      <Button
-        type="button"
-        className="h-12 w-full rounded-full"
-        disabled={!canStartPlaybook(profile)}
-        onClick={diagnose}
-      >
-        {primary?.id === 'pb-02'
-          ? 'Start 24-hour registration'
-          : primary
-            ? `Start ${primary.title_en}`
-            : 'Diagnose and open playbook'}
-      </Button>
+      <div className="sticky bottom-0 -mx-4 bg-[var(--lawn-cream)]/95 px-4 pb-4 pt-3 backdrop-blur-sm [padding-bottom:max(1rem,env(safe-area-inset-bottom))] sm:static sm:mx-0 sm:bg-transparent sm:px-0 sm:backdrop-blur-none">
+        <Button
+          type="button"
+          className="h-12 w-full rounded-full"
+          disabled={!ready}
+          onClick={start}
+        >
+          {!ready
+            ? `Answer ${NEEDED - filled} more to continue`
+            : primary
+              ? `Start: ${primary.title_en}`
+              : 'Browse all guides'}
+        </Button>
+      </div>
     </div>
   );
 }
