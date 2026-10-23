@@ -66,7 +66,7 @@ src/
 │   ├── payment/                 # Payment providers (Stripe, PayPal, Creem)
 │   ├── email/                   # Email providers (Resend)
 │   ├── storage/                 # Storage providers (S3, R2)
-│   └── ai/                     # AI providers (Replicate, Gemini, Fal, Kie)
+│   └── ai/                     # ShipAny template providers (Replicate, Fal, Kie). Product copilot does not call models.
 │
 ├── modules/                     # Business logic — independently removable
 │   ├── payment/service.ts       # Checkout, webhook, order + subscription + credit atomicity
@@ -399,7 +399,7 @@ All functionality is self-contained — no external packages needed.
 | `@/core/payment` | `PaymentManager`, `StripeProvider`, `PayPalProvider`, `CreemProvider` |
 | `@/core/email` | `EmailManager`, `ResendProvider` |
 | `@/core/storage` | `StorageManager`, `S3Provider`, `R2Provider` |
-| `@/core/ai` | `AIManager`, `ReplicateProvider`, `GeminiProvider`, `FalProvider`, `KieProvider` |
+| `@/core/ai` | `AIManager`, `ReplicateProvider`, `FalProvider`, `KieProvider` (ShipAny template scaffolding; the copilot does not call these) |
 | `@/core/auth/rbac` | `matchPermission`, `matchAnyPermission`, `ROLES` |
 | `@/core/db` | `db()` singleton, `createDb` (multi-dialect) |
 | `@/lib/hash` | `getUuid`, `getSnowId`, `getUniSeq`, `getNonceStr`, `md5` |
@@ -460,7 +460,7 @@ CONFIG_ENCRYPTION_KEY=
 
 **Provider credentials live in the admin panel, not env.** Payments (Stripe/
 Creem/PayPal/Alipay/WeChat), OAuth (Google/GitHub/One-Tap), email (Resend),
-storage (R2), AI (Replicate/Gemini/Fal), and analytics are configured at
+storage (R2), AI (Replicate/Fal), and analytics are configured at
 `/admin/settings` and stored in the `config` table (encrypted when
 `CONFIG_ENCRYPTION_KEY` is set). Resolution is `{ ...envConfigs, ...dbConfigs }`
 — same-named env vars still work as fallbacks, but database values win.

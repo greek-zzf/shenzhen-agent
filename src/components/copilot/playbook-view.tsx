@@ -20,7 +20,6 @@ import { cn } from '@/lib/utils';
 
 import { AccommodationReminderOptIn } from './accommodation-reminder';
 import { NiaEligibilityCard } from './nia-eligibility';
-import { PlaybookHelp, PlaybookHelpTrigger } from './playbook-help';
 import { SourceStaleBadge } from './source-stale-badge';
 import {
   ArrivalTimer,
@@ -212,7 +211,6 @@ export function PlaybookView({
   attachedIds = [],
   loginNext,
   freshness,
-  assistAvailable = false,
   niaEligibility = null,
 }: {
   playbook: Playbook;
@@ -221,7 +219,6 @@ export function PlaybookView({
   attachedIds?: string[];
   loginNext?: string;
   freshness?: PlaybookFreshness | null;
-  assistAvailable?: boolean;
   niaEligibility?: NiaEligibility | null;
 }) {
   const router = useRouter();
@@ -231,7 +228,6 @@ export function PlaybookView({
   );
   const [checked, setChecked] = useState<Record<string, boolean>>({});
   const [done, setDone] = useState<Record<string, boolean>>({});
-  const [helpOpen, setHelpOpen] = useState(false);
   const [stepsExpanded, setStepsExpanded] = useState(false);
   const [currentStepId, setCurrentStepId] = useState(
     playbook.steps[0]?.id ?? playbook.id
@@ -281,7 +277,6 @@ export function PlaybookView({
   function openStuck(step?: PlaybookStep) {
     setStuckNode(step?.stuck_node ?? playbook.failure_tree.nodes[0]?.id);
     setStuckOpen(true);
-    setHelpOpen(true);
   }
 
   const header = (
@@ -289,13 +284,6 @@ export function PlaybookView({
       <div className="flex flex-wrap items-center gap-2">
         <SourceStaleBadge lastVerified={playbook.last_verified} />
         <span className="text-xs text-muted-foreground">{playbook.id}</span>
-        {mode === 'run' ? (
-          <PlaybookHelpTrigger
-            onClick={() => {
-              setHelpOpen(true);
-            }}
-          />
-        ) : null}
       </div>
       <h1 className="text-2xl font-semibold tracking-tight">{playbook.title_en}</h1>
       <p className="text-sm leading-6 text-muted-foreground">{playbook.summary_en}</p>
@@ -444,16 +432,6 @@ export function PlaybookView({
           >
             I&apos;m stuck
           </Button>
-          <button
-            type="button"
-            className="self-center text-xs text-muted-foreground underline-offset-4 hover:underline lg:hidden"
-            onClick={() => {
-              setCurrentStepId(activeStep.id);
-              setHelpOpen(true);
-            }}
-          >
-            Ask this step
-          </button>
         </div>
       </section>
 
@@ -474,21 +452,5 @@ export function PlaybookView({
 
   if (mode !== 'run') return publicBody;
 
-  return (
-    <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start lg:gap-8">
-      {runBody}
-      <PlaybookHelp
-        playbook={playbook}
-        profile={profile}
-        currentStepId={activeStepId}
-        available={assistAvailable}
-        mobileOpen={helpOpen}
-        onMobileOpenChange={setHelpOpen}
-        onOpenFailureNode={(nodeId) => {
-          setStuckNode(nodeId);
-          setStuckOpen(true);
-        }}
-      />
-    </div>
-  );
+  return runBody;
 }

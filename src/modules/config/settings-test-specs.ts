@@ -82,13 +82,6 @@ export const testSpecs: Record<string, TestSpec> = {
       { name: 'prompt', label: 'Prompt', type: 'textarea', defaultValue: 'a small red cube, product photography', required: true },
     ],
   },
-  gemini: {
-    group: 'gemini',
-    fields: [
-      { name: 'model', label: 'Model', type: 'text', defaultValue: 'gemini-2.5-flash-image', required: true },
-      { name: 'prompt', label: 'Prompt', type: 'textarea', defaultValue: 'a small red cube, product photography', required: true },
-    ],
-  },
   fal: {
     group: 'fal',
     fields: [

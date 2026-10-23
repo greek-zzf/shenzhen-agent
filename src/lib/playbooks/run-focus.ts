@@ -3,7 +3,7 @@ import type { CopilotProfile } from './profile';
 import type { Playbook, PlaybookStep } from './schema';
 
 export const RUN_FRAMING =
-  'This is an execution playbook — not a chatbot. Follow the current step at the window. Ask only answers this step from the SOP.';
+  "This is an execution playbook — not a chatbot. Follow the current step at the window. If it fails, open I'm stuck.";
 
 export const MAX_FOCUSED_CLICK_PATH_SCREENS = 3;
 

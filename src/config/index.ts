@@ -70,9 +70,8 @@ export const envConfigs: Record<string, string> = {
   storage_public_domain: procEnv.STORAGE_PUBLIC_DOMAIN ?? '',
   inline_image_max_kb: procEnv.INLINE_IMAGE_MAX_KB ?? '2048',
 
-  // AI
+  // AI (ShipAny template scaffolding — product copilot does not call models)
   replicate_api_token: procEnv.REPLICATE_API_TOKEN ?? '',
-  gemini_api_key: procEnv.GEMINI_API_KEY ?? '',
 
   // Locale (public)
   locale: publicEnv('VITE_DEFAULT_LOCALE') ?? 'en',
