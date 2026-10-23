@@ -3,15 +3,10 @@ import { useMemo, useState } from 'react';
 
 import { ProfileCard } from '@/components/copilot/profile-card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { attachPlaybooks, primaryAttachedId } from '@/lib/playbooks/attach';
 import { PLAYBOOKS } from '@/lib/playbooks/catalog';
-import {
-  fillIntakeProfileFn,
-  getIntakeAssistStatusFn,
-} from '@/lib/playbooks/fill-profile';
-import { applyIntakeFill, syncDerivedBroken } from '@/lib/playbooks/intake-fill';
+import { syncDerivedBroken } from '@/lib/playbooks/intake-fill';
 import {
   BROKEN_OPTIONS,
   COUNTRY_CHIPS,
@@ -109,12 +104,8 @@ function Chip({
 
 function IntakePage() {
   const router = useRouter();
-  const { available: assistAvailable } = Route.useLoaderData();
   const [profile, setProfile] = useState<CopilotProfile>(() => loadProfile());
-  const [situation, setSituation] = useState('');
-  const [filling, setFilling] = useState(false);
   const [error, setError] = useState('');
-  const [assistOff, setAssistOff] = useState(!assistAvailable);
 
   const attached = useMemo(
     () => attachPlaybooks(profile, PLAYBOOKS),
@@ -135,25 +126,6 @@ function IntakePage() {
     commit({ ...profile, ...patch });
   }
 
-  async function fillFromSentence() {
-    const message = situation.trim();
-    if (!message || assistOff) return;
-    setFilling(true);
-    setError('');
-    try {
-      const result = await fillIntakeProfileFn({ data: { message } });
-      if (!result.available) {
-        setAssistOff(true);
-        return;
-      }
-      commit(applyIntakeFill(profile, result.fill));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not read that sentence.');
-    } finally {
-      setFilling(false);
-    }
-  }
-
   function diagnose() {
     if (!canStartPlaybook(profile)) {
       setError('Fill any three fields to start a playbook.');
@@ -167,45 +139,9 @@ function IntakePage() {
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Intake</h1>
         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-          Tell me which passport and what is stuck. I&apos;ll attach a playbook —
-          this is not a chat with a travel writer.
+          Tap the chips that match your passport and what is stuck. One playbook
+          is attached from those rules — this is not a chat.
         </p>
-        {assistOff ? (
-          <p className="mt-2 text-xs text-muted-foreground">
-            Live assist is off — tap the chips.
-          </p>
-        ) : null}
-      </div>
-
-      <div className="space-y-2">
-        <label htmlFor="intake-situation" className="sr-only">
-          Situation
-        </label>
-        <Textarea
-          id="intake-situation"
-          rows={3}
-          disabled={assistOff}
-          placeholder="US passport, land tomorrow from HK, WeChat Pay dead"
-          value={situation}
-          onChange={(e) => setSituation(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              void fillFromSentence();
-            }
-          }}
-        />
-        {!assistOff ? (
-          <Button
-            type="button"
-            variant="outline"
-            className="h-10 w-full"
-            disabled={filling || !situation.trim()}
-            onClick={() => void fillFromSentence()}
-          >
-            {filling ? 'Reading…' : 'Fill profile from this'}
-          </Button>
-        ) : null}
       </div>
 
       <ProfileCard profile={profile} />
@@ -474,6 +410,5 @@ function IntakePage() {
 }
 
 export const Route = createFileRoute('/(copilot)/intake')({
-  loader: async () => getIntakeAssistStatusFn(),
   component: IntakePage,
 });
