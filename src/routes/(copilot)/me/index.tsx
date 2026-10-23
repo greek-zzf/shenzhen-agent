@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
 
+import { CopilotAuthGate } from '@/components/copilot/auth-gate';
 import { AccommodationReminderOptIn } from '@/components/copilot/accommodation-reminder';
 import { ProfileCard } from '@/components/copilot/profile-card';
 import { Button } from '@/components/ui/button';
@@ -98,6 +99,14 @@ function MePage() {
   );
 }
 
+function GatedMePage() {
+  return (
+    <CopilotAuthGate>
+      <MePage />
+    </CopilotAuthGate>
+  );
+}
+
 export const Route = createFileRoute('/(copilot)/me/')({
-  component: MePage,
+  component: GatedMePage,
 });

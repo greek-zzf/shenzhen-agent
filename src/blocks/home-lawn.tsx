@@ -83,7 +83,7 @@ export function HomeLawn() {
 
       <section className="home-lawn-slab relative z-10 mt-8 px-4 py-8 sm:px-8 sm:py-10 lg:px-12">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <Link href="/login?next=/intake" className="home-lawn-passport">
+          <Link href="/intake" className="home-lawn-passport">
             Start with my passport →
           </Link>
           <p className="text-[13px] font-medium text-[color:color-mix(in_oklab,var(--lawn-ink)_70%,var(--lawn-cream))]">

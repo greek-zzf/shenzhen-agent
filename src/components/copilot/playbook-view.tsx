@@ -222,11 +222,9 @@ function RunProgress({
 
 function RelatedPlaybooks({
   ids,
-  mode,
   heading,
 }: {
   ids: string[];
-  mode: 'public' | 'run';
   heading: string;
 }) {
   if (!ids.length) return null;
@@ -239,7 +237,7 @@ function RelatedPlaybooks({
         {ids.map((id) => (
           <li key={id}>
             <Link
-              href={mode === 'public' ? `/login?next=/run/${id}` : `/run/${id}`}
+              href={`/run/${id}`}
               className="inline-flex min-h-11 items-center rounded-full bg-white px-4 text-sm font-medium shadow-[0_4px_12px_rgba(47,49,48,0.06)]"
             >
               {playbookTitle(id)}
@@ -256,7 +254,6 @@ export function PlaybookView({
   profile,
   mode,
   attachedIds = [],
-  loginNext,
   freshness,
   niaEligibility = null,
   onProfileChange,
@@ -265,7 +262,6 @@ export function PlaybookView({
   profile: CopilotProfile;
   mode: 'public' | 'run';
   attachedIds?: string[];
-  loginNext?: string;
   freshness?: PlaybookFreshness | null;
   niaEligibility?: NiaEligibility | null;
   onProfileChange?: (next: CopilotProfile) => void;
@@ -412,14 +408,14 @@ export function PlaybookView({
     </>
   );
 
-  const loginHref = `/login?next=${encodeURIComponent(loginNext ?? `/run/${playbook.id}`)}`;
+  const runHref = `/run/${playbook.id}`;
 
   if (mode !== 'run') {
     return (
       <article className="space-y-6">
         {header}
         <Link
-          href={loginHref}
+          href={runHref}
           className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
         >
           Run this step by step
@@ -446,12 +442,12 @@ export function PlaybookView({
           ))}
         </ol>
         <Link
-          href={loginHref}
+          href={runHref}
           className="flex h-12 w-full items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground"
         >
           Run this step by step
         </Link>
-        <RelatedPlaybooks ids={related} mode="public" heading="Related" />
+        <RelatedPlaybooks ids={related} heading="Related" />
         {footer}
       </article>
     );
@@ -576,7 +572,7 @@ export function PlaybookView({
         </div>
       </section>
 
-      <RelatedPlaybooks ids={related} mode="run" heading="Also for your situation" />
+      <RelatedPlaybooks ids={related} heading="Also for your situation" />
 
       {footer}
 

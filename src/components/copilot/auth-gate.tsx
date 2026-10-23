@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useSession } from '@/core/auth/client';
 import { usePathname, useRouter } from '@/core/i18n/navigation';
@@ -8,10 +8,15 @@ export function CopilotAuthGate({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = useSession();
   const pathname = usePathname();
   const router = useRouter();
+  // Redirect once: the gate stays mounted while /login loads, and a second
+  // pass would read /login as the page to come back to.
+  const redirectedRef = useRef(false);
 
   useEffect(() => {
     if (isPending) return;
     if (session?.user) return;
+    if (redirectedRef.current) return;
+    redirectedRef.current = true;
     const next = safeNextPath(pathname);
     router.replace(`/login?next=${encodeURIComponent(next)}`);
   }, [isPending, session, pathname, router]);
