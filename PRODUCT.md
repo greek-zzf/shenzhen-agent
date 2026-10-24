@@ -67,6 +67,15 @@ v1 is **Shenzhen-only**. Other cities route to an unsupported-city screen. There
 
 **Interview lock:** the only constraint explicitly marked inviolable in init is English chrome / Chinese for the real world (see Brand Commitments). Other spec rules above remain current product record unless later revoked.
 
+## Guide (acquisition surface)
+
+Decided 2026-10-24: `/guide` is **Felix's Shenzhen guide** — food, coffee, and small tips from places he has personally visited, imported from his digital-garden vault (`scripts/import-guide.mjs` → `src/content/guide/`). It is an **acquisition surface**, not part of the errand product:
+
+- Its job is search traffic and trust from the same people (tourists and new movers looking up "coffee Nanshan", "beef offal Shekou"), not a second product. It does not enter intake, playbooks, or the `I'm stuck` tree, and the copilot still answers food/nightlife questions with the redirect in the IA doc.
+- It is linked from the homepage slab and the sitemap, not from the capsule nav.
+- It is personal and first-person. No sponsored placements, no invented hours, prices, or "verified" claims beyond what the note says; closed places are marked closed, not deleted.
+- Chinese addresses and metro lines follow the same rule as the rest of the product: copyable Hanzi for the driver, English chrome.
+
 ## Brand Commitments
 
 - **Name:** Shenzhen Copilot (confirmed). Wordmark in copilot chrome; do not fall back to the ShipAny template name on copilot surfaces.
@@ -86,7 +95,7 @@ No logo, color, or type system is committed here. `public/logo.png` and default 
 
 ## Product Principles
 
-1. **Design for this week's arrival, not the settled city.** If a surface helps someone browse Shenzhen, it is the wrong surface.
+1. **Design for this week's arrival, not the settled city.** If an errand surface helps someone browse Shenzhen, it is the wrong surface. (The `/guide` acquisition surface is the one deliberate exception — see Guide above.)
 2. **The playbook is the product.** Chat only fills the file. After attach, the user executes steps at the window.
 3. **English in the chrome, Chinese in the world.** The clerk, the form, and the landlord see Chinese; the user never has to operate a Chinese nav to get there.
 4. **Unknown beats a fake certain.** Conflicting hours, fees, and “Alipay is easier” claims sit side by side. Confirm at the counter.
