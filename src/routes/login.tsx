@@ -63,8 +63,8 @@ function LoginPage() {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Log in</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Email and password via the existing account system. No WeChat login.
-            No China phone required.
+            Only needed for email reminders. Every guide works without an
+            account. No WeChat, no China phone number.
           </p>
         </div>
 
@@ -154,7 +154,10 @@ function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           No account?{' '}
-          <Link href="/sign-up" className="underline underline-offset-4">
+          <Link
+            href={`/sign-up?callbackUrl=${encodeURIComponent(afterLoginUrl)}`}
+            className="underline underline-offset-4"
+          >
             Sign up
           </Link>
         </p>
