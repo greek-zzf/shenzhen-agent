@@ -49,7 +49,6 @@ export function PublicPlaybookPage({
         playbook={playbook}
         profile={EMPTY_PROFILE}
         mode="public"
-        loginNext={`/run/${playbook.id}`}
         freshness={freshness}
         niaEligibility={niaEligibility}
       />

@@ -17,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { safeNextPath } from "@/lib/playbooks/safe-next";
 import {
   Field,
   FieldDescription,
@@ -52,7 +53,7 @@ function SignUpPage() {
 
   const afterLoginUrl = redirectParam
     ? `/auth-callback?redirect=${encodeURIComponent(redirectParam)}`
-    : callbackUrl || "/settings";
+    : safeNextPath(callbackUrl, "/settings");
 
   const configQuery = usePublicConfig();
   const configs = configQuery.data ?? {};

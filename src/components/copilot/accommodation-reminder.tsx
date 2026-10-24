@@ -2,9 +2,13 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import { buttonVariants } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
+import { useSession } from '@/core/auth/client';
+import { Link, usePathname } from '@/core/i18n/navigation';
 import { apiGet, apiPost } from '@/lib/api-client';
+import { cn } from '@/lib/utils';
 import { formatOfficialFetchedAt } from '@/lib/playbooks/freshness';
 
 import { ArrivalTimer } from './slots';
@@ -43,12 +47,16 @@ export function AccommodationReminderOptIn({
   showTimer?: boolean;
 }) {
   const queryClient = useQueryClient();
+  const { data: session, isPending: sessionPending } = useSession();
+  const signedIn = Boolean(session?.user);
+  const pathname = usePathname();
   const hotel = stayType === 'hotel';
   const [dueAtInput, setDueAtInput] = useState('');
 
   const query = useQuery({
     queryKey: ['accommodation-reminder'],
     queryFn: () => apiGet<ReminderResponse>('/api/accommodation-reminders'),
+    enabled: signedIn,
   });
 
   const mutation = useMutation({
@@ -97,6 +105,27 @@ export function AccommodationReminderOptIn({
         <ArrivalTimer arrivalAt={arrivalAt} label="24 hours from arrival" />
       ) : null}
 
+      {!signedIn && !hotel ? (
+        <div className="space-y-2">
+          <p className="text-sm leading-6">
+            Want an email before the 24-hour deadline? Log in and we&apos;ll bring
+            you straight back to this step.
+          </p>
+          <Link
+            href={`/login?next=${encodeURIComponent(pathname)}`}
+            aria-disabled={sessionPending}
+            className={cn(
+              buttonVariants({ variant: 'outline' }),
+              'h-11 rounded-full px-4',
+              sessionPending && 'pointer-events-none opacity-60'
+            )}
+          >
+            Log in for an email reminder
+          </Link>
+        </div>
+      ) : null}
+
+      {signedIn ? (
       <label className="flex cursor-pointer items-start gap-3">
         <Checkbox
           checked={shownChecked}
@@ -109,6 +138,7 @@ export function AccommodationReminderOptIn({
           default.
         </span>
       </label>
+      ) : null}
 
       {hotel ? (
         <p className="text-sm text-muted-foreground">
@@ -116,7 +146,7 @@ export function AccommodationReminderOptIn({
         </p>
       ) : null}
 
-      {!hotel && arrivalAt ? (
+      {signedIn && !hotel && arrivalAt ? (
         <label className="block space-y-1">
           <span className="text-xs text-muted-foreground">
             Remind at (optional — default is arrival + 24 hours)
