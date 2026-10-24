@@ -5,8 +5,9 @@ import { cn } from '@/lib/utils';
 import '@fontsource/poppins/500.css';
 import '@fontsource/poppins/600.css';
 import '@/styles/home-lawn.css';
+import { BRAND_NAME } from '@/lib/brand';
+import { Wordmark } from './brand';
 
-const WORDMARK = 'Shenzhen Copilot';
 
 export function CopilotChrome({
   children,
@@ -23,14 +24,11 @@ export function CopilotChrome({
     <div className="lawn-shell flex min-h-svh flex-col">
       <header className="px-4 pt-5 sm:px-6 lg:px-8">
         <nav
-          aria-label="Shenzhen Copilot"
+          aria-label={BRAND_NAME}
           className="mx-auto flex h-14 w-full max-w-6xl items-center gap-6 rounded-full bg-white px-5 shadow-[0_8px_24px_rgba(47,49,48,0.08)]"
         >
-          <Link
-            href="/"
-            className="shrink-0 whitespace-nowrap text-[15px] font-semibold tracking-tight"
-          >
-            {WORDMARK}
+          <Link href="/" aria-label={`${BRAND_NAME} home`} className="flex items-center">
+            <Wordmark />
           </Link>
           <div className="ml-auto flex items-center gap-5">
             <Link

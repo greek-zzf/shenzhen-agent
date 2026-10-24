@@ -29,7 +29,7 @@ export const Route = createFileRoute('/(copilot)/run/pb-10/hr-letter')({
     return { excerpt };
   },
   head: () => ({
-    meta: [{ title: 'HR stay note — Shenzhen Copilot' }],
+    meta: [{ title: 'HR stay note — How to Shenzhen' }],
   }),
   component: HrLetterPage,
 });

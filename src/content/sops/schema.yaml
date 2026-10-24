@@ -1,4 +1,4 @@
-# Shenzhen Copilot playbook schema (documentation).
+# How to Shenzhen playbook schema (documentation).
 # Runtime validation lives in src/lib/playbooks/schema.ts (zod).
 # An LLM must never rewrite, reorder, or invent steps. last_verified: null
 # always renders a SourceStaleBadge — draft SOP, never field-verified.

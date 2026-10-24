@@ -6,7 +6,7 @@ last_verified: null
 source_max_age_days: 14
 lifecycle: 72h
 public_slug: accommodation-registration
-summary_en: Hotels register you. An apartment does not. You have 24 hours. Scan 房屋码. Skip i深圳 face. This copilot never submits the form.
+summary_en: Hotels register you. An apartment does not. You have 24 hours. Scan 房屋码. Skip i深圳 face. This guide never submits the form.
 disclaimer_en: This is a procedure guide, not legal, medical, or immigration advice.
 attach_when:
   - when: stay_is

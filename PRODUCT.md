@@ -17,7 +17,7 @@ Tourists are the top of the acquisition funnel. Long-term residents are later re
 
 ## Product Purpose
 
-Shenzhen Copilot is an English-first **web errand agent** for foreigners who are coming to, just arriving in, or already in Shenzhen. A short intake diagnoses what is stuck. The deliverable is a **live playbook** the user can execute at the window or in an app: checklist, official citations, Chinese speech for the clerk, and numbered screenshot click-paths.
+How to Shenzhen is an English-first **web errand agent** for foreigners who are coming to, just arriving in, or already in Shenzhen. A short intake diagnoses what is stuck. The deliverable is a **live playbook** the user can execute at the window or in an app: checklist, official citations, Chinese speech for the clerk, and numbered screenshot click-paths.
 
 It exists because the failure is not “China is digital.” The failure is **this passport + this visa + this district today + this screen of this app — what do I tap next.** Missed 24-hour registration, a closed VOA window, or a metro gate that will not take a foreign card are hard deadlines, not a weak reading experience.
 
@@ -69,12 +69,13 @@ v1 is **Shenzhen-only**. Other cities route to an unsupported-city screen. There
 
 ## Brand Commitments
 
-- **Name:** Shenzhen Copilot (confirmed). Wordmark in copilot chrome; do not fall back to the ShipAny template name on copilot surfaces.
+- **Name:** How to Shenzhen (confirmed 2026-10, replaces "Shenzhen Copilot"). Single source: `BRAND_NAME` in `src/lib/brand.ts`. Wordmark in copilot chrome; do not fall back to the ShipAny template name on copilot surfaces.
+- **Logo:** three steps going up — tomato, cobalt, violet discs (`BrandMark` in `src/components/copilot/brand.tsx`; files in `public/brand/`). Favicon and app icons in `public/`.
 - **Language (confirmed):** UI chrome, navigation, errors, and step titles stay English. Chinese appears only on speech cards, copyable place names, and contract/form/HR prefill.
 - **Voice (from spec):** calm, executable, short. Never mock the newcomer. Do not use “this has been asked,” “you will struggle,” or “just use WeChat like everyone else.”
 - **Disclaimer (every playbook):** “This is a procedure guide, not legal, medical, or immigration advice. Rules change. Confirm at the counter.”
 
-No logo, color, or type system is committed here. `public/logo.png` and default `VITE_APP_NAME` still reflect the ShipAny template and are not brand assets for this product.
+Color and type live in DESIGN.md. `public/logo.png` is the brand app icon; set `VITE_APP_NAME=How to Shenzhen` in each environment so template surfaces (page `<title>` fallback, emails) match.
 
 ## Evidence on Hand
 

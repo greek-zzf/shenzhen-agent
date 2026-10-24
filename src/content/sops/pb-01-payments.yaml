@@ -298,7 +298,7 @@ steps:
   - id: bind-in-real-apps
     title_en: Bind inside the real Alipay and WeChat apps
     slot: click_path
-    why: This copilot never submits a bind. You tap Me → Bank cards / Pay in the official apps only.
+    why: This guide never submits a bind. You tap Me → Bank cards / Pay in the official apps only.
     skippable: false
     skip_if: null
     passport_fail_warning:

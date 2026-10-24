@@ -107,7 +107,7 @@ describe('buildPublicPlaybookHead', () => {
     assert.ok(title && 'title' in title);
     assert.equal(
       title.title,
-      'Shenzhen visa on arrival hours — Shenzhen Copilot'
+      'Shenzhen visa on arrival hours — How to Shenzhen'
     );
 
     const description = head.meta.find(

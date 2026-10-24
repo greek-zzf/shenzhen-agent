@@ -2,7 +2,7 @@
 
 One-page briefing for a **foreign-passport** volunteer. A Chinese-ID founder cannot finish these launch blockers: the wrong hall, the wrong WeChat identity, and the wrong Alipay KYC all produce the wrong photos.
 
-This is **not** a city guide. Shenzhen Copilot ships **execution playbooks** (window / app / gate). Transcribe what you see. Do not invent hours or fees. Editors — not volunteers — write SOP YAML. **Never set `last_verified`** unless the packet has a photo **and** a date **and** a location. Stock / Xiaohongshu frames already in the repo are substitutes only; rights are **not** cleared.
+This is **not** a city guide. How to Shenzhen ships **execution playbooks** (window / app / gate). Transcribe what you see. Do not invent hours or fees. Editors — not volunteers — write SOP YAML. **Never set `last_verified`** unless the packet has a photo **and** a date **and** a location. Stock / Xiaohongshu frames already in the repo are substitutes only; rights are **not** cleared.
 
 Tick sheet: [`field-research/volunteer-checklist.csv`](./field-research/volunteer-checklist.csv).
 

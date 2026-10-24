@@ -36,6 +36,10 @@ Poppins 600 display, 500 nav and labels. Flush-left. Display tracking `-0.02em`,
 - Cream slab: `border-radius: 48px 48px 0 0`, full bleed, `Start with my passport` as uppercase text link.
 - Paper shards: authored SVG, lower right, behind content.
 
+## Logo
+
+Three discs stepping up from lower left: tomato `#FE6255` → cobalt `#116DE8` → violet `#5D308D` (on ink, lift cobalt to `#4B93F5` and violet to `#A27BD0`). Wordmark is Poppins, "How to" 500 + "Shenzhen" 600, tracking `-0.02em`, mark left of text. App icon puts the discs on the lawn square. Files: `public/brand/` (mark, lockup, lockup-on-dark, app-icon), `public/favicon.*`, `public/apple-touch-icon.png`, `public/icon-192.png`, `public/icon-512.png`. Regenerate rather than hand-edit the outlined lockups.
+
 ## Motion
 
 One signature: pill/disc travel on hover. Content is visible by default.

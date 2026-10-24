@@ -51,7 +51,7 @@ export const Route = createFileRoute('/(copilot)/run/$playbookId')({
     meta: [
       {
         title: loaderData
-          ? `${loaderData.playbook.title_en} — Shenzhen Copilot`
+          ? `${loaderData.playbook.title_en} — How to Shenzhen`
           : 'Playbook',
       },
     ],
