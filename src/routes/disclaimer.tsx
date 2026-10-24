@@ -11,7 +11,7 @@ function DisclaimerPage() {
         <SourceStaleBadge lastVerified={null} />
         <h1 className="text-2xl font-semibold tracking-tight">Disclaimer</h1>
         <p className="text-sm leading-6">
-          Shenzhen Copilot is a procedure guide. It is not legal advice, not
+          How to Shenzhen is a procedure guide. It is not legal advice, not
           medical advice, and not immigration advice. A complete folder is not a
           visa, a payment, or a police registration.
         </p>
@@ -34,7 +34,7 @@ function DisclaimerPage() {
 export const Route = createFileRoute('/disclaimer')({
   head: () => ({
     meta: [
-      { title: 'Disclaimer — Shenzhen Copilot' },
+      { title: 'Disclaimer — How to Shenzhen' },
       {
         name: 'description',
         content: 'Procedure guide, not legal, medical, or immigration advice.',

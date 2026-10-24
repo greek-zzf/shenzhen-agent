@@ -4,7 +4,9 @@
  * and never copied from YAML fields that may later name hours or fees.
  */
 
-export const SITE_NAME = 'Shenzhen Copilot';
+import { BRAND_NAME } from '@/lib/brand';
+
+export const SITE_NAME = BRAND_NAME;
 
 export const PUBLIC_PLAYBOOK_SLUGS = [
   'voa-hours',
@@ -28,23 +30,23 @@ export const PUBLIC_PLAYBOOK_SEO: Record<
   'voa-hours': {
     slug: 'voa-hours',
     path: '/p/voa-hours',
-    title: 'Shenzhen visa on arrival hours — Shenzhen Copilot',
+    title: 'Shenzhen visa on arrival hours — How to Shenzhen',
     description:
       'Published Shenzhen visa-on-arrival hours conflict with traveler reports. This draft playbook shows both claims and tells you to confirm at the window. No invented hours or fees.',
   },
   'alipay-metro': {
     slug: 'alipay-metro',
     path: '/p/alipay-metro',
-    title: 'Alipay metro for foreigners — Shenzhen Copilot',
+    title: 'Alipay metro for foreigners — How to Shenzhen',
     description:
       'How foreigners ride Shenzhen metro with Alipay Transport or WeChat Pay. Skip the metro mini-program. Cash token is the backup. Draft SOP — not a payment promise.',
   },
   'accommodation-registration': {
     slug: 'accommodation-registration',
     path: '/p/accommodation-registration',
-    title: 'Temporary accommodation registration Shenzhen — Shenzhen Copilot',
+    title: 'Temporary accommodation registration Shenzhen — How to Shenzhen',
     description:
-      'Hotels register you; an apartment does not. You have 24 hours. Scan the house QR, skip iShenzhen face, and verify at the window. This copilot never submits the form.',
+      'Hotels register you; an apartment does not. You have 24 hours. Scan the house QR, skip iShenzhen face, and verify at the window. This guide never submits the form.',
   },
 };
 

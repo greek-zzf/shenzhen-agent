@@ -12,7 +12,7 @@ export const Route = createFileRoute('/')({
   loader: () => ({ locale: getLocale() }),
   head: () => ({
     meta: [
-      { title: 'Shenzhen Copilot' },
+      { title: 'How to Shenzhen' },
       {
         name: 'description',
         content:

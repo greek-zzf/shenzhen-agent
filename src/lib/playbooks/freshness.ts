@@ -1,7 +1,7 @@
 import type { UrlKind } from './schema';
 
 export const SOURCE_FETCH_USER_AGENT =
-  'ShenzhenCopilot/0.1 (+https://github.com/greek-zzf/shenzhen-agent)';
+  'HowToShenzhen/0.1 (+https://github.com/greek-zzf/shenzhen-agent)';
 export const SOURCE_FETCH_TIMEOUT_MS = 8_000;
 export const SOURCE_FETCH_MAX_URLS = 3;
 export const SOURCE_FETCH_CACHE_TTL_MS = 6 * 60 * 60 * 1000;

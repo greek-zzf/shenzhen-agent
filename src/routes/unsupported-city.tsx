@@ -9,14 +9,14 @@ function UnsupportedCityPage() {
     <CopilotChrome>
       <article className="space-y-4">
         <h1 className="text-2xl font-semibold tracking-tight">
-          This copilot covers Shenzhen only
+          This guide covers Shenzhen only
         </h1>
         <p className="text-sm leading-6">
           Steps, windows, and one-stop desks here are Shenzhen-specific. We will
           not walk you through another city as if it were the same playbook.
         </p>
         <Link href="/" className="inline-flex text-sm font-medium underline underline-offset-4">
-          Back to Shenzhen Copilot
+          Back to How to Shenzhen
         </Link>
       </article>
     </CopilotChrome>
@@ -26,8 +26,8 @@ function UnsupportedCityPage() {
 export const Route = createFileRoute('/unsupported-city')({
   head: () => ({
     meta: [
-      { title: 'Unsupported city — Shenzhen Copilot' },
-      { name: 'description', content: 'This copilot covers Shenzhen only.' },
+      { title: 'Unsupported city — How to Shenzhen' },
+      { name: 'description', content: 'This guide covers Shenzhen only.' },
     ],
     links: [{ rel: 'canonical', href: `${envConfigs.app_url}/unsupported-city` }],
   }),

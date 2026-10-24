@@ -43,7 +43,7 @@ export function buildReminderEmail(params: {
   const subject = 'Reminder: 24-hour accommodation registration window';
 
   const lead =
-    'You asked Shenzhen Copilot to email you about the 24-hour temporary accommodation registration deadline (境外人员临时住宿登记).';
+    'You asked How to Shenzhen to email you about the 24-hour temporary accommodation registration deadline (境外人员临时住宿登记).';
 
   const window = `Arrival you set: ${arrival}. Reminder due: ${due}. Register before the 24-hour window closes. The in-app timer on the playbook still counts down.`;
 
