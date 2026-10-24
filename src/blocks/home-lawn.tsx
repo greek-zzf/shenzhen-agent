@@ -87,6 +87,10 @@ export function HomeLawn() {
             Start with my passport →
           </Link>
           <p className="text-[13px] font-medium text-[color:color-mix(in_oklab,var(--lawn-ink)_70%,var(--lawn-cream))]">
+            <Link href="/guide" className="underline-offset-4 hover:underline">
+              Food &amp; coffee guide
+            </Link>
+            {' · '}
             <Link href="/disclaimer" className="underline-offset-4 hover:underline">
               Disclaimer
             </Link>

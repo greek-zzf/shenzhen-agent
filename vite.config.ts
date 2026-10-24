@@ -55,7 +55,11 @@ export default defineConfig({
   },
   plugins: [
     // MDX must run before the react plugin so JSX in compiled MDX gets transformed.
-    { enforce: 'pre', ...mdx({ providerImportSource: '@mdx-js/react' }) },
+    {
+      enforce: 'pre',
+      // Guide entries are plain markdown loaded with ?raw (src/lib/guide/catalog.ts).
+      ...mdx({ providerImportSource: '@mdx-js/react', exclude: /src\/content\/guide\// }),
+    },
     tailwindcss(),
     paraglideVitePlugin({
       project: './project.inlang',

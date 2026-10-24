@@ -11,6 +11,8 @@ One-colour lawn. The public homepage is objects on a green field, not a max-w-lg
 - `/` — Persuade. Composition A: three equal situation pills on the green; cream slab is the passport shelf.
 - Errand web (`/library`, `/intake`, `/run`, `/me`, `/p/*`, `/login`, `/disclaimer`): same lawn. Green field, white capsule nav (wordmark · Library · Log in / Me), cream slab as the work surface. No bottom tab bar. Operate type scale (not 88px display).
 
+- `/guide`, `/guide/$slug` — Felix's food & coffee guide. Same errand chrome (capsule nav, cream slab). Category pills reuse the discs (Food tomato, Coffee cobalt, Tips violet); place cards are white 1.75rem-radius cards with a 4:3 photo. Detail pages put the copyable Chinese address and metro in a white side card. Linked from the homepage slab, not the capsule nav.
+
 ## Color
 
 | Role | Hex |
